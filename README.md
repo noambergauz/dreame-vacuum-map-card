@@ -4,28 +4,9 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 
 ## Features
 
-### Interactive Map Display
-- Real-time vacuum map visualization
-- Room selection for targeted cleaning
-- Support for multiple cleaning modes (Full house, Room, Zone, Spot)
+(Almost) complete feature pairity with the original Dreame application
 
-### Advanced Cleaning Controls
-- **CleanGenius Mode**: AI-powered cleaning with automatic settings
-  - Vacuum & Mop / Mop after Vacuum options
-  - Deep Cleaning toggle for intensive cleaning
-  
-- **Custom Mode**: Full manual control
-  - 4 cleaning modes (Sweeping, Mopping, Sweeping & Mopping, Mopping after Sweeping)
-  - 4 suction levels (Quiet, Standard, Strong, Turbo) with Max+ boost
-  - Dynamic wetness control with real-time slider
-  - Mop-washing frequency settings (By area, By time, By room)
-  - Cleaning route selection (Quick, Standard, Intensive, Deep)
-
-### Smart UI Features
-- Mode-aware controls (e.g., wetness slider only shows when mopping)
-- Dynamic sliders with visual feedback
-- Beautiful BEM/SCSS architecture
-- Shadow DOM for proper CSS isolation
+![Main Screen](screenshots/image.png)
 
 ## Installation
 
@@ -97,4 +78,3 @@ npm run deploy
 
 ## License
 
-MIT
