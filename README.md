@@ -85,10 +85,6 @@ npm run deploy
 - **Vite 7.2.4** - Fast build tool
 - **SASS** - Powerful CSS preprocessor
 
-## Project Structure
-
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed information about the project structure and BEM methodology.
-
 ## Requirements
 
 - Home Assistant with the [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) integration installed

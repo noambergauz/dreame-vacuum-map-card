@@ -1,13 +1,24 @@
 import { Toggle } from '../common';
 import type { Hass } from '../../types/homeassistant';
+import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '../../types/vacuum';
+import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
+import {
+  getCleanGeniusModeIcon,
+  getCleanGeniusModeFriendlyName,
+  convertCleanGeniusModeToService,
+  convertCleanGeniusStateToService,
+  convertToLowerCase,
+} from '../../utils';
+import {
+  CLEANGENIUS_STATE,
+  CLEANING_ROUTE,
+} from '../../constants';
 
 interface CleanGeniusModeProps {
   cleangeniusMode: string;
   cleangeniusModeList: string[];
   cleangenius: string;
-  cleangeniusModeEntity: string;
-  cleangeniusEntity: string;
-  cleaningRouteEntity: string;
+  baseEntityId: string;
   hass: Hass;
 }
 
@@ -15,36 +26,37 @@ export function CleanGeniusMode({
   cleangeniusMode,
   cleangeniusModeList,
   cleangenius,
-  cleangeniusModeEntity,
-  cleangeniusEntity,
-  cleaningRouteEntity,
+  baseEntityId,
   hass,
 }: CleanGeniusModeProps) {
-  // Service call helpers
-  const setSelectOption = (selectEntity: string, option: string) => {
-    hass.callService('select', 'select_option', {
-      entity_id: selectEntity,
-      option: option,
-    });
-  };
+  // Use service hooks
+  const { setSelectOption } = useHomeAssistantServices(hass);
 
-  // Convert display value to service value for cleangenius mode
-  const convertToServiceValue = (mode: string): string => {
-    if (mode === 'Vacuum and mop') return 'vacuum_and_mop';
-    if (mode === 'Mop after vacuum') return 'mop_after_vacuum';
-    return mode;
-  };
+  // Get entity IDs
+  const entityIds = useVacuumEntityIds(baseEntityId);
 
   // Handle deep cleaning toggle in CleanGenius mode
   const handleDeepCleaningToggle = (enabled: boolean) => {
     if (enabled) {
       // Enable deep cleaning mode and set route to Deep
-      setSelectOption(cleangeniusEntity, 'deep_cleaning');
-      setSelectOption(cleaningRouteEntity, 'Deep');
+      setSelectOption(
+        entityIds.cleangenius,
+        convertCleanGeniusStateToService(CLEANGENIUS_STATE.DEEP_CLEANING as CleanGeniusState)
+      );
+      setSelectOption(
+        entityIds.cleaningRoute,
+        convertToLowerCase(CLEANING_ROUTE.DEEP)
+      );
     } else {
       // Disable deep cleaning and set route to Standard
-      setSelectOption(cleangeniusEntity, 'routine_cleaning');
-      setSelectOption(cleaningRouteEntity, 'Standard');
+      setSelectOption(
+        entityIds.cleangenius,
+        convertCleanGeniusStateToService(CLEANGENIUS_STATE.ROUTINE_CLEANING as CleanGeniusState)
+      );
+      setSelectOption(
+        entityIds.cleaningRoute,
+        convertToLowerCase(CLEANING_ROUTE.STANDARD)
+      );
     }
   };
 
@@ -56,22 +68,25 @@ export function CleanGeniusMode({
         <div className="cleaning-mode-modal__mode-grid">
           {/* Use cleangenius_mode_list from entity */}
           {cleangeniusModeList.map((mode, idx) => {
+            const typedMode = mode as CleanGeniusModeType;
             const isVacMop = mode === 'Vacuum and mop';
-            const isMopAfter = mode === 'Mop after vacuum';
             return (
               <div
                 key={idx}
                 className={`cleaning-mode-modal__mode-card ${
                   mode === cleangeniusMode ? 'cleaning-mode-modal__mode-card--selected' : ''
                 }`}
-                onClick={() => setSelectOption(cleangeniusModeEntity, convertToServiceValue(mode))}
+                onClick={() => setSelectOption(
+                  entityIds.cleangeniusMode,
+                  convertCleanGeniusModeToService(typedMode)
+                )}
                 style={{ cursor: 'pointer' }}
               >
                 <div className={`cleaning-mode-modal__mode-icon cleaning-mode-modal__mode-icon--${isVacMop ? 'vac-mop' : 'mop-after'}`}>
-                  <span>{isVacMop ? '🔄' : '➜'}</span>
+                  <span>{getCleanGeniusModeIcon(typedMode)}</span>
                 </div>
                 <span className="cleaning-mode-modal__mode-label">
-                  {isVacMop ? 'Vac & Mop' : isMopAfter ? 'Mop after Vac' : mode}
+                  {getCleanGeniusModeFriendlyName(typedMode)}
                 </span>
                 {mode === cleangeniusMode && (
                   <div className="cleaning-mode-modal__mode-checkmark">
@@ -88,7 +103,7 @@ export function CleanGeniusMode({
       <div className="cleaning-mode-modal__setting">
         <span className="cleaning-mode-modal__setting-label">Deep Cleaning</span>
         <Toggle 
-          checked={cleangenius === 'Deep cleaning'} 
+          checked={cleangenius === CLEANGENIUS_STATE.DEEP_CLEANING} 
           onChange={handleDeepCleaningToggle} 
         />
       </div>

@@ -1,5 +1,21 @@
 import { Toggle, CircularButton } from '../common';
 import type { Hass } from '../../types/homeassistant';
+import type { CleaningMode, SuctionLevel, CleaningRoute, SelfCleanFrequency } from '../../types/vacuum';
+import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
+import {
+  getCleaningModeIcon,
+  getSuctionLevelIcon,
+  getCleaningRouteIcon,
+  getSelfCleanFrequencyIcon,
+  convertCleaningModeToService,
+  convertSelfCleanFrequencyToService,
+  convertToLowerCase,
+} from '../../utils';
+import {
+  SLIDER_CONFIG,
+  CLEANING_MODE,
+  MOP_PAD_HUMIDITY,
+} from '../../constants';
 
 interface CustomModeProps {
   cleaningMode: string;
@@ -19,11 +35,6 @@ interface CustomModeProps {
   selfCleanTime: number;
   selfCleanTimeMin: number;
   selfCleanTimeMax: number;
-  cleaningModeEntity: string;
-  suctionLevelEntity: string;
-  wetnessLevelEntity: string;
-  cleaningRouteEntity: string;
-  maxSuctionEntity: string;
   baseEntityId: string;
   hass: Hass;
 }
@@ -46,89 +57,19 @@ export function CustomMode({
   selfCleanTime,
   selfCleanTimeMin,
   selfCleanTimeMax,
-  cleaningModeEntity,
-  suctionLevelEntity,
-  wetnessLevelEntity,
-  cleaningRouteEntity,
-  maxSuctionEntity,
   baseEntityId,
   hass,
 }: CustomModeProps) {
-  // Service call helpers
-  const setSelectOption = (selectEntity: string, option: string) => {
-    hass.callService('select', 'select_option', {
-      entity_id: selectEntity,
-      option: option,
-    });
-  };
+  // Use service hooks
+  const { setSelectOption, setSwitch, setNumber } = useHomeAssistantServices(hass);
 
-  const setSwitch = (switchEntity: string, turnOn: boolean) => {
-    hass.callService('switch', turnOn ? 'turn_on' : 'turn_off', {
-      entity_id: switchEntity,
-    });
-  };
+  // Get entity IDs
+  const entityIds = useVacuumEntityIds(baseEntityId);
 
-  const setNumber = (numberEntity: string, value: number) => {
-    hass.callService('number', 'set_value', {
-      entity_id: numberEntity,
-      value: value,
-    });
-  };
-
-  // Convert display value to service value for cleaning mode
-  const convertToServiceValue = (mode: string): string => {
-    if (mode === 'Sweeping') return 'sweeping';
-    if (mode === 'Mopping') return 'mopping';
-    if (mode === 'Sweeping and mopping') return 'sweeping_and_mopping';
-    if (mode === 'Mopping after sweeping') return 'mopping_after_sweeping';
-    return mode;
-  };
-
-  // Convert suction level to service value
-  const convertSuctionToServiceValue = (level: string): string => {
-    // Convert to lowercase for service call
-    return level.toLowerCase();
-  };
-
-  // Convert route to service value
-  const convertRouteToServiceValue = (route: string): string => {
-    // Convert to lowercase for service call
-    return route.toLowerCase();
-  };
-
-  // Convert self clean frequency to service value
-  const convertFrequencyToServiceValue = (freq: string): string => {
-    if (freq === 'By area') return 'by_area';
-    if (freq === 'By time') return 'by_time';
-    if (freq === 'By room') return 'by_room';
-    return freq;
-  };
-
-  // Map cleaning modes to icons
-  const getModeIcon = (mode: string): string => {
-    if (mode.includes('Sweep') && mode.includes('Mop')) return '🔄';
-    if (mode.includes('after')) return '➜';
-    if (mode.includes('Mop')) return '💧';
-    if (mode.includes('Sweep') || mode.includes('Vacuum')) return '🌀';
-    return '⚙️';
-  };
-
-  // Map suction levels to icons
-  const getSuctionIcon = (level: string): string => {
-    if (level.includes('Quiet') || level.includes('Silent')) return '🌙';
-    if (level.includes('Turbo')) return '⚡';
-    if (level.includes('Strong')) return '🌀';
-    return '🔄';
-  };
-
-  // Map routes to icons
-  const getRouteIcon = (route: string): string => {
-    if (route === 'Quick') return '⌇';
-    if (route === 'Standard') return '≡';
-    if (route === 'Intensive') return '⋮⋮';
-    if (route === 'Deep') return '⫴';
-    return '≡';
-  };
+  // Calculate slider percentages
+  const wetnessPercent = ((wetnessLevel - SLIDER_CONFIG.WETNESS.MIN) / (SLIDER_CONFIG.WETNESS.MAX - SLIDER_CONFIG.WETNESS.MIN)) * 100;
+  const selfCleanAreaPercent = ((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
+  const selfCleanTimePercent = ((selfCleanTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100;
 
   return (
     <div className="cleaning-mode-modal__content">
@@ -141,8 +82,8 @@ export function CustomMode({
               <CircularButton
                 size="small"
                 selected={mode === cleaningMode}
-                onClick={() => setSelectOption(cleaningModeEntity, convertToServiceValue(mode))}
-                icon={getModeIcon(mode)}
+                onClick={() => setSelectOption(entityIds.cleaningMode, convertCleaningModeToService(mode as CleaningMode))}
+                icon={getCleaningModeIcon(mode as CleaningMode)}
               />
               <span className="cleaning-mode-modal__mode-option-label">{mode}</span>
             </div>
@@ -159,8 +100,8 @@ export function CustomMode({
               <CircularButton
                 size="small"
                 selected={level === suctionLevel}
-                onClick={() => setSelectOption(suctionLevelEntity, convertSuctionToServiceValue(level))}
-                icon={getSuctionIcon(level)}
+                onClick={() => setSelectOption(entityIds.suctionLevel, convertToLowerCase(level))}
+                icon={getSuctionLevelIcon(level as SuctionLevel)}
               />
               <span className="cleaning-mode-modal__power-label">{level}</span>
             </div>
@@ -173,7 +114,7 @@ export function CustomMode({
             <span className="cleaning-mode-modal__max-plus-title">Max+</span>
             <Toggle 
               checked={maxSuctionPower} 
-              onChange={(checked) => setSwitch(maxSuctionEntity, checked)} 
+              onChange={(checked) => setSwitch(entityIds.maxSuctionPower, checked)} 
             />
           </div>
           <p className="cleaning-mode-modal__max-plus-description">
@@ -183,7 +124,7 @@ export function CustomMode({
       </section>
 
       {/* Wetness - Only show when mopping is enabled */}
-      {cleaningMode !== 'Sweeping' && (
+      {cleaningMode !== CLEANING_MODE.SWEEPING && (
         <section className="cleaning-mode-modal__section">
           <h3 className="cleaning-mode-modal__section-title">Wetness</h3>
 
@@ -191,19 +132,19 @@ export function CustomMode({
           <div className="cleaning-mode-modal__slider-container">
             <input
               type="range"
-              min="1"
-              max="32"
+              min={SLIDER_CONFIG.WETNESS.MIN}
+              max={SLIDER_CONFIG.WETNESS.MAX}
               value={wetnessLevel}
-              onChange={(e) => setNumber(wetnessLevelEntity, parseInt(e.target.value))}
+              onChange={(e) => setNumber(entityIds.wetnessLevel, parseInt(e.target.value))}
               className="cleaning-mode-modal__slider"
               style={{
-                background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${((wetnessLevel - 1) / 31) * 100}%, #e0e0e0 ${((wetnessLevel - 1) / 31) * 100}%, #e0e0e0 100%)`
+                background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${wetnessPercent}%, #e0e0e0 ${wetnessPercent}%, #e0e0e0 100%)`
               }}
             />
             <div 
               className="cleaning-mode-modal__slider-value"
               style={{
-                left: `calc(${((wetnessLevel - 1) / 31) * 100}% + ${8 - ((wetnessLevel - 1) / 31) * 16}px)`
+                left: `calc(${wetnessPercent}% + ${8 - wetnessPercent * 0.16}px)`
               }}
             >
               {wetnessLevel}
@@ -213,17 +154,17 @@ export function CustomMode({
           {/* Labels */}
           <div className="cleaning-mode-modal__slider-labels">
             <span className={`cleaning-mode-modal__slider-label ${
-              mopPadHumidity === 'Slightly dry' ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
+              mopPadHumidity === MOP_PAD_HUMIDITY.SLIGHTLY_DRY ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
             }`}>
               Slightly dry
             </span>
             <span className={`cleaning-mode-modal__slider-label ${
-              mopPadHumidity === 'Moist' ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
+              mopPadHumidity === MOP_PAD_HUMIDITY.MOIST ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
             }`}>
               Moist
             </span>
             <span className={`cleaning-mode-modal__slider-label ${
-              mopPadHumidity === 'Wet' ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
+              mopPadHumidity === MOP_PAD_HUMIDITY.WET ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
             }`}>
               Wet
             </span>
@@ -242,8 +183,8 @@ export function CustomMode({
               <CircularButton
                 size="small"
                 selected={freq === selfCleanFrequency}
-                onClick={() => setSelectOption(`select.${baseEntityId}_self_clean_frequency`, convertFrequencyToServiceValue(freq))}
-                icon={freq === 'By area' ? '📐' : freq === 'By time' ? '⏱️' : '🏠'}
+                onClick={() => setSelectOption(entityIds.selfCleanFrequency, convertSelfCleanFrequencyToService(freq as SelfCleanFrequency))}
+                icon={getSelfCleanFrequencyIcon(freq as SelfCleanFrequency)}
               />
               <span className="cleaning-mode-modal__mode-option-label">{freq}</span>
             </div>
@@ -260,23 +201,23 @@ export function CustomMode({
               value={selfCleanFrequency === 'By area' ? selfCleanArea : selfCleanTime}
               onChange={(e) => {
                 const entity = selfCleanFrequency === 'By area' 
-                  ? `number.${baseEntityId}_self_clean_area`
-                  : `number.${baseEntityId}_self_clean_time`;
+                  ? entityIds.selfCleanArea
+                  : entityIds.selfCleanTime;
                 setNumber(entity, parseInt(e.target.value));
               }}
               className="cleaning-mode-modal__slider"
               style={{
                 background: selfCleanFrequency === 'By area'
-                  ? `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100}%, #e0e0e0 ${((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100}%, #e0e0e0 100%)`
-                  : `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${((selfCleanTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100}%, #e0e0e0 ${((selfCleanTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100}%, #e0e0e0 100%)`
+                  ? `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${selfCleanAreaPercent}%, #e0e0e0 ${selfCleanAreaPercent}%, #e0e0e0 100%)`
+                  : `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${selfCleanTimePercent}%, #e0e0e0 ${selfCleanTimePercent}%, #e0e0e0 100%)`
               }}
             />
             <div 
               className="cleaning-mode-modal__slider-value"
               style={{
                 left: selfCleanFrequency === 'By area'
-                  ? `calc(${((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100}% + ${8 - ((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 16}px)`
-                  : `calc(${((selfCleanTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100}% + ${8 - ((selfCleanTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 16}px)`
+                  ? `calc(${selfCleanAreaPercent}% + ${8 - selfCleanAreaPercent * 0.16}px)`
+                  : `calc(${selfCleanTimePercent}% + ${8 - selfCleanTimePercent * 0.16}px)`
               }}
             >
               {selfCleanFrequency === 'By area' ? `${selfCleanArea}m²` : `${selfCleanTime}m`}
@@ -298,8 +239,8 @@ export function CustomMode({
               <CircularButton
                 size="small"
                 selected={route === cleaningRoute}
-                onClick={() => setSelectOption(cleaningRouteEntity, convertRouteToServiceValue(route))}
-                icon={getRouteIcon(route)}
+                onClick={() => setSelectOption(entityIds.cleaningRoute, convertToLowerCase(route))}
+                icon={getCleaningRouteIcon(route as CleaningRoute)}
               />
               <span className="cleaning-mode-modal__route-label">{route}</span>
             </div>
