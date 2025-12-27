@@ -21,14 +21,19 @@
     transition: transform 0.2s, opacity 0.2s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     
-    &:hover {
+    &:hover:not(:disabled) {
       transform: scale(1.1);
       opacity: 0.9;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
     
-    &:active {
+    &:active:not(:disabled) {
       transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 }
@@ -49,12 +54,19 @@
   align-items: center;
   transition: transform 0.1s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.98);
+  }
+
+  &--disabled,
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 
   &__content {

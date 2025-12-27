@@ -6,6 +6,11 @@
   padding: 4px;
   margin-bottom: 15px;
 
+  &--disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
   &__button {
     flex: 1;
     border: none;
@@ -24,8 +29,12 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    &:hover:not(&--active) {
+    &:hover:not(&--active):not(:disabled) {
       background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
     }
   }
 }

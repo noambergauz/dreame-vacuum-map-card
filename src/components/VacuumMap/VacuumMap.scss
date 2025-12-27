@@ -85,4 +85,114 @@
       box-shadow: 0 2px 8px rgba(255, 149, 0, 0.4);
     }
   }
+
+  &__zone {
+    position: absolute;
+    border: 3px solid #007aff;
+    background: rgba(0, 122, 255, 0.15);
+    pointer-events: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 122, 255, 0.3);
+
+    &::before {
+      content: '🧹';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 24px;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
+
+  &__zone-handle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #007aff;
+    border: 2px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+    z-index: 10;
+    touch-action: none; // Prevent scrolling when touching handles
+
+    // Larger touch target
+    &::before {
+      content: '';
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+    }
+
+    &:hover {
+      background: #0051d5;
+      transform: scale(1.2);
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
+
+    &--tl {
+      top: -12px;
+      left: -12px;
+      cursor: nwse-resize;
+    }
+
+    &--tr {
+      top: -12px;
+      right: -12px;
+      cursor: nesw-resize;
+    }
+
+    &--bl {
+      bottom: -12px;
+      left: -12px;
+      cursor: nesw-resize;
+    }
+
+    &--br {
+      bottom: -12px;
+      right: -12px;
+      cursor: nwse-resize;
+    }
+  }
+
+  &__zone-clear {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #ff3b30;
+    color: white;
+    border: 2px solid white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.4);
+    transition: all 0.2s ease;
+    line-height: 1;
+    padding: 0;
+
+    &:hover {
+      background: #ff1f0f;
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
 }

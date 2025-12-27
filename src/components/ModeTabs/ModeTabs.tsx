@@ -4,9 +4,10 @@ import './ModeTabs.scss';
 interface ModeTabsProps {
   selectedMode: CleaningMode;
   onModeChange: (mode: CleaningMode) => void;
+  disabled?: boolean;
 }
 
-export function ModeTabs({ selectedMode, onModeChange }: ModeTabsProps) {
+export function ModeTabs({ selectedMode, onModeChange, disabled = false }: ModeTabsProps) {
   const modes: { value: CleaningMode; label: string }[] = [
     { value: 'room', label: 'Room' },
     { value: 'all', label: 'All' },
@@ -14,7 +15,7 @@ export function ModeTabs({ selectedMode, onModeChange }: ModeTabsProps) {
   ];
 
   return (
-    <div className="mode-tabs">
+    <div className={`mode-tabs ${disabled ? 'mode-tabs--disabled' : ''}`}>
       {modes.map((mode) => (
         <button
           key={mode.value}
@@ -22,6 +23,7 @@ export function ModeTabs({ selectedMode, onModeChange }: ModeTabsProps) {
           className={`mode-tabs__button ${
             selectedMode === mode.value ? 'mode-tabs__button--active' : ''
           }`}
+          disabled={disabled}
         >
           {mode.label}
         </button>

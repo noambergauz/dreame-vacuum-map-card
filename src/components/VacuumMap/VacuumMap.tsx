@@ -1,4 +1,5 @@
-import type { Hass, RoomPosition, CleaningMode } from '../../types/homeassistant';
+import { useState, useRef } from 'react';
+import type { Hass, RoomPosition, CleaningMode, Zone } from '../../types/homeassistant';
 import './VacuumMap.scss';
 
 interface VacuumMapProps {
@@ -8,7 +9,11 @@ interface VacuumMapProps {
   selectedRooms: Map<number, string>;
   rooms: RoomPosition[];
   onRoomToggle: (roomId: number, roomName: string) => void;
+  zone: Zone | null;
+  onZoneChange: (zone: Zone | null) => void;
 }
+
+type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
 
 export function VacuumMap({
   hass,
@@ -17,12 +22,120 @@ export function VacuumMap({
   selectedRooms,
   rooms,
   onRoomToggle,
+  zone,
+  onZoneChange,
 }: VacuumMapProps) {
   const mapEntity = hass.states[mapEntityId];
   const mapUrl = mapEntity?.attributes?.entity_picture;
+  const mapRef = useRef<HTMLDivElement>(null);
+  const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
+  const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
+
+  const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (selectedMode !== 'zone') return;
+    if (resizingHandle) return; // Don't create new zone while resizing
+
+    const rect = mapRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    // Get click position relative to map
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Convert to percentage
+    const xPercent = (x / rect.width) * 100;
+    const yPercent = (y / rect.height) * 100;
+
+    // Create zone centered on the click
+    const size = 15; // Square size in percentage
+    const centerX = xPercent;
+    const centerY = yPercent;
+
+    const newZone: Zone = {
+      x1: Math.max(0, centerX - size / 2),
+      y1: Math.max(0, centerY - size / 2),
+      x2: Math.min(100, centerX + size / 2),
+      y2: Math.min(100, centerY + size / 2),
+    };
+
+    onZoneChange(newZone);
+  };
+
+  const handleResizeStart = (e: React.MouseEvent | React.TouchEvent, handle: ResizeHandle) => {
+    e.stopPropagation();
+    if (!zone) return;
+    
+    setResizingHandle(handle);
+    setResizeStartZone(zone);
+  };
+
+  const getClientPosition = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if ('touches' in e && e.touches.length > 0) {
+      return { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY };
+    }
+    return { clientX: (e as React.MouseEvent).clientX, clientY: (e as React.MouseEvent).clientY };
+  };
+
+  const handleResizeMove = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
+    if (!resizingHandle || !resizeStartZone) return;
+
+    const rect = mapRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const { clientX, clientY } = getClientPosition(e);
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const xPercent = Math.max(0, Math.min(100, (x / rect.width) * 100));
+    const yPercent = Math.max(0, Math.min(100, (y / rect.height) * 100));
+
+    let newZone: Zone = { ...resizeStartZone };
+
+    switch (resizingHandle) {
+      case 'tl': // Top-left
+        newZone.x1 = Math.min(xPercent, resizeStartZone.x2 - 5);
+        newZone.y1 = Math.min(yPercent, resizeStartZone.y2 - 5);
+        break;
+      case 'tr': // Top-right
+        newZone.x2 = Math.max(xPercent, resizeStartZone.x1 + 5);
+        newZone.y1 = Math.min(yPercent, resizeStartZone.y2 - 5);
+        break;
+      case 'bl': // Bottom-left
+        newZone.x1 = Math.min(xPercent, resizeStartZone.x2 - 5);
+        newZone.y2 = Math.max(yPercent, resizeStartZone.y1 + 5);
+        break;
+      case 'br': // Bottom-right
+        newZone.x2 = Math.max(xPercent, resizeStartZone.x1 + 5);
+        newZone.y2 = Math.max(yPercent, resizeStartZone.y1 + 5);
+        break;
+    }
+
+    onZoneChange(newZone);
+  };
+
+  const handleResizeEnd = () => {
+    setResizingHandle(null);
+    setResizeStartZone(null);
+  };
+
+  const handleClearZone = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onZoneChange(null);
+    setResizingHandle(null);
+    setResizeStartZone(null);
+  };
 
   return (
-    <div className="vacuum-map">
+    <div 
+      className="vacuum-map" 
+      ref={mapRef} 
+      onClick={handleMapClick}
+      onMouseMove={handleResizeMove}
+      onMouseUp={handleResizeEnd}
+      onMouseLeave={handleResizeEnd}
+      onTouchMove={handleResizeMove}
+      onTouchEnd={handleResizeEnd}
+      onTouchCancel={handleResizeEnd}
+    >
       {mapUrl ? (
         <img
           src={hass.hassUrl(mapUrl)}
@@ -47,7 +160,10 @@ export function VacuumMap({
             {rooms.map((room) => (
               <button
                 key={room.id}
-                onClick={() => onRoomToggle(room.id, room.name)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRoomToggle(room.id, room.name);
+                }}
                 className={`vacuum-map__room ${
                   selectedRooms.has(room.id) ? 'vacuum-map__room--selected' : ''
                 }`}
@@ -61,6 +177,60 @@ export function VacuumMap({
               </button>
             ))}
           </div>
+        </>
+      )}
+
+      {selectedMode === 'zone' && (
+        <>
+          <div className="vacuum-map__overlay">
+            {zone ? 'Drag corners to resize, click elsewhere to reposition' : 'Click on the map to place a cleaning zone'}
+          </div>
+
+          {zone && (
+            <div
+              className="vacuum-map__zone"
+              style={{
+                left: `${zone.x1}%`,
+                top: `${zone.y1}%`,
+                width: `${zone.x2 - zone.x1}%`,
+                height: `${zone.y2 - zone.y1}%`,
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Resize handles */}
+              <div
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--tl"
+                onMouseDown={(e) => handleResizeStart(e, 'tl')}
+                onTouchStart={(e) => handleResizeStart(e, 'tl')}
+                title="Resize"
+              />
+              <div
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--tr"
+                onMouseDown={(e) => handleResizeStart(e, 'tr')}
+                onTouchStart={(e) => handleResizeStart(e, 'tr')}
+                title="Resize"
+              />
+              <div
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--bl"
+                onMouseDown={(e) => handleResizeStart(e, 'bl')}
+                onTouchStart={(e) => handleResizeStart(e, 'bl')}
+                title="Resize"
+              />
+              <div
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--br"
+                onMouseDown={(e) => handleResizeStart(e, 'br')}
+                onTouchStart={(e) => handleResizeStart(e, 'br')}
+                title="Resize"
+              />
+              <button
+                className="vacuum-map__zone-clear"
+                onClick={handleClearZone}
+                title="Clear zone"
+              >
+                ×
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

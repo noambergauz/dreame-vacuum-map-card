@@ -7,7 +7,7 @@ import { ModeTabs } from '../ModeTabs';
 import { ActionButtons } from '../ActionButtons';
 import { CleaningModeModal } from '../CleaningModeModal';
 import { ShortcutsModal } from '../ShortcutsModal';
-import type { Hass, HassConfig, CleaningMode, RoomPosition } from '../../types/homeassistant';
+import type { Hass, HassConfig, CleaningMode, RoomPosition, Zone } from '../../types/homeassistant';
 import './DreameVacuumCard.scss';
 
 interface DreameVacuumCardProps {
@@ -18,6 +18,7 @@ interface DreameVacuumCardProps {
 export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const [selectedMode, setSelectedMode] = useState<CleaningMode>('all');
   const [selectedRooms, setSelectedRooms] = useState<Map<number, string>>(new Map());
+  const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [modalOpened, setModalOpened] = useState(false);
   const [shortcutsModalOpened, setShortcutsModalOpened] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
@@ -42,6 +43,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const handleModeChange = (mode: CleaningMode) => {
     setSelectedMode(mode);
     setSelectedRooms(new Map());
+    setSelectedZone(null);
   };
 
   const handleRoomToggle = (roomId: number, roomName: string) => {
@@ -76,7 +78,25 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         }
         break;
       case 'zone':
-        showToast('Click on the map to select a zone for cleaning');
+        if (selectedZone) {
+          // Convert percentage coordinates to map coordinates
+          // Dreame vacuum maps typically use a coordinate range of about -6000 to 6000
+          const MAP_SIZE = 12000; // Total map size in mm
+          const MAP_OFFSET = 6000; // Offset to convert from 0-based to centered coordinates
+          
+          const x1 = Math.round((selectedZone.x1 / 100) * MAP_SIZE - MAP_OFFSET);
+          const y1 = Math.round((selectedZone.y1 / 100) * MAP_SIZE - MAP_OFFSET);
+          const x2 = Math.round((selectedZone.x2 / 100) * MAP_SIZE - MAP_OFFSET);
+          const y2 = Math.round((selectedZone.y2 / 100) * MAP_SIZE - MAP_OFFSET);
+
+          hass.callService('dreame_vacuum', 'vacuum_clean_zone', {
+            entity_id: config.entity,
+            zone: [x1, y1, x2, y2],
+          });
+          showToast('Starting zone cleaning');
+        } else {
+          showToast('Please select a zone on the map');
+        }
         break;
     }
   };
@@ -84,6 +104,21 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const handleDock = () => {
     hass.callService('vacuum', 'return_to_base', { entity_id: config.entity });
     showToast('Vacuum returning to dock');
+  };
+
+  const handlePause = () => {
+    hass.callService('vacuum', 'pause', { entity_id: config.entity });
+    showToast('Pausing vacuum');
+  };
+
+  const handleResume = () => {
+    hass.callService('vacuum', 'start', { entity_id: config.entity });
+    showToast('Resuming cleaning');
+  };
+
+  const handleStop = () => {
+    hass.callService('vacuum', 'stop', { entity_id: config.entity });
+    showToast('Stopping vacuum');
   };
 
   const showToast = (message: string) => {
@@ -96,6 +131,26 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   }
 
   console.log(entity)
+
+  // Determine the effective mode based on vacuum status
+  const vacuumStatus = entity.attributes.status || '';
+  const isSegmentCleaning = entity.attributes.segment_cleaning || false;
+  const isZoneCleaning = entity.attributes.zone_cleaning || false;
+  
+  // Get the display mode - use actual status when running, otherwise use selected mode
+  const getEffectiveMode = (): CleaningMode => {
+    if (entity.attributes.started) {
+      if (isSegmentCleaning || vacuumStatus.toLowerCase().includes('room')) {
+        return 'room';
+      }
+      if (isZoneCleaning || vacuumStatus.toLowerCase().includes('zone')) {
+        return 'zone';
+      }
+    }
+    return selectedMode;
+  };
+
+  const effectiveMode = getEffectiveMode();
 
   return (
     <div className="dreame-vacuum-card">
@@ -116,14 +171,18 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             selectedRooms={selectedRooms}
             rooms={rooms}
             onRoomToggle={handleRoomToggle}
+            zone={selectedZone}
+            onZoneChange={setSelectedZone}
           />
         )}
 
         <CleaningModeButton 
-          cleaningMode={entity.attributes.cleangenius_mode || entity.attributes.cleaning_mode || 'Sweeping and mopping'} 
+          cleanGeniusMode={entity.attributes.cleangenius_mode}
+          cleaningMode={entity.attributes.cleaning_mode || 'Sweeping and mopping'} 
           cleangenius={entity.attributes.cleangenius || 'Off'}
           onClick={() => setModalOpened(true)} 
           onShortcutsClick={() => setShortcutsModalOpened(true)}
+          disabled={entity.attributes.started || false}
         />
 
         <div className="dreame-vacuum-card__controls">
@@ -132,11 +191,20 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
               Selected: {Array.from(selectedRooms.values()).join(', ')}
             </div>
           )}
-          <ModeTabs selectedMode={selectedMode} onModeChange={handleModeChange} />
+          <ModeTabs 
+            selectedMode={effectiveMode} 
+            onModeChange={handleModeChange} 
+            disabled={entity.attributes.started || false}
+          />
           <ActionButtons
             selectedMode={selectedMode}
             selectedRoomsCount={selectedRooms.size}
+            isRunning={entity.attributes.running || false}
+            isPaused={entity.attributes.paused || false}
             onClean={handleClean}
+            onPause={handlePause}
+            onResume={handleResume}
+            onStop={handleStop}
             onDock={handleDock}
           />
         </div>

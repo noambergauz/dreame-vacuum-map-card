@@ -4,7 +4,10 @@
   margin-top: 15px;
 
   &__clean,
-  &__dock {
+  &__dock,
+  &__pause,
+  &__resume,
+  &__stop {
     flex: 1;
     border: none;
     border-radius: 15px;
@@ -30,6 +33,36 @@
 
     &:hover {
       box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
+    }
+  }
+
+  &__pause {
+    background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4);
+    }
+  }
+
+  &__resume {
+    background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3);
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(52, 199, 89, 0.4);
+    }
+  }
+
+  &__stop {
+    background: linear-gradient(135deg, #ff3b30 0%, #ff1f0f 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+
+    &:hover {
+      box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
     }
   }
 
