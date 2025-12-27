@@ -29,16 +29,12 @@ export function CleanGeniusMode({
   baseEntityId,
   hass,
 }: CleanGeniusModeProps) {
-  // Use service hooks
   const { setSelectOption } = useHomeAssistantServices(hass);
 
-  // Get entity IDs
   const entityIds = useVacuumEntityIds(baseEntityId);
 
-  // Handle deep cleaning toggle in CleanGenius mode
   const handleDeepCleaningToggle = (enabled: boolean) => {
     if (enabled) {
-      // Enable deep cleaning mode and set route to Deep
       setSelectOption(
         entityIds.cleangenius,
         convertCleanGeniusStateToService(CLEANGENIUS_STATE.DEEP_CLEANING as CleanGeniusState)
@@ -48,7 +44,6 @@ export function CleanGeniusMode({
         convertToLowerCase(CLEANING_ROUTE.DEEP)
       );
     } else {
-      // Disable deep cleaning and set route to Standard
       setSelectOption(
         entityIds.cleangenius,
         convertCleanGeniusStateToService(CLEANGENIUS_STATE.ROUTINE_CLEANING as CleanGeniusState)
@@ -62,11 +57,9 @@ export function CleanGeniusMode({
 
   return (
     <div className="cleaning-mode-modal__content">
-      {/* Cleaning Mode */}
       <section className="cleaning-mode-modal__section">
         <h3 className="cleaning-mode-modal__section-title">Cleaning Mode</h3>
         <div className="cleaning-mode-modal__mode-grid">
-          {/* Use cleangenius_mode_list from entity */}
           {cleangeniusModeList.map((mode, idx) => {
             const typedMode = mode as CleanGeniusModeType;
             const isVacMop = mode === 'Vacuum and mop';
@@ -99,7 +92,6 @@ export function CleanGeniusMode({
         </div>
       </section>
 
-      {/* Deep Cleaning */}
       <div className="cleaning-mode-modal__setting">
         <span className="cleaning-mode-modal__setting-label">Deep Cleaning</span>
         <Toggle 

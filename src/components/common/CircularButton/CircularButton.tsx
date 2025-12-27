@@ -17,7 +17,6 @@ export function CircularButton({
   size = 'medium',
   iconStyle = {}
 }: CircularButtonProps) {
-  // Check if icon is an SVG string
   const isSvg = typeof icon === 'string' && icon.trim().startsWith('<svg');
   
   return (

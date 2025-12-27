@@ -39,7 +39,6 @@ export function ActionButtons({
     }
   };
 
-  // When running: show Pause and Stop buttons
   if (isRunning && !isPaused) {
     return (
       <div className="action-buttons">
@@ -55,7 +54,6 @@ export function ActionButtons({
     );
   }
 
-  // When paused: show Resume and Stop buttons
   if (isPaused) {
     return (
       <div className="action-buttons">
@@ -71,7 +69,6 @@ export function ActionButtons({
     );
   }
 
-  // Default state: show Clean and Dock buttons
   return (
     <div className="action-buttons">
       <button onClick={onClean} className="action-buttons__clean">

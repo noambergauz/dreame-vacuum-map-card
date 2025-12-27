@@ -3,20 +3,20 @@
   text-align: center;
 
   &__title {
-    margin: 0 0 8px;
+    margin: 0;
     font-size: 20px;
     font-weight: 600;
     color: #1a1a1a;
   }
 
   &__status {
-    margin: 0 0 16px;
+    margin: 0;
     font-size: 14px;
     color: #666;
   }
 
   &__progress {
-    margin: 0 auto 16px;
+    margin: 0 auto;
     max-width: 200px;
   }
 
@@ -44,8 +44,9 @@
     display: flex;
     justify-content: center;
     gap: 20px;
-    font-size: 14px;
+    font-size: 16px;
     color: #1a1a1a;
+    margin-top: 14px;
   }
 
   &__stat {

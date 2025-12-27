@@ -118,9 +118,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     transition: all 0.2s ease;
     z-index: 10;
-    touch-action: none; // Prevent scrolling when touching handles
+    touch-action: none;
 
-    // Larger touch target
     &::before {
       content: '';
       position: absolute;

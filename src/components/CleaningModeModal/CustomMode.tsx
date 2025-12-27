@@ -62,13 +62,9 @@ export function CustomMode({
   baseEntityId,
   hass,
 }: CustomModeProps) {
-  // Use service hooks
   const { setSelectOption, setSwitch, setNumber } = useHomeAssistantServices(hass);
-
-  // Get entity IDs
   const entityIds = useVacuumEntityIds(baseEntityId);
 
-  // Calculate slider percentages
   const wetnessPercent = ((wetnessLevel - SLIDER_CONFIG.WETNESS.MIN) / (SLIDER_CONFIG.WETNESS.MAX - SLIDER_CONFIG.WETNESS.MIN)) * 100;
   const selfCleanAreaPercent = ((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
   const selfCleanTimePercent = ((selfCleanTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100;

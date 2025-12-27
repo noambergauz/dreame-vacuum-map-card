@@ -33,21 +33,18 @@ export function VacuumMap({
 
   const handleMapClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (selectedMode !== 'zone') return;
-    if (resizingHandle) return; // Don't create new zone while resizing
+    if (resizingHandle) return;
 
     const rect = mapRef.current?.getBoundingClientRect();
     if (!rect) return;
 
-    // Get click position relative to map
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Convert to percentage
     const xPercent = (x / rect.width) * 100;
     const yPercent = (y / rect.height) * 100;
 
-    // Create zone centered on the click
-    const size = 15; // Square size in percentage
+    const size = 15;
     const centerX = xPercent;
     const centerY = yPercent;
 
@@ -91,19 +88,19 @@ export function VacuumMap({
     let newZone: Zone = { ...resizeStartZone };
 
     switch (resizingHandle) {
-      case 'tl': // Top-left
+      case 'tl':
         newZone.x1 = Math.min(xPercent, resizeStartZone.x2 - 5);
         newZone.y1 = Math.min(yPercent, resizeStartZone.y2 - 5);
         break;
-      case 'tr': // Top-right
+      case 'tr':
         newZone.x2 = Math.max(xPercent, resizeStartZone.x1 + 5);
         newZone.y1 = Math.min(yPercent, resizeStartZone.y2 - 5);
         break;
-      case 'bl': // Bottom-left
+      case 'bl':
         newZone.x1 = Math.min(xPercent, resizeStartZone.x2 - 5);
         newZone.y2 = Math.max(yPercent, resizeStartZone.y1 + 5);
         break;
-      case 'br': // Bottom-right
+      case 'br':
         newZone.x2 = Math.max(xPercent, resizeStartZone.x1 + 5);
         newZone.y2 = Math.max(yPercent, resizeStartZone.y1 + 5);
         break;

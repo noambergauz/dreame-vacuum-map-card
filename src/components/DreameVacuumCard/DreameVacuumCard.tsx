@@ -28,13 +28,12 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const deviceName = entity?.attributes?.friendly_name || config.title || 'Dreame Vacuum';
   const mapEntityId = config.map_entity || `camera.${config.entity.split('.')[1]}_map`;
 
-  // Get room data
   const entityRooms = entity?.attributes?.rooms?.[entity?.attributes?.selected_map || ''];
   const rooms: RoomPosition[] = entityRooms
     ? entityRooms.map((room) => ({
         id: room.id,
         name: room.name,
-        x: 50, // Default position for map display
+        x: 50,
         y: 50,
         icon: room.icon,
       }))
@@ -79,10 +78,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         break;
       case 'zone':
         if (selectedZone) {
-          // Convert percentage coordinates to map coordinates
-          // Dreame vacuum maps typically use a coordinate range of about -6000 to 6000
-          const MAP_SIZE = 12000; // Total map size in mm
-          const MAP_OFFSET = 6000; // Offset to convert from 0-based to centered coordinates
+          const MAP_SIZE = 12000;
+          const MAP_OFFSET = 6000;
           
           const x1 = Math.round((selectedZone.x1 / 100) * MAP_SIZE - MAP_OFFSET);
           const y1 = Math.round((selectedZone.y1 / 100) * MAP_SIZE - MAP_OFFSET);
@@ -130,14 +127,10 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     return <div className="dreame-vacuum-card__error">Entity not found: {config.entity}</div>;
   }
 
-  console.log(entity)
-
-  // Determine the effective mode based on vacuum status
   const vacuumStatus = entity.attributes.status || '';
   const isSegmentCleaning = entity.attributes.segment_cleaning || false;
   const isZoneCleaning = entity.attributes.zone_cleaning || false;
   
-  // Get the display mode - use actual status when running, otherwise use selected mode
   const getEffectiveMode = (): CleaningMode => {
     if (entity.attributes.started) {
       if (isSegmentCleaning || vacuumStatus.toLowerCase().includes('room')) {
@@ -199,7 +192,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           <ActionButtons
             selectedMode={selectedMode}
             selectedRoomsCount={selectedRooms.size}
-            isRunning={entity.attributes.running || false}
+            isRunning={entity.attributes.running || entity.attributes.resume_cleaning || false}
             isPaused={entity.attributes.paused || false}
             onClean={handleClean}
             onPause={handlePause}

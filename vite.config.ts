@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Plugin to inline CSS into JS for Home Assistant custom cards
 function inlineCSS() {
   return {
     name: 'inline-css',
@@ -31,7 +30,6 @@ function inlineCSS() {
   };
 }
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), inlineCSS()],
   build: {

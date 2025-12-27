@@ -22,20 +22,13 @@ export function CleaningModeModal({
   entity,
   hass,
 }: CleaningModeModalProps) {
-  // Extract base entity ID
   const baseEntityId = extractBaseEntityId(entity.entity_id);
-  
-  // Use service hooks
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
-  
-  // Get entity IDs
   const entityIds = useVacuumEntityIds(baseEntityId);
   
-  // Get cleangenius mode from entity
   const cleangenius = entity.attributes.cleangenius || CLEANGENIUS_STATE.OFF;
   const [isCleanGenius, setIsCleanGenius] = useState(cleangenius !== CLEANGENIUS_STATE.OFF);
   
-  // Get actual values from entity with defaults
   const cleaningMode = entity.attributes.cleaning_mode || DEFAULTS.CLEANING_MODE;
   const cleangeniusMode = entity.attributes.cleangenius_mode || DEFAULTS.CLEANGENIUS_MODE;
   const suctionLevel = entity.attributes.suction_level || DEFAULTS.SUCTION_LEVEL;
@@ -57,7 +50,6 @@ export function CleaningModeModal({
     { value: UI_MODE_TYPE.CUSTOM, label: 'Custom' },
   ];
 
-  // Get available options from entity
   const cleaningModeList: string[] = entity.attributes.cleaning_mode_list || [
     'Sweeping',
     'Mopping',
@@ -73,22 +65,18 @@ export function CleaningModeModal({
   const suctionLevelList: string[] = entity.attributes.suction_level_list || ['Quiet', 'Standard', 'Strong', 'Turbo'];
   const cleaningRouteList: string[] = entity.attributes.cleaning_route_list || ['Quick', 'Standard', 'Intensive', 'Deep'];
 
-  // Handle mode switching between CleanGenius and Custom
   const handleModeSwitch = (value: string) => {
     const isCleanGeniusMode = value === UI_MODE_TYPE.CLEANGENIUS;
     setIsCleanGenius(isCleanGeniusMode);
     
-    // Set custom_mopping_mode based on mode selection
     setSwitch(entityIds.customMoppingMode, !isCleanGeniusMode);
     
-    // When switching to CleanGenius, activate routine cleaning
     if (isCleanGeniusMode) {
       setSelectOption(
         entityIds.cleangenius,
         convertCleanGeniusStateToService(CLEANGENIUS_STATE.ROUTINE_CLEANING as CleanGeniusState)
       );
     } else {
-      // When switching to Custom, turn off CleanGenius
       setSelectOption(
         entityIds.cleangenius,
         convertCleanGeniusStateToService(CLEANGENIUS_STATE.OFF as CleanGeniusState)

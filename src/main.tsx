@@ -13,7 +13,6 @@ class DreameVacuumMapCard extends HTMLElement {
     super();
     this.attachShadow({ mode: 'open' });
     
-    // Inject styles into shadow DOM
     const styleEl = document.createElement('style');
     styleEl.textContent = styles;
     this.shadowRoot!.appendChild(styleEl);
@@ -46,7 +45,6 @@ class DreameVacuumMapCard extends HTMLElement {
   private render() {
     if (!this._hass || !this._config || !this.shadowRoot) return;
 
-    // Create container for React
     let container = this.shadowRoot.querySelector('#react-root') as HTMLElement;
     if (!container) {
       container = document.createElement('div');
@@ -54,12 +52,10 @@ class DreameVacuumMapCard extends HTMLElement {
       this.shadowRoot.appendChild(container);
     }
 
-    // Create root if it doesn't exist
     if (!this._root) {
       this._root = ReactDOM.createRoot(container);
     }
 
-    // Render React component
     this._root.render(
       <React.StrictMode>
         <DreameVacuumCard hass={this._hass} config={this._config} />
@@ -80,10 +76,8 @@ class DreameVacuumMapCard extends HTMLElement {
   }
 }
 
-// Define custom element
 customElements.define('dreame-vacuum-map-card', DreameVacuumMapCard);
 
-// Register with Home Assistant
 declare global {
   interface Window {
     customCards?: Array<{
@@ -105,6 +99,5 @@ if (window.customCards) {
 
 console.info('Dreame Vacuum Map Card (React) loaded');
 
-// Expose for building
 export default DreameVacuumMapCard;
 

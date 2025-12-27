@@ -10,7 +10,6 @@ interface CleaningModeButtonProps {
 }
 
 export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius, onClick, onShortcutsClick, disabled = false }: CleaningModeButtonProps) {
-  // Map cleaning mode to icon
   const getIcon = (mode: string): string => {
     if (mode.includes('Sweep') && mode.includes('Mop')) return '🔄';
     if (mode.includes('after')) return '➜';
@@ -19,15 +18,12 @@ export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius,
     return '⚙️';
   };
 
-  // Map cleaning mode to friendly name
   const getCleanGeniusFriendlyName = (mode: string): string => {
-    // CleanGenius modes
     if (mode === 'Vacuum and mop') return 'Vac & Mop';
     if (mode === 'Mop after vacuum') return 'Mop after Vac';
     return "";
   };
 
-  // Map cleaning mode to friendly name
   const getCustomCleaningFriendlyName = (mode: string): string => {
     if (mode === 'Mopping after sweeping') return 'Mop after Vac';
     if (mode === 'Sweeping and mopping') return 'Vac & Mop';
@@ -36,7 +32,6 @@ export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius,
     return "";
   };
 
-  // Get prefix based on cleangenius status
   const getPrefix = (): string => {
     return cleangenius === 'Off' ? 'Custom: ' : 'CleanGenius: ';
   };

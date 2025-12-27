@@ -34,7 +34,6 @@
     font-weight: 600;
   }
 
-  // Room map visualization (CleanGenius mode)
   &__room-map {
     background: white;
     border-radius: 12px;
@@ -50,7 +49,6 @@
     color: #999;
   }
 
-  // Cleaning Mode Grid (CleanGenius)
   &__mode-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -127,7 +125,6 @@
     font-size: 14px;
   }
 
-  // Horizontal scroll for mode options (Custom)
   &__horizontal-scroll {
     display: flex;
     gap: 12px;
@@ -168,7 +165,6 @@
     line-height: 1.2;
   }
 
-  // Suction Power Grid
   &__power-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -189,7 +185,6 @@
     text-align: center;
   }
 
-  // Max+ Setting
   &__max-plus {
     background: white;
     border-radius: 12px;
@@ -216,7 +211,6 @@
     line-height: 1.4;
   }
 
-  // Wetness Slider
   &__slider-container {
     position: relative;
     padding: 0 8px;
@@ -292,7 +286,6 @@
     }
   }
 
-  // Generic Setting Row
   &__setting {
     display: flex;
     align-items: center;
@@ -334,7 +327,6 @@
     color: #999;
   }
 
-  // Route Grid
   &__route-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
