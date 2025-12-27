@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Header } from '../Header';
 import { CleaningModeButton } from '../CleaningModeButton';
 import { VacuumMap } from '../VacuumMap';
+import { RoomSelector } from '../RoomSelector';
 import { ModeTabs } from '../ModeTabs';
 import { ActionButtons } from '../ActionButtons';
 import { CleaningModeModal } from '../CleaningModeModal';
@@ -13,18 +14,6 @@ interface DreameVacuumCardProps {
   hass: Hass;
   config: HassConfig;
 }
-
-const ROOM_POSITIONS: Record<number, { x: number; y: number }> = {
-  1: { x: 46.7, y: 3.3 },
-  2: { x: 31.3, y: 6.0 },
-  5: { x: 21.3, y: 25.3 },
-  6: { x: 18.7, y: 43.9 },
-  7: { x: 38.3, y: 35.7 },
-  8: { x: 29.8, y: 62.1 },
-  9: { x: 81.1, y: 49.4 },
-  10: { x: 71.7, y: 79.6 },
-  12: { x: 56.1, y: 53.7 },
-};
 
 export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const [selectedMode, setSelectedMode] = useState<CleaningMode>('all');
@@ -44,16 +33,11 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     ? entityRooms.map((room) => ({
         id: room.id,
         name: room.name,
-        x: ROOM_POSITIONS[room.id]?.x || 50,
-        y: ROOM_POSITIONS[room.id]?.y || 50,
+        x: 50, // Default position for map display
+        y: 50,
         icon: room.icon,
       }))
-    : Object.entries(ROOM_POSITIONS).map(([id, pos]) => ({
-        id: parseInt(id),
-        name: `Room ${id}`,
-        x: pos.x,
-        y: pos.y,
-      }));
+    : [];
 
   const handleModeChange = (mode: CleaningMode) => {
     setSelectedMode(mode);
@@ -117,14 +101,23 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     <div className="dreame-vacuum-card">
       <div className="dreame-vacuum-card__container">
         <Header entity={entity} deviceName={deviceName} />
-        <VacuumMap
-          hass={hass}
-          mapEntityId={mapEntityId}
-          selectedMode={selectedMode}
-          selectedRooms={selectedRooms}
-          rooms={rooms}
-          onRoomToggle={handleRoomToggle}
-        />
+        
+        {selectedMode === 'room' ? (
+          <RoomSelector
+            rooms={rooms}
+            selectedRooms={selectedRooms}
+            onRoomToggle={handleRoomToggle}
+          />
+        ) : (
+          <VacuumMap
+            hass={hass}
+            mapEntityId={mapEntityId}
+            selectedMode={selectedMode}
+            selectedRooms={selectedRooms}
+            rooms={rooms}
+            onRoomToggle={handleRoomToggle}
+          />
+        )}
 
         <CleaningModeButton 
           cleaningMode={entity.attributes.cleangenius_mode || entity.attributes.cleaning_mode || 'Sweeping and mopping'} 
@@ -134,9 +127,9 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         />
 
         <div className="dreame-vacuum-card__controls">
-          {selectedRooms.size > 0 && (
+          {selectedRooms.size > 0 && selectedMode === 'room' && (
             <div className="dreame-vacuum-card__room-selection">
-              Selected rooms: {Array.from(selectedRooms.values()).join(', ')}
+              Selected: {Array.from(selectedRooms.values()).join(', ')}
             </div>
           )}
           <ModeTabs selectedMode={selectedMode} onModeChange={handleModeChange} />
