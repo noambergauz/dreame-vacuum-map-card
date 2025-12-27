@@ -128,6 +128,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     return <div className="dreame-vacuum-card__error">Entity not found: {config.entity}</div>;
   }
 
+  console.debug(entity)
+
   const vacuumStatus = entity.attributes.status || '';
   const isSegmentCleaning = entity.attributes.segment_cleaning || false;
   const isZoneCleaning = entity.attributes.zone_cleaning || false;
@@ -195,6 +197,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             selectedRoomsCount={selectedRooms.size}
             isRunning={entity.attributes.running || entity.attributes.resume_cleaning || false}
             isPaused={entity.attributes.paused || false}
+            isDocked={entity.attributes.docked || false}
             onClean={handleClean}
             onPause={handlePause}
             onResume={handleResume}
