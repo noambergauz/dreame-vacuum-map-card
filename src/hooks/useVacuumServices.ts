@@ -1,16 +1,18 @@
 import { useCallback } from 'react';
 import type { Hass, CleaningMode, Zone } from '../types/homeassistant';
+import { convertUIZoneToVacuumZone } from '../utils/zoneConverter';
 
 interface VacuumServicesParams {
   hass: Hass;
   entityId: string;
+  mapEntityId: string;
   onSuccess?: (message: string) => void;
 }
 
 /**
  * Hook providing vacuum service operations
  */
-export function useVacuumServices({ hass, entityId, onSuccess }: VacuumServicesParams) {
+export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: VacuumServicesParams) {
   const handleStart = useCallback(() => {
     hass.callService('vacuum', 'start', { entity_id: entityId });
     onSuccess?.('Starting full house cleaning');
@@ -40,26 +42,39 @@ export function useVacuumServices({ hass, entityId, onSuccess }: VacuumServicesP
     onSuccess?.(`Starting cleaning for ${count} selected room${count > 1 ? 's' : ''}`);
   }, [hass, entityId, onSuccess]);
 
-  const handleCleanZone = useCallback((zone: Zone) => {
-    const MAP_SIZE = 12000;
-    const MAP_OFFSET = 6000;
+  const handleCleanZone = useCallback((zone: Zone, imageWidth: number, imageHeight: number) => {
+    const mapEntity = hass.states[mapEntityId];
     
-    const x1 = Math.round((zone.x1 / 100) * MAP_SIZE - MAP_OFFSET);
-    const y1 = Math.round((zone.y1 / 100) * MAP_SIZE - MAP_OFFSET);
-    const x2 = Math.round((zone.x2 / 100) * MAP_SIZE - MAP_OFFSET);
-    const y2 = Math.round((zone.y2 / 100) * MAP_SIZE - MAP_OFFSET);
+    console.log('Zone conversion debug:', {
+      uiZone: zone,
+      imageWidth,
+      imageHeight,
+      mapEntity: mapEntity?.attributes,
+    });
+    
+    // Convert UI zone (percentage) to vacuum coordinates
+    const vacuumZone = convertUIZoneToVacuumZone(
+      zone,
+      mapEntity,
+      imageWidth,
+      imageHeight
+    );
+
+    console.log('Converted vacuum zone:', vacuumZone);
 
     hass.callService('dreame_vacuum', 'vacuum_clean_zone', {
       entity_id: entityId,
-      zone: [x1, y1, x2, y2],
+      zone: [vacuumZone.x1, vacuumZone.y1, vacuumZone.x2, vacuumZone.y2],
     });
     onSuccess?.('Starting zone cleaning');
-  }, [hass, entityId, onSuccess]);
+  }, [hass, entityId, mapEntityId, onSuccess]);
 
   const handleClean = useCallback((
     mode: CleaningMode,
     selectedRooms: Map<number, string>,
-    selectedZone: Zone | null
+    selectedZone: Zone | null,
+    imageWidth?: number,
+    imageHeight?: number
   ) => {
     switch (mode) {
       case 'all':
@@ -73,8 +88,10 @@ export function useVacuumServices({ hass, entityId, onSuccess }: VacuumServicesP
         }
         break;
       case 'zone':
-        if (selectedZone) {
-          handleCleanZone(selectedZone);
+        if (selectedZone && imageWidth && imageHeight) {
+          handleCleanZone(selectedZone, imageWidth, imageHeight);
+        } else if (selectedZone) {
+          onSuccess?.('Cannot determine map dimensions');
         } else {
           onSuccess?.('Please select a zone on the map');
         }

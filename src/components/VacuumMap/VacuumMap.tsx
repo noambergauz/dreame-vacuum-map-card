@@ -11,6 +11,7 @@ interface VacuumMapProps {
   onRoomToggle: (roomId: number, roomName: string) => void;
   zone: Zone | null;
   onZoneChange: (zone: Zone | null) => void;
+  onImageDimensionsChange?: (width: number, height: number) => void;
 }
 
 type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
@@ -24,10 +25,12 @@ export function VacuumMap({
   onRoomToggle,
   zone,
   onZoneChange,
+  onImageDimensionsChange,
 }: VacuumMapProps) {
   const mapEntity = hass.states[mapEntityId];
   const mapUrl = mapEntity?.attributes?.entity_picture;
   const mapRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
@@ -135,9 +138,16 @@ export function VacuumMap({
     >
       {mapUrl ? (
         <img
+          ref={imageRef}
           src={hass.hassUrl(mapUrl)}
           alt="Vacuum Map"
           className="vacuum-map__image"
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (img.naturalWidth && img.naturalHeight) {
+              onImageDimensionsChange?.(img.naturalWidth, img.naturalHeight);
+            }
+          }}
         />
       ) : (
         <div className="vacuum-map__placeholder">

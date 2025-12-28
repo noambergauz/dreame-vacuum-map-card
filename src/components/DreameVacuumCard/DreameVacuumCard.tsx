@@ -11,6 +11,7 @@ import { Toast } from '../common';
 import { useVacuumCardState, useVacuumServices, useToast } from '../../hooks';
 import { extractEntityData, getEffectiveCleaningMode } from '../../utils/entityHelpers';
 import type { Hass, HassConfig } from '../../types/homeassistant';
+import { useState } from 'react';
 import './DreameVacuumCard.scss';
 
 interface DreameVacuumCardProps {
@@ -21,6 +22,9 @@ interface DreameVacuumCardProps {
 export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const entity = hass.states[config.entity];
   const theme = config.theme || 'light';
+
+  // Track map image dimensions
+  const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
 
   // State management
   const {
@@ -48,6 +52,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   } = useVacuumServices({
     hass,
     entityId: config.entity,
+    mapEntityId: config.map_entity || `camera.${config.entity.split('.')[1]}_map`,
     onSuccess: showToast,
   });
 
@@ -60,7 +65,13 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
 
   // Handle clean action
   const handleCleanAction = () => {
-    handleClean(selectedMode, selectedRooms, selectedZone);
+    handleClean(
+      selectedMode, 
+      selectedRooms, 
+      selectedZone,
+      imageDimensions?.width,
+      imageDimensions?.height
+    );
   };
 
   // Handle resume (just calls start)
@@ -104,6 +115,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             onRoomToggle={handleRoomToggleWithToast}
             zone={selectedZone}
             onZoneChange={setSelectedZone}
+            onImageDimensionsChange={(width, height) => setImageDimensions({ width, height })}
           />
         )}
 
