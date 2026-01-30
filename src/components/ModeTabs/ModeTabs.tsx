@@ -1,17 +1,22 @@
 import type { CleaningMode } from '../../types/homeassistant';
+import type { SupportedLanguage } from '../../i18n/locales';
+import { useTranslation } from '../../hooks';
 import './ModeTabs.scss';
 
 interface ModeTabsProps {
   selectedMode: CleaningMode;
   onModeChange: (mode: CleaningMode) => void;
   disabled?: boolean;
+  language?: SupportedLanguage;
 }
 
-export function ModeTabs({ selectedMode, onModeChange, disabled = false }: ModeTabsProps) {
+export function ModeTabs({ selectedMode, onModeChange, disabled = false, language = 'en' }: ModeTabsProps) {
+  const { t } = useTranslation(language);
+  
   const modes: { value: CleaningMode; label: string }[] = [
-    { value: 'room', label: 'Room' },
-    { value: 'all', label: 'All' },
-    { value: 'zone', label: 'Zone' },
+    { value: 'room', label: t('modes.room') },
+    { value: 'all', label: t('modes.all') },
+    { value: 'zone', label: t('modes.zone') },
   ];
 
   return (

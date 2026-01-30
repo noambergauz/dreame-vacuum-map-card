@@ -12,9 +12,6 @@ import {
 } from '../constants';
 import type { CleaningMode, CleanGeniusMode, CleanGeniusState, SelfCleanFrequency } from '../types/vacuum';
 
-/**
- * Convert cleaning mode display value to service value
- */
 export function convertCleaningModeToService(mode: CleaningMode): string {
   switch (mode) {
     case CLEANING_MODE.SWEEPING:
@@ -30,9 +27,6 @@ export function convertCleaningModeToService(mode: CleaningMode): string {
   }
 }
 
-/**
- * Convert CleanGenius mode display value to service value
- */
 export function convertCleanGeniusModeToService(mode: CleanGeniusMode): string {
   switch (mode) {
     case CLEANGENIUS_MODE.VACUUM_AND_MOP:
@@ -44,9 +38,6 @@ export function convertCleanGeniusModeToService(mode: CleanGeniusMode): string {
   }
 }
 
-/**
- * Convert CleanGenius state display value to service value
- */
 export function convertCleanGeniusStateToService(state: CleanGeniusState): string {
   switch (state) {
     case CLEANGENIUS_STATE.OFF:
@@ -60,9 +51,6 @@ export function convertCleanGeniusStateToService(state: CleanGeniusState): strin
   }
 }
 
-/**
- * Convert self clean frequency display value to service value
- */
 export function convertSelfCleanFrequencyToService(frequency: SelfCleanFrequency): string {
   switch (frequency) {
     case SELF_CLEAN_FREQUENCY.BY_AREA:
@@ -76,38 +64,22 @@ export function convertSelfCleanFrequencyToService(frequency: SelfCleanFrequency
   }
 }
 
-/**
- * Convert any string to lowercase for service calls
- * Used for suction levels and cleaning routes
- */
 export function convertToLowerCase(value: string): string {
   return value.toLowerCase();
 }
 
-/**
- * Build entity ID from base entity ID and suffix
- */
 export function buildEntityId(baseEntityId: string, suffix: string): string {
   return `select.${baseEntityId}_${suffix}`;
 }
 
-/**
- * Build switch entity ID
- */
 export function buildSwitchEntityId(baseEntityId: string, suffix: string): string {
   return `switch.${baseEntityId}_${suffix}`;
 }
 
-/**
- * Build number entity ID
- */
 export function buildNumberEntityId(baseEntityId: string, suffix: string): string {
   return `number.${baseEntityId}_${suffix}`;
 }
 
-/**
- * Extract base entity ID from full entity ID
- */
 export function extractBaseEntityId(entityId: string): string {
   return entityId.replace('vacuum.', '');
 }

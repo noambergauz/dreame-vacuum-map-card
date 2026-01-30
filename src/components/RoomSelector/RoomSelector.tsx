@@ -1,5 +1,7 @@
 /// <reference path="../../types/custom-elements.d.ts" />
 import type { RoomPosition } from '../../types/homeassistant';
+import type { SupportedLanguage } from '../../i18n/locales';
+import { useTranslation } from '../../hooks';
 import './RoomSelector.scss';
 import React from 'react';
 
@@ -7,15 +9,18 @@ interface RoomSelectorProps {
   rooms: RoomPosition[];
   selectedRooms: Map<number, string>;
   onRoomToggle: (roomId: number, roomName: string) => void;
+  language?: SupportedLanguage;
 }
 
-export function RoomSelector({ rooms, selectedRooms, onRoomToggle }: RoomSelectorProps) {
+export function RoomSelector({ rooms, selectedRooms, onRoomToggle, language = 'en' }: RoomSelectorProps) {
+  const { t } = useTranslation(language);
+
   return (
     <div className="room-selector">
       <div className="room-selector__header">
-        <span className="room-selector__title">Select Rooms</span>
+        <span className="room-selector__title">{t('room_selector.title')}</span>
         {selectedRooms.size > 0 && (
-          <span className="room-selector__count">{selectedRooms.size} selected</span>
+          <span className="room-selector__count">{t('room_selector.selected_count', { count: String(selectedRooms.size) })}</span>
         )}
       </div>
       

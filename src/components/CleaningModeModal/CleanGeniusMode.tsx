@@ -2,6 +2,8 @@ import { Toggle } from '../common';
 import type { Hass } from '../../types/homeassistant';
 import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '../../types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
+import { useTranslation } from '../../hooks/useTranslation';
+import type { SupportedLanguage } from '../../i18n/locales';
 import {
   getCleanGeniusModeIcon,
   getCleanGeniusModeFriendlyName,
@@ -20,6 +22,7 @@ interface CleanGeniusModeProps {
   cleangenius: string;
   baseEntityId: string;
   hass: Hass;
+  language?: SupportedLanguage;
 }
 
 export function CleanGeniusMode({
@@ -28,8 +31,10 @@ export function CleanGeniusMode({
   cleangenius,
   baseEntityId,
   hass,
+  language,
 }: CleanGeniusModeProps) {
   const { setSelectOption } = useHomeAssistantServices(hass);
+  const { t } = useTranslation(language);
 
   const entityIds = useVacuumEntityIds(baseEntityId);
 
@@ -58,7 +63,7 @@ export function CleanGeniusMode({
   return (
     <div className="cleaning-mode-modal__content">
       <section className="cleaning-mode-modal__section">
-        <h3 className="cleaning-mode-modal__section-title">Cleaning Mode</h3>
+        <h3 className="cleaning-mode-modal__section-title">{t('cleangenius_mode.cleaning_mode_title')}</h3>
         <div className="cleaning-mode-modal__mode-grid">
           {cleangeniusModeList.map((mode, idx) => {
             const typedMode = mode as CleanGeniusModeType;
@@ -93,7 +98,7 @@ export function CleanGeniusMode({
       </section>
 
       <div className="cleaning-mode-modal__setting">
-        <span className="cleaning-mode-modal__setting-label">Deep Cleaning</span>
+        <span className="cleaning-mode-modal__setting-label">{t('cleangenius_mode.deep_cleaning')}</span>
         <Toggle 
           checked={cleangenius === CLEANGENIUS_STATE.DEEP_CLEANING} 
           onChange={handleDeepCleaningToggle} 

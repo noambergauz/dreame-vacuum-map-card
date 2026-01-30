@@ -24,10 +24,6 @@ import {
 } from '../constants';
 import type { CleaningMode, CleanGeniusMode, SuctionLevel, CleaningRoute, SelfCleanFrequency } from '../types/vacuum';
 
-/**
- * Get icon for cleaning mode
- * Returns either an SVG string or emoji
- */
 export function getCleaningModeIcon(mode: CleaningMode): string {
   switch (mode) {
     case CLEANING_MODE.SWEEPING:
@@ -43,10 +39,6 @@ export function getCleaningModeIcon(mode: CleaningMode): string {
   }
 }
 
-/**
- * Get icon for CleanGenius mode
- * Returns either an SVG string or emoji
- */
 export function getCleanGeniusModeIcon(mode: CleanGeniusMode): string {
   switch (mode) {
     case CLEANGENIUS_MODE.VACUUM_AND_MOP:
@@ -58,10 +50,6 @@ export function getCleanGeniusModeIcon(mode: CleanGeniusMode): string {
   }
 }
 
-/**
- * Get icon for suction level
- * Returns SVG string
- */
 export function getSuctionLevelIcon(level: SuctionLevel): string {
   switch (level) {
     case SUCTION_LEVEL.QUIET:
@@ -76,9 +64,6 @@ export function getSuctionLevelIcon(level: SuctionLevel): string {
   }
 }
 
-/**
- * Get icon for cleaning route
- */
 export function getCleaningRouteIcon(route: CleaningRoute): string {
   switch (route) {
     case CLEANING_ROUTE.QUICK:
@@ -92,9 +77,6 @@ export function getCleaningRouteIcon(route: CleaningRoute): string {
   }
 }
 
-/**
- * Get icon for self clean frequency
- */
 export function getSelfCleanFrequencyIcon(frequency: SelfCleanFrequency): string {
   switch (frequency) {
     case SELF_CLEAN_FREQUENCY.BY_AREA:

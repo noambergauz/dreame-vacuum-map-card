@@ -1,4 +1,6 @@
 import './CleaningModeButton.scss';
+import { useTranslation } from '../../hooks/useTranslation';
+import type { SupportedLanguage } from '../../i18n/locales';
 
 interface CleaningModeButtonProps {
   cleaningMode: string;
@@ -7,9 +9,11 @@ interface CleaningModeButtonProps {
   onClick: () => void;
   onShortcutsClick?: () => void;
   disabled?: boolean;
+  language?: SupportedLanguage;
 }
 
-export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius, onClick, onShortcutsClick, disabled = false }: CleaningModeButtonProps) {
+export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius, onClick, onShortcutsClick, disabled = false, language }: CleaningModeButtonProps) {
+  const { t } = useTranslation(language);
   const getIcon = (mode: string): string => {
     if (mode.includes('Sweep') && mode.includes('Mop')) return '🔄';
     if (mode.includes('after')) return '➜';
@@ -19,21 +23,21 @@ export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius,
   };
 
   const getCleanGeniusFriendlyName = (mode: string): string => {
-    if (mode === 'Vacuum and mop') return 'Vac & Mop';
-    if (mode === 'Mop after vacuum') return 'Mop after Vac';
+    if (mode === 'Vacuum and mop') return t('cleaning_mode_button.vac_and_mop');
+    if (mode === 'Mop after vacuum') return t('cleaning_mode_button.mop_after_vac');
     return "";
   };
 
   const getCustomCleaningFriendlyName = (mode: string): string => {
-    if (mode === 'Mopping after sweeping') return 'Mop after Vac';
-    if (mode === 'Sweeping and mopping') return 'Vac & Mop';
-    if (mode === 'Sweeping') return 'Vacuum';
-    if (mode === 'Mopping') return 'Mop';
+    if (mode === 'Mopping after sweeping') return t('cleaning_mode_button.mop_after_vac');
+    if (mode === 'Sweeping and mopping') return t('cleaning_mode_button.vac_and_mop');
+    if (mode === 'Sweeping') return t('cleaning_mode_button.vacuum');
+    if (mode === 'Mopping') return t('cleaning_mode_button.mop');
     return "";
   };
 
   const getPrefix = (): string => {
-    return cleangenius === 'Off' ? 'Custom: ' : 'CleanGenius: ';
+    return cleangenius === 'Off' ? t('cleaning_mode_button.prefix_custom') : t('cleaning_mode_button.prefix_cleangenius');
   };
 
   const handleShortcutsClick = (e: React.MouseEvent) => {
@@ -60,7 +64,7 @@ export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius,
         <button
           className="cleaning-mode-button-wrapper__shortcuts"
           onClick={handleShortcutsClick}
-          title="View shortcuts"
+          title={t('cleaning_mode_button.view_shortcuts')}
           disabled={disabled}
         >
           ⚡

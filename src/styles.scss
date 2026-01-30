@@ -2,6 +2,7 @@
 @use './components/common/CircularButton/CircularButton.scss';
 @use './components/common/Modal/Modal.scss';
 @use './components/common/SegmentedControl/SegmentedControl.scss';
+@use './components/common/Toast/Toast.scss';
 @use './components/Header/Header.scss';
 @use './components/ModeTabs/ModeTabs.scss';
 @use './components/ActionButtons/ActionButtons.scss';
@@ -9,5 +10,6 @@
 @use './components/VacuumMap/VacuumMap.scss';
 @use './components/CleaningModeModal/CleaningModeModal.scss';
 @use './components/RoomSelector/RoomSelector.scss';
+@use './components/RoomSelectionDisplay/RoomSelectionDisplay.scss';
 @use './components/ShortcutsModal/ShortcutsModal.scss';
 @use './components/DreameVacuumCard/DreameVacuumCard.scss';

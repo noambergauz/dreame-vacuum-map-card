@@ -33,8 +33,6 @@
   --handle-shadow: rgba(0, 0, 0, 0.2);
   --handle-bg: rgba(0, 0, 0, 0.15);
   --backdrop-bg: rgba(0, 0, 0, 0.4);
-  --toast-bg: #ffffff;
-  --toast-shadow: rgba(0, 0, 0, 0.15);
   --toggle-active: #D4AF37;
 
   // Dark theme
@@ -65,11 +63,7 @@
     --handle-shadow: rgba(0, 0, 0, 0.4);
     --handle-bg: rgba(255, 255, 255, 0.15);
     --backdrop-bg: rgba(0, 0, 0, 0.6);
-    --toast-bg: #2c2c2e;
-    --toast-shadow: rgba(0, 0, 0, 0.4);
     --toggle-active: #ffd60a;
-    --toast-bg: #2c2c2e;
-    --toast-shadow: rgba(0, 0, 0, 0.3);
   }
 
   &__error {
@@ -87,60 +81,10 @@
   &__controls {
     padding: 0 20px 20px;
   }
-
-  &__room-selection {
-    margin: 10px 0;
-    padding: 8px 12px;
-    background: var(--accent-bg, rgba(0, 122, 255, 0.1));
-    border-radius: 8px;
+  &__error {
+    padding: 20px;
     text-align: center;
+    color: var(--error-color, #ff3b30);
     font-size: 14px;
-    color: var(--accent-color, #007aff);
-  }
-
-  &__toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: var(--toast-bg, white);
-    padding: 12px 16px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px var(--toast-shadow, rgba(0, 0, 0, 0.15));
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    animation: slideIn 0.3s ease;
-  }
-
-  &__toast-message {
-    font-size: 14px;
-    color: var(--text-primary, #1a1a1a);
-  }
-
-  &__toast-close {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 0;
-    color: var(--text-secondary, #666);
-    transition: color 0.2s ease;
-
-    &:hover {
-      color: var(--text-primary, #1a1a1a);
-    }
-  }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
   }
 }

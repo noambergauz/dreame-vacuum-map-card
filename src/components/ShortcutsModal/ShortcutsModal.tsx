@@ -1,5 +1,7 @@
 import { Modal } from '../common';
 import type { Hass, HassEntity } from '../../types/homeassistant';
+import { useTranslation } from '../../hooks/useTranslation';
+import type { SupportedLanguage } from '../../i18n/locales';
 import './ShortcutsModal.scss';
 
 interface ShortcutsModalProps {
@@ -7,6 +9,7 @@ interface ShortcutsModalProps {
   onClose: () => void;
   entity: HassEntity;
   hass: Hass;
+  language?: SupportedLanguage;
 }
 
 export function ShortcutsModal({
@@ -14,7 +17,9 @@ export function ShortcutsModal({
   onClose,
   entity,
   hass,
+  language,
 }: ShortcutsModalProps) {
+  const { t } = useTranslation(language);
   const shortcutsObj = entity.attributes.shortcuts || {};
   const shortcuts = Object.entries(shortcutsObj).map(([id, data]: [string, any]) => ({
     id: parseInt(id),
@@ -33,13 +38,13 @@ export function ShortcutsModal({
   return (
     <Modal opened={opened} onClose={onClose}>
       <div className="shortcuts-modal">
-        <h2 className="shortcuts-modal__title">Shortcuts</h2>
+        <h2 className="shortcuts-modal__title">{t('shortcuts.title')}</h2>
         
         {shortcuts.length === 0 ? (
           <div className="shortcuts-modal__empty">
-            <p>No shortcuts available</p>
+            <p>{t('shortcuts.no_shortcuts')}</p>
             <p className="shortcuts-modal__empty-hint">
-              Create shortcuts in the Dreame app to quickly start your favorite cleaning routines
+              {t('shortcuts.create_hint')}
             </p>
           </div>
         ) : (

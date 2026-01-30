@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { DreameVacuumCard } from './components/DreameVacuumCard';
 import type { Hass, HassConfig } from './types/homeassistant';
+import { createMockHass } from './utils/mock';
+import { isDevelopment, devConfig } from './config/env';
+import { attachDevUtils } from './utils/devUtils';
 import styles from './styles.scss?inline';
 
 class DreameVacuumMapCard extends HTMLElement {
@@ -33,6 +36,22 @@ class DreameVacuumMapCard extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    
+    // In development mode, use mock data
+    if (isDevelopment && !this._hass) {
+      this._hass = createMockHass();
+      this._config = {
+        entity: devConfig.mockEntityId,
+        type: 'custom:dreame-vacuum-map-card',
+        title: devConfig.mockEntityTitle,
+        theme: "dark"
+      };
+      
+      // Attach dev utilities to window for console access
+      attachDevUtils(this._hass, devConfig.mockEntityId);
+      
+      this.render();
+    }
   }
 
   disconnectedCallback() {

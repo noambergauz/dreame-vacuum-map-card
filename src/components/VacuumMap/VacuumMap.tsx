@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 import type { Hass, RoomPosition, CleaningMode, Zone } from '../../types/homeassistant';
+import type { SupportedLanguage } from '../../i18n/locales';
+import { useTranslation } from '../../hooks';
 import './VacuumMap.scss';
 
 interface VacuumMapProps {
@@ -11,6 +13,8 @@ interface VacuumMapProps {
   onRoomToggle: (roomId: number, roomName: string) => void;
   zone: Zone | null;
   onZoneChange: (zone: Zone | null) => void;
+  onImageDimensionsChange?: (width: number, height: number) => void;
+  language?: SupportedLanguage;
 }
 
 type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
@@ -24,10 +28,14 @@ export function VacuumMap({
   onRoomToggle,
   zone,
   onZoneChange,
+  onImageDimensionsChange,
+  language = 'en',
 }: VacuumMapProps) {
+  const { t } = useTranslation(language);
   const mapEntity = hass.states[mapEntityId];
   const mapUrl = mapEntity?.attributes?.entity_picture;
   const mapRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
@@ -135,22 +143,29 @@ export function VacuumMap({
     >
       {mapUrl ? (
         <img
+          ref={imageRef}
           src={hass.hassUrl(mapUrl)}
           alt="Vacuum Map"
           className="vacuum-map__image"
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (img.naturalWidth && img.naturalHeight) {
+              onImageDimensionsChange?.(img.naturalWidth, img.naturalHeight);
+            }
+          }}
         />
       ) : (
         <div className="vacuum-map__placeholder">
-          No map available
+          {t('vacuum_map.no_map')}
           <br />
-          <small>Looking for: {mapEntityId}</small>
+          <small>{t('vacuum_map.looking_for', { entity: mapEntityId })}</small>
         </div>
       )}
 
       {selectedMode === 'room' && (
         <>
           <div className="vacuum-map__overlay">
-            Click on room numbers to select rooms for cleaning
+            {t('vacuum_map.room_overlay')}
           </div>
 
           <div className="vacuum-map__rooms">
@@ -180,7 +195,7 @@ export function VacuumMap({
       {selectedMode === 'zone' && (
         <>
           <div className="vacuum-map__overlay">
-            {zone ? 'Drag corners to resize, click elsewhere to reposition' : 'Click on the map to place a cleaning zone'}
+            {zone ? t('vacuum_map.zone_overlay_resize') : t('vacuum_map.zone_overlay_create')}
           </div>
 
           {zone && (
@@ -222,7 +237,7 @@ export function VacuumMap({
               <button
                 className="vacuum-map__zone-clear"
                 onClick={handleClearZone}
-                title="Clear zone"
+                title={t('vacuum_map.clear_zone')}
               >
                 ×
               </button>

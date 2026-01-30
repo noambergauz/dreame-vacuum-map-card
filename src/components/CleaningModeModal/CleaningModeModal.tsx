@@ -5,6 +5,8 @@ import { CustomMode } from './CustomMode';
 import type { Hass, HassEntity } from '../../types/homeassistant';
 import type { CleanGeniusState } from '../../types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
+import { useTranslation } from '../../hooks/useTranslation';
+import type { SupportedLanguage } from '../../i18n/locales';
 import { convertCleanGeniusStateToService, extractBaseEntityId } from '../../utils';
 import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS } from '../../constants';
 import './CleaningModeModal.scss';
@@ -14,6 +16,7 @@ interface CleaningModeModalProps {
   onClose: () => void;
   entity: HassEntity;
   hass: Hass;
+  language?: SupportedLanguage;
 }
 
 export function CleaningModeModal({
@@ -21,7 +24,9 @@ export function CleaningModeModal({
   onClose,
   entity,
   hass,
+  language,
 }: CleaningModeModalProps) {
+  const { t } = useTranslation(language);
   const baseEntityId = extractBaseEntityId(entity.entity_id);
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
@@ -46,8 +51,8 @@ export function CleaningModeModal({
   const mopPadHumidity = entity.attributes.mop_pad_humidity || DEFAULTS.MOP_PAD_HUMIDITY;
 
   const modeOptions = [
-    { value: UI_MODE_TYPE.CLEANGENIUS, label: 'CleanGenius' },
-    { value: UI_MODE_TYPE.CUSTOM, label: 'Custom' },
+    { value: UI_MODE_TYPE.CLEANGENIUS, label: t('cleaning_mode.clean_genius') },
+    { value: UI_MODE_TYPE.CUSTOM, label: t('cleaning_mode.custom') },
   ];
 
   const cleaningModeList: string[] = entity.attributes.cleaning_mode_list || [
@@ -104,6 +109,7 @@ export function CleaningModeModal({
               cleangenius={cleangenius}
               baseEntityId={baseEntityId}
               hass={hass}
+              language={language}
             />
           ) : (
             <CustomMode
@@ -126,6 +132,7 @@ export function CleaningModeModal({
               selfCleanTimeMax={selfCleanTimeMax}
               baseEntityId={baseEntityId}
               hass={hass}
+              language={language}
             />
           )}
         </div>

@@ -6,7 +6,7 @@
   gap: 8px;
 
   &__shortcuts {
-    background: var(--primary-color);
+    background: var(--accent-color, #007aff);
     color: white;
     border: none;
     border-radius: 50%;
@@ -19,12 +19,12 @@
     font-size: 1.1rem;
     flex-shrink: 0;
     transition: transform 0.2s, opacity 0.2s;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px var(--card-shadow, rgba(0, 0, 0, 0.08));
     
     &:hover:not(:disabled) {
       transform: scale(1.1);
       opacity: 0.9;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 4px 12px var(--card-shadow-hover, rgba(0, 0, 0, 0.12));
     }
     
     &:active:not(:disabled) {

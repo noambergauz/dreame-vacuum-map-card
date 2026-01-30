@@ -2,6 +2,8 @@ import { Toggle, CircularButton } from '../common';
 import type { Hass } from '../../types/homeassistant';
 import type { CleaningMode, SuctionLevel, CleaningRoute, SelfCleanFrequency } from '../../types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
+import { useTranslation } from '../../hooks/useTranslation';
+import type { SupportedLanguage } from '../../i18n/locales';
 import {
   getCleaningModeIcon,
   getSuctionLevelIcon,
@@ -39,6 +41,7 @@ interface CustomModeProps {
   selfCleanTimeMax: number;
   baseEntityId: string;
   hass: Hass;
+  language?: SupportedLanguage;
 }
 
 export function CustomMode({
@@ -61,9 +64,11 @@ export function CustomMode({
   selfCleanTimeMax,
   baseEntityId,
   hass,
+  language,
 }: CustomModeProps) {
   const { setSelectOption, setSwitch, setNumber } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
+  const { t } = useTranslation(language);
 
   const wetnessPercent = ((wetnessLevel - SLIDER_CONFIG.WETNESS.MIN) / (SLIDER_CONFIG.WETNESS.MAX - SLIDER_CONFIG.WETNESS.MIN)) * 100;
   const selfCleanAreaPercent = ((selfCleanArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
@@ -73,7 +78,7 @@ export function CustomMode({
     <div className="cleaning-mode-modal__content">
       {/* Custom Mode - Cleaning Mode */}
       <section className="cleaning-mode-modal__section">
-        <h3 className="cleaning-mode-modal__section-title">Cleaning Mode</h3>
+        <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.cleaning_mode_title')}</h3>
         <div className="cleaning-mode-modal__power-grid">
           {cleaningModeList.map((mode, idx) => (
             <div key={idx} className="cleaning-mode-modal__mode-option">
@@ -92,7 +97,7 @@ export function CustomMode({
 
       {/* Suction Power */}
       <section className="cleaning-mode-modal__section">
-        <h3 className="cleaning-mode-modal__section-title">Suction Power</h3>
+        <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.suction_power_title')}</h3>
         <div className="cleaning-mode-modal__power-grid">
           {suctionLevelList.map((level, idx) => (
             <div key={idx} className="cleaning-mode-modal__power-option">
@@ -118,7 +123,7 @@ export function CustomMode({
             />
           </div>
           <p className="cleaning-mode-modal__max-plus-description">
-            The suction power will be increased to the highest level, which is a single-use mode.
+            {t('custom_mode.max_plus_description')}
           </p>
         </div>
       </section>
@@ -126,7 +131,7 @@ export function CustomMode({
       {/* Wetness - Only show when mopping is enabled */}
       {cleaningMode !== CLEANING_MODE.SWEEPING && (
         <section className="cleaning-mode-modal__section">
-          <h3 className="cleaning-mode-modal__section-title">Wetness</h3>
+          <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.wetness_title')}</h3>
 
           {/* Slider */}
           <div className="cleaning-mode-modal__slider-container">
@@ -156,17 +161,17 @@ export function CustomMode({
             <span className={`cleaning-mode-modal__slider-label ${
               mopPadHumidity === MOP_PAD_HUMIDITY.SLIGHTLY_DRY ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
             }`}>
-              Slightly dry
+              {t('custom_mode.slightly_dry')}
             </span>
             <span className={`cleaning-mode-modal__slider-label ${
               mopPadHumidity === MOP_PAD_HUMIDITY.MOIST ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
             }`}>
-              Moist
+              {t('custom_mode.moist')}
             </span>
             <span className={`cleaning-mode-modal__slider-label ${
               mopPadHumidity === MOP_PAD_HUMIDITY.WET ? 'cleaning-mode-modal__slider-label--active' : 'cleaning-mode-modal__slider-label--inactive'
             }`}>
-              Wet
+              {t('custom_mode.wet')}
             </span>
           </div>
         </section>
@@ -174,7 +179,7 @@ export function CustomMode({
 
       {/* Mop-washing frequency */}
       <section className="cleaning-mode-modal__section">
-        <h3 className="cleaning-mode-modal__section-title">Mop-washing frequency</h3>
+        <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.mop_washing_frequency_title')}</h3>
         
         {/* Frequency type selector */}
         <div className="cleaning-mode-modal__horizontal-scroll">
@@ -229,7 +234,7 @@ export function CustomMode({
       {/* Route */}
       <section className="cleaning-mode-modal__section">
         <div className="cleaning-mode-modal__section-header">
-          <h3 className="cleaning-mode-modal__section-title">Route</h3>
+          <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.route_title')}</h3>
         </div>
 
         <div className="cleaning-mode-modal__route-grid">

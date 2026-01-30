@@ -5,9 +5,6 @@
 import { CLEANGENIUS_MODE, CLEANING_MODE, SUCTION_LEVEL } from '../constants';
 import type { CleaningMode, CleanGeniusMode, SuctionLevel } from '../types/vacuum';
 
-/**
- * Get friendly name for cleaning mode
- */
 export function getCleaningModeFriendlyName(mode: CleaningMode): string {
   switch (mode) {
     case CLEANING_MODE.SWEEPING_AND_MOPPING:
@@ -23,9 +20,6 @@ export function getCleaningModeFriendlyName(mode: CleaningMode): string {
   }
 }
 
-/**
- * Get friendly name for CleanGenius mode
- */
 export function getCleanGeniusModeFriendlyName(mode: CleanGeniusMode): string {
   switch (mode) {
     case CLEANGENIUS_MODE.VACUUM_AND_MOP:

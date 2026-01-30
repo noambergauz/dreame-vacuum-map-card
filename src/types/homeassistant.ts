@@ -20,6 +20,7 @@ export interface Room {
   id: number;
   name: string;
   icon?: string;
+  visibility?: string;
 }
 
 export interface HassConfig {
@@ -28,6 +29,7 @@ export interface HassConfig {
   title?: string;
   type: string;
   theme?: 'light' | 'dark';
+  language?: 'en' | 'de';
 }
 
 export interface Hass {
@@ -45,6 +47,7 @@ export interface RoomPosition {
   x: number;
   y: number;
   icon?: string;
+  visibility?: string;
 }
 
 export interface Zone {

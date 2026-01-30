@@ -1,0 +1,18 @@
+.room-selection-display {
+  padding: 12px 16px;
+  background: var(--accent-bg, #e3f2fd);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--text-primary, #1a1a1a);
+}
+
+.room-selection-display__label {
+  font-weight: 600;
+  margin-right: 8px;
+  color: var(--accent-color, #007aff);
+}
+
+.room-selection-display__rooms {
+  color: var(--text-secondary, #666666);
+}
