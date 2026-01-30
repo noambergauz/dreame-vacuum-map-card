@@ -1,1 +1,515 @@
-{}
+{
+    "entity_id": "vacuum.dima",
+    "state": "docked",
+    "attributes": {
+        "fan_speed_list": [
+            "Silent",
+            "Standard",
+            "Strong",
+            "Turbo"
+        ],
+        "fan_speed": "Strong",
+        "mop_pad": true,
+        "mop_pad_humidity": "Moist",
+        "mop_pad_humidity_list": [
+            "Slightly dry",
+            "Moist",
+            "Wet"
+        ],
+        "self_clean_area": 25,
+        "self_clean_area_min": 10,
+        "self_clean_area_max": 35,
+        "previous_self_clean_area": 25,
+        "self_clean_time_min": 10,
+        "self_clean_time_max": 50,
+        "previous_self_clean_time": 25,
+        "washing_mode": "Standard",
+        "washing_mode_list": [
+            "Light",
+            "Standard",
+            "Deep"
+        ],
+        "status": "Sleeping",
+        "cleaning_mode_list": [
+            "Sweeping",
+            "Mopping",
+            "Sweeping and mopping",
+            "Mopping after sweeping"
+        ],
+        "cleaning_mode": "Mopping after sweeping",
+        "suction_level_list": [
+            "Quiet",
+            "Standard",
+            "Strong",
+            "Turbo"
+        ],
+        "suction_level": "Strong",
+        "tight_mopping": false,
+        "error": "No error",
+        "low_water_warning": "No warning",
+        "cleaning_time": 61,
+        "cleaned_area": 36,
+        "voice_packet_id": "EN",
+        "timezone": "Asia/Jerusalem",
+        "main_brush_time_left": 298,
+        "main_brush_left": 99,
+        "side_brush_time_left": 198,
+        "side_brush_left": 99,
+        "filter_left": 98,
+        "filter_time_left": 148,
+        "total_cleaned_area": 3836,
+        "total_cleaning_time": 4733,
+        "cleaning_count": 90,
+        "customized_cleaning": false,
+        "nation_matched": "matched",
+        "total_runtime": 0,
+        "total_cruise_time": 0,
+        "drying_progress": 78,
+        "cleaning_progress": 0,
+        "intelligent_recognition": false,
+        "multi_floor_map": false,
+        "scheduled_clean": false,
+        "voice_assistant": true,
+        "voice_assistant_language_list": [
+            "English",
+            "German",
+            "Chinese"
+        ],
+        "voice_assistant_language": "English",
+        "auto_empty_mode": "High frequency",
+        "auto_empty_mode_list": [
+            "Off",
+            "Standard",
+            "High frequency",
+            "Low frequency"
+        ],
+        "auto_dust_collecting": true,
+        "auto_empty_status": "Idle",
+        "self_clean": true,
+        "obstacle_avoidance": true,
+        "volume": 49,
+        "child_lock": false,
+        "resume_cleaning": true,
+        "carpet_boost": true,
+        "schedule": [],
+        "map_recovery_status": "Idle",
+        "auto_water_refilling": 0,
+        "detergent_status": "Installed",
+        "map_backup_status": "Idle",
+        "sensor_dirty_left": 94,
+        "sensor_dirty_time_left": 28,
+        "carpet_recognition": 1,
+        "carpet_cleaning_list": [
+            "Avoidance",
+            "Adaptation",
+            "Remove mop",
+            "Vacuum and mop",
+            "Ignore"
+        ],
+        "carpet_cleaning": "Adaptation",
+        "auto_mount_mop": true,
+        "auto_add_detergent": 1,
+        "clean_carpets_first": false,
+        "dust_bag_status": "Installed",
+        "drying_time": 2,
+        "station_drainage_status": "Idle",
+        "hot_water_status": "Enabled",
+        "clean_water_tank_status": "Installed",
+        "dirty_water_tank_status": "Installed",
+        "smart_mop_washing": 1,
+        "mopping_mode": 2,
+        "auto_drying": true,
+        "collision_avoidance": true,
+        "fill_light": true,
+        "streaming_voice_prompt": true,
+        "ai_obstacle_detection": true,
+        "ai_pet_detection": true,
+        "ai_obstacle_picture": false,
+        "ai_obstacle_image_upload": false,
+        "pet_focused_detection": false,
+        "large_particles_boost": false,
+        "max_suction_power": false,
+        "custom_mopping_mode": true,
+        "cleaning_route_list": [
+            "Quick",
+            "Standard",
+            "Intensive",
+            "Deep"
+        ],
+        "cleaning_route": "Deep",
+        "cleangenius_list": [
+            "Off",
+            "Routine cleaning",
+            "Deep cleaning"
+        ],
+        "cleangenius": "Off",
+        "cleangenius_mode_list": [],
+        "cleangenius_mode": "Mop after vacuum",
+        "water_temperature_list": [],
+        "water_temperature": "Hot",
+        "side_brush_carpet_rotate": 0,
+        "dnd_disable_resume_cleaning": 1,
+        "dnd_disable_auto_empty": 1,
+        "dnd_reduce_volume": 0,
+        "self_clean_frequency_list": [
+            "By area",
+            "By time",
+            "By room"
+        ],
+        "self_clean_frequency": "By area",
+        "floor_direction_cleaning": false,
+        "intensive_carpet_cleaning": false,
+        "mop_extend": true,
+        "mop_extend_frequency_list": [
+            "Standard",
+            "Intelligent",
+            "High"
+        ],
+        "mop_extend_frequency": "High",
+        "gap_cleaning_extension": true,
+        "mopping_under_furnitures": false,
+        "auto_recleaning_list": [
+            "Off",
+            "In deep mode",
+            "In all modes"
+        ],
+        "auto_recleaning": "Off",
+        "auto_rewashing_list": [
+            "Off",
+            "In deep mode",
+            "In all modes"
+        ],
+        "auto_rewashing": "In all modes",
+        "dnd": {
+            "0": {
+                "enabled": false,
+                "start": "22:00",
+                "end": "08:00"
+            }
+        },
+        "off_peak_charging": false,
+        "off_peak_charging_start": "22:00",
+        "off_peak_charging_end": "08:00",
+        "shortcuts": {
+            "32": {
+                "name": "Clean Kitchen",
+                "map_id": 1,
+                "running": false,
+                "tasks": [
+                    [
+                        {
+                            "segment_id": 12,
+                            "suction_level": 1,
+                            "water_volume": 27,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        }
+                    ]
+                ]
+            },
+            "33": {
+                "name": "Full House Clean ",
+                "map_id": 1,
+                "running": false,
+                "tasks": [
+                    [
+                        {
+                            "segment_id": 9,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 12,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 7,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 2,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 1,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 5,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 6,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 8,
+                            "suction_level": 1,
+                            "water_volume": 16,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        }
+                    ]
+                ]
+            },
+            "34": {
+                "name": "Quick cleaning",
+                "map_id": 1,
+                "running": false,
+                "tasks": [
+                    [
+                        {
+                            "segment_id": 9,
+                            "suction_level": 2,
+                            "water_volume": 25,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 12,
+                            "suction_level": 3,
+                            "water_volume": 27,
+                            "cleaning_times": 2,
+                            "cleaning_mode": 2
+                        },
+                        {
+                            "segment_id": 7,
+                            "suction_level": 2,
+                            "water_volume": 22,
+                            "cleaning_times": 1,
+                            "cleaning_mode": 2
+                        }
+                    ]
+                ]
+            }
+        },
+        "battery": 100,
+        "cleaning_sequence": [
+            2,
+            1,
+            5,
+            7,
+            6,
+            8,
+            12,
+            9
+        ],
+        "charging": false,
+        "docked": true,
+        "located": true,
+        "started": false,
+        "paused": false,
+        "running": false,
+        "returning_paused": false,
+        "returning": false,
+        "segment_cleaning": false,
+        "zone_cleaning": false,
+        "spot_cleaning": false,
+        "cruising": false,
+        "vacuum_state": "drying",
+        "has_saved_map": true,
+        "has_temporary_map": false,
+        "mapping": false,
+        "mapping_available": false,
+        "dust_collection_available": true,
+        "washing": false,
+        "washing_paused": false,
+        "drying": true,
+        "low_water": false,
+        "washing_available": true,
+        "drying_available": true,
+        "draining_available": true,
+        "cleangenius_cleaning": false,
+        "wetness_level": 18,
+        "active_segments": null,
+        "current_segment": 9,
+        "selected_map": "Map 1",
+        "selected_map_id": 1,
+        "selected_map_index": 1,
+        "rooms": {
+            "Map 1": [
+                {
+                    "id": 1,
+                    "name": "Bathroom",
+                    "icon": "mdi:toilet"
+                },
+                {
+                    "id": 2,
+                    "name": "Primary Bedroom",
+                    "icon": "mdi:bed-king-outline"
+                },
+                {
+                    "id": 5,
+                    "name": "Bathroom 2",
+                    "icon": "mdi:toilet"
+                },
+                {
+                    "id": 6,
+                    "name": "Utility Room",
+                    "icon": "mdi:archive-outline"
+                },
+                {
+                    "id": 7,
+                    "name": "Corridor",
+                    "icon": "mdi:foot-print"
+                },
+                {
+                    "id": 8,
+                    "name": "Office",
+                    "icon": "mdi:monitor-shimmer"
+                },
+                {
+                    "id": 9,
+                    "name": "Living Room",
+                    "icon": "mdi:sofa-outline"
+                },
+                {
+                    "id": 10,
+                    "name": "Balcony",
+                    "icon": "mdi:flower-outline"
+                },
+                {
+                    "id": 12,
+                    "name": "Kitchen",
+                    "icon": "mdi:chef-hat"
+                }
+            ]
+        },
+        "maps": [
+            {
+                "id": 1,
+                "date": "2026-01-30T11:38:40",
+                "index": 1,
+                "name": "Map 1",
+                "custom_name": null,
+                "recovery_map": [
+                    "01/30/26 11:38:22: Map1 (Edited)",
+                    "07/02/25 10:23:34: Map2 (Original)",
+                    "11/19/25 22:12:43: Map3 (Backup)"
+                ]
+            }
+        ],
+        "carpet_avoidance": false,
+        "floor_direction_cleaning_available": true,
+        "shortcut_task": false,
+        "firmware_version": 1760,
+        "ap": {
+            "ssid": "Noam - Home_EXT_2.4",
+            "bssid": "dc:62:79:af:f0:7e",
+            "rssi": -45,
+            "ip": "192.168.1.7"
+        },
+        "capabilities": [
+            "lidar_navigation",
+            "multi_floor_map",
+            "ai_detection",
+            "self_wash_base",
+            "auto_empty_base",
+            "mop_pad_lifting",
+            "mop_pad_lifting_plus",
+            "customized_cleaning",
+            "auto_switch_settings",
+            "mop_pad_unmounting",
+            "mopping_after_sweeping",
+            "wifi_map",
+            "backup_map",
+            "dnd",
+            "dnd_task",
+            "shortcuts",
+            "drainage",
+            "carpet_recognition",
+            "fill_light",
+            "voice_assistant",
+            "hot_washing",
+            "mop_pad_swing",
+            "mop_pad_swing_plus",
+            "off_peak_charging",
+            "max_suction_power",
+            "obstacle_image_crop",
+            "self_clean_frequency",
+            "auto_empty_mode",
+            "tight_mopping",
+            "floor_material",
+            "floor_direction_cleaning",
+            "segment_visibility",
+            "cleangenius",
+            "large_particles_boost",
+            "fluid_detection",
+            "intensive_carpet_cleaning",
+            "mopping_settings",
+            "cleaning_route",
+            "segment_slow_clean_route",
+            "pet_furniture",
+            "task_type",
+            "water_tank_draining",
+            "auto_rename_segment",
+            "ultra_clean_mode",
+            "clean_carpets_first",
+            "saved_furnitures",
+            "extended_furnitures",
+            "new_furnitures",
+            "wetness",
+            "wetness_level",
+            "obstacles",
+            "water_check",
+            "auto_carpet_cleaning",
+            "segment_mopping_settings",
+            "max_suction_power_extended",
+            "auto_recleaning",
+            "auto_rewashing",
+            "new_state",
+            "camera_streaming",
+            "gen5",
+            "cleangenius_mode",
+            "side_reach",
+            "water_temperature",
+            "washing_mode",
+            "smart_mop_washing",
+            "dnd_functions",
+            "ramps",
+            "virtual_tracks",
+            "side_brush_carpet_rotate",
+            "station_cleaning",
+            "area_rotation",
+            "auto_add_detergent",
+            "carpet_cleanset_v2",
+            "carpet_shape",
+            "carpet_id",
+            "auto_emptying",
+            "custom_cleaning_mode",
+            "cruising",
+            "map"
+        ],
+        "device_class": "dreame_vacuum",
+        "icon": "mdi:hair-dryer",
+        "friendly_name": " Dima",
+        "supported_features": 15292
+    },
+    "context": {
+        "id": "01KG74P8WX43XAG47J9Y5Q04YS",
+        "parent_id": null,
+        "user_id": null
+    },
+    "last_changed": "2026-01-30T08:53:25.415Z",
+    "last_updated": "2026-01-30T09:45:31.293Z"
+}
