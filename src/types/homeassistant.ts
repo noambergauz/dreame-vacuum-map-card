@@ -33,7 +33,7 @@ export interface HassConfig {
   title?: string;
   type: string;
   theme?: 'light' | 'dark';
-  language?: 'en' | 'de';
+  language?: 'en' | 'de' | 'ru';
 }
 
 export interface Hass {
