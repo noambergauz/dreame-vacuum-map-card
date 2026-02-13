@@ -3,6 +3,7 @@
  * Maps various vacuum states and modes to SVG or emoji icons
  */
 
+import type { ReactElement } from 'react';
 import {
   CLEANGENIUS_MODE,
   SUCTION_LEVEL,
@@ -21,10 +22,13 @@ import {
   CLEANING_ROUTE_STANDARD_ICON_SVG,
   CLEANING_ROUTE_INTENSIVE_ICON_SVG,
   CLEANING_ROUTE_DEEP_ICON_SVG,
+  MOP_WASHING_FREQUENCY_BY_AREA_ICON_SVG,
+  MOP_WASHING_FREQUENCY_BY_TIME_ICON_SVG,
+  MOP_WASHING_FREQUENCY_BY_ROOM_ICON_SVG
 } from '../constants';
 import type { CleaningMode, CleanGeniusMode, SuctionLevel, CleaningRoute, SelfCleanFrequency } from '../types/vacuum';
 
-export function getCleaningModeIcon(mode: CleaningMode): string {
+export function getCleaningModeIcon(mode: CleaningMode): ReactElement | string {
   switch (mode) {
     case CLEANING_MODE.SWEEPING:
       return VACUUM_ICON_SVG;
@@ -39,7 +43,7 @@ export function getCleaningModeIcon(mode: CleaningMode): string {
   }
 }
 
-export function getCleanGeniusModeIcon(mode: CleanGeniusMode): string {
+export function getCleanGeniusModeIcon(mode: CleanGeniusMode): ReactElement | string {
   switch (mode) {
     case CLEANGENIUS_MODE.VACUUM_AND_MOP:
       return VACUUM_MOP_ICON_SVG;
@@ -50,7 +54,7 @@ export function getCleanGeniusModeIcon(mode: CleanGeniusMode): string {
   }
 }
 
-export function getSuctionLevelIcon(level: SuctionLevel): string {
+export function getSuctionLevelIcon(level: SuctionLevel): ReactElement | string {
   switch (level) {
     case SUCTION_LEVEL.QUIET:
     case SUCTION_LEVEL.SILENT:
@@ -64,7 +68,7 @@ export function getSuctionLevelIcon(level: SuctionLevel): string {
   }
 }
 
-export function getCleaningRouteIcon(route: CleaningRoute): string {
+export function getCleaningRouteIcon(route: CleaningRoute): ReactElement | string {
   switch (route) {
     case CLEANING_ROUTE.QUICK:
       return CLEANING_ROUTE_QUICK_ICON_SVG;
@@ -77,14 +81,14 @@ export function getCleaningRouteIcon(route: CleaningRoute): string {
   }
 }
 
-export function getSelfCleanFrequencyIcon(frequency: SelfCleanFrequency): string {
+export function getSelfCleanFrequencyIcon(frequency: SelfCleanFrequency): ReactElement | string {
   switch (frequency) {
     case SELF_CLEAN_FREQUENCY.BY_AREA:
-      return '📐';
+      return MOP_WASHING_FREQUENCY_BY_AREA_ICON_SVG;
     case SELF_CLEAN_FREQUENCY.BY_TIME:
-      return '⏱️';
+      return MOP_WASHING_FREQUENCY_BY_TIME_ICON_SVG;
     case SELF_CLEAN_FREQUENCY.BY_ROOM:
-      return '🏠';
+      return MOP_WASHING_FREQUENCY_BY_ROOM_ICON_SVG;
     default:
       return '⚙️';
   }

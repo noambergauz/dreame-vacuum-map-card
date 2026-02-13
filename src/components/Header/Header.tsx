@@ -1,5 +1,13 @@
 import type { HassEntity } from '../../types/homeassistant';
 import './Header.scss';
+import {
+  BATTERY_EMPTY_ICON_SVG,
+  BATTERY_LOW_ICON_SVG,
+  BATTERY_MEDIUM_ICON_SVG,
+  BATTERY_FULL_ICON_SVG,
+  HISTORY_ICON_SVG,
+  AREA_ICON_SVG
+} from "../../constants/icons";
 
 interface HeaderProps {
   entity: HassEntity;
@@ -26,6 +34,16 @@ export function Header({ entity, deviceName }: HeaderProps) {
     const battery = entity.attributes.battery;
     return typeof battery === 'number' ? battery : 0;
   };
+
+  const getBatteryLevelIcon = () => {
+    const battery = entity.attributes.battery;
+    if (typeof battery !== 'number') return null;
+    
+    if (battery >= 80) return BATTERY_FULL_ICON_SVG;
+    if (battery >= 60) return BATTERY_MEDIUM_ICON_SVG;
+    if (battery >= 20) return BATTERY_LOW_ICON_SVG;
+    return BATTERY_EMPTY_ICON_SVG;
+  }
 
   const progress = (() => {
     const cleaningProgress = entity.attributes.cleaning_progress;
@@ -55,15 +73,15 @@ export function Header({ entity, deviceName }: HeaderProps) {
 
       <div className="header__stats">
         <div className="header__stat">
-          <span className="header__stat-icon">🏠</span>
+          <span className="header__stat-icon--area">{AREA_ICON_SVG}</span>
           <span className="header__stat-value">{getCleanedArea()} m²</span>
         </div>
         <div className="header__stat">
-          <span className="header__stat-icon">⏱️</span>
+          <span className="header__stat-icon--cleaning-time">{HISTORY_ICON_SVG}</span>
           <span className="header__stat-value">{getCleaningTime()} min</span>
         </div>
         <div className="header__stat">
-          <span className="header__stat-icon">🔋</span>
+          <span className="header__stat-icon">{getBatteryLevelIcon()}</span>
           <span className="header__stat-value">{getBatteryLevel()} %</span>
         </div>
       </div>

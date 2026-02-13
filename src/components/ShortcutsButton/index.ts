@@ -1,1 +1,0 @@
-export { ShortcutsButton } from './ShortcutsButton';

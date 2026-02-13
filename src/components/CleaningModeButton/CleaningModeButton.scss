@@ -20,6 +20,10 @@
     flex-shrink: 0;
     transition: transform 0.2s, opacity 0.2s;
     box-shadow: 0 2px 8px var(--card-shadow, rgba(0, 0, 0, 0.08));
+
+    svg {
+      scale: 0.8;
+    }
     
     &:hover:not(:disabled) {
       transform: scale(1.1);

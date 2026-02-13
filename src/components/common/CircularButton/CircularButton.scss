@@ -33,9 +33,10 @@
     }
 
     &--selected {
-      background: var(--toggle-active, #D4AF37);
-      border: 3px solid var(--toggle-active, #D4AF37);
-      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+      background: var(--toggle-active); 
+      border: 3px solid var(--toggle-active-border); 
+      box-shadow: 0 0 0 4px var(--toggle-active-shadow-color);
+      color: var(--text-primary);
     }
 
     &:hover:not(&--selected) {

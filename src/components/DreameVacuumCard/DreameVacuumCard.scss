@@ -33,7 +33,9 @@
   --handle-shadow: rgba(0, 0, 0, 0.2);
   --handle-bg: rgba(0, 0, 0, 0.15);
   --backdrop-bg: rgba(0, 0, 0, 0.4);
-  --toggle-active: #D4AF37;
+  --toggle-active: #2e354f;
+  --toggle-active-border: #5865f2;
+  --toggle-active-shadow-color: rgba(88, 101, 242, 0.25);
 
   // Dark theme
   &--dark {
@@ -63,7 +65,11 @@
     --handle-shadow: rgba(0, 0, 0, 0.4);
     --handle-bg: rgba(255, 255, 255, 0.15);
     --backdrop-bg: rgba(0, 0, 0, 0.6);
-    --toggle-active: #ffd60a;
+    --accent-color: #5865f2;
+    --accent-color-shadow-color: rgba(88, 101, 242, 0.25);
+    --toggle-active: #2e354f;
+    --toggle-active-border: #5865f2;
+    --toggle-active-shadow-color: rgba(88, 101, 242, 0.25);
   }
 
   &__error {

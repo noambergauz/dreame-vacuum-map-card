@@ -1,6 +1,14 @@
 import './CleaningModeButton.scss';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { SupportedLanguage } from '../../i18n/locales';
+import { 
+  SHORTCUTS_ICON_SVG,
+  VACUUM_MOP_ICON_SVG,
+  VACUUM_ICON_SVG,
+  MOP_ICON_SVG,
+  MOP_AFTER_VACUUM_ICON_SVG
+} from "../../constants/icons";
+import type { ReactElement } from 'react';
 
 interface CleaningModeButtonProps {
   cleaningMode: string;
@@ -14,13 +22,13 @@ interface CleaningModeButtonProps {
 
 export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius, onClick, onShortcutsClick, disabled = false, language }: CleaningModeButtonProps) {
   const { t } = useTranslation(language);
-  const getIcon = (mode: string): string => {
-    if (mode.includes('Sweep') && mode.includes('Mop')) return '🔄';
-    if (mode.includes('after')) return '➜';
-    if (mode.includes('Mop')) return '💧';
-    if (mode.includes('Sweep') || mode.includes('Vacuum')) return '🌀';
-    return '⚙️';
-  };
+  const getIcon = (mode: string): ReactElement => {
+    if (mode.includes('Sweep') && mode.includes('Mop')) return VACUUM_MOP_ICON_SVG;
+    if (mode.includes('after')) return MOP_AFTER_VACUUM_ICON_SVG;
+    if (mode.includes('Mop')) return MOP_ICON_SVG;
+    if (mode.includes('Sweep') || mode.includes('Vacuum')) return VACUUM_ICON_SVG;
+    return VACUUM_MOP_ICON_SVG;
+    };
 
   const getCleanGeniusFriendlyName = (mode: string): string => {
     if (mode === 'Vacuum and mop') return t('cleaning_mode_button.vac_and_mop');
@@ -67,7 +75,7 @@ export function CleaningModeButton({ cleaningMode, cleanGeniusMode, cleangenius,
           title={t('cleaning_mode_button.view_shortcuts')}
           disabled={disabled}
         >
-          ⚡
+          {SHORTCUTS_ICON_SVG}
         </button>
       )}
     </div>

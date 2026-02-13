@@ -61,9 +61,14 @@
   }
   
   &__item-icon {
+    display: flex;
     font-size: 1.3rem;
     flex-shrink: 0;
     color: var(--text-primary, #1a1a1a);
+
+    svg {
+      scale: 0.8;
+    }
   }
   
   &__item-name {

@@ -35,7 +35,9 @@
   }
 
   &__input:checked + &__slider {
-    background-color: var(--toggle-active, #D4AF37);
+    background-color: var(--toggle-active);
+    border: 2px solid var(--toggle-active-border); 
+    box-shadow: 0 0 0 4px var(--toggle-active-shadow-color);
   }
 
   &__input:checked + &__slider &__knob {

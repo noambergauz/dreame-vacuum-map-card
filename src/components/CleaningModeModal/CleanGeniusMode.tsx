@@ -81,7 +81,7 @@ export function CleanGeniusMode({
                 style={{ cursor: 'pointer' }}
               >
                 <div className={`cleaning-mode-modal__mode-icon cleaning-mode-modal__mode-icon--${isVacMop ? 'vac-mop' : 'mop-after'}`}>
-                  <span style={{fontSize: 13}}>{getCleanGeniusModeIcon(typedMode)}</span>
+                  {getCleanGeniusModeIcon(typedMode)}
                 </div>
                 <span className="cleaning-mode-modal__mode-label">
                   {getCleanGeniusModeFriendlyName(typedMode)}

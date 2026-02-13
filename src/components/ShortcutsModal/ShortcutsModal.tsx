@@ -3,6 +3,7 @@ import type { Hass, HassEntity } from '../../types/homeassistant';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { SupportedLanguage } from '../../i18n/locales';
 import './ShortcutsModal.scss';
+import { SHORTCUT_START_CLEANING_ICON_SVG } from '../../constants/icons';
 
 interface ShortcutData {
   name: string;
@@ -60,7 +61,7 @@ export function ShortcutsModal({
                 className="shortcuts-modal__item"
                 onClick={() => handleShortcutClick(shortcut.id)}
               >
-                <span className="shortcuts-modal__item-icon">▶   </span>
+                <span className="shortcuts-modal__item-icon">{SHORTCUT_START_CLEANING_ICON_SVG}</span>
                 <span className="shortcuts-modal__item-name">{shortcut.name}</span>
               </button>
             ))}

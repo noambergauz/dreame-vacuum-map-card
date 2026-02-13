@@ -9,73 +9,48 @@
   &__resume,
   &__stop {
     flex: 1;
-    border: none;
-    border-radius: 15px;
+    background: #232325; // Darker obsidian base
+    border: 1px solid #3a3a3c; // Your base color as the "frame"
+    border-radius: 14px;
     padding: 14px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    transition: transform 0.1s ease;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #636366;
 
-    &:active {
-      transform: scale(0.98);
+    // --- THE LIGHTER DARK SELECTED STATE ---
+    &--selected {
+      /* A "Lighter Dark" navy-charcoal that makes the indigo pop */
+      background: #2a2e3f !important; 
+      
+      /* Vibrant Electric Indigo border */
+      border-color: #5865f2 !important; 
+      
+      /* Pure indigo text */
+      color: #9da5ff !important; 
+      
+      /* 1. Subtle lift + 2. Electric outer glow + 3. Inset "rim" light */
+      transform: translateY(-2px);
+      box-shadow: 
+        0 10px 20px rgba(0, 0, 0, 0.4),            // Depth shadow
+        0 0 12px rgba(88, 101, 242, 0.25),         // Outer indigo aura
+        inset 0 1px 1px rgba(255, 255, 255, 0.1) !important; // Top edge highlight
     }
   }
 
-  &__clean {
-    background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(255, 165, 0, 0.3);
-
-    &:hover {
-      box-shadow: 0 6px 20px rgba(255, 165, 0, 0.4);
-    }
-  }
-
-  &__pause {
-    background: linear-gradient(135deg, #ff9500 0%, #ff6b00 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(255, 149, 0, 0.3);
-
-    &:hover {
-      box-shadow: 0 6px 20px rgba(255, 149, 0, 0.4);
-    }
-  }
-
-  &__resume {
-    background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(52, 199, 89, 0.3);
-
-    &:hover {
-      box-shadow: 0 6px 20px rgba(52, 199, 89, 0.4);
-    }
-  }
-
-  &__stop {
-    background: linear-gradient(135deg, #ff3b30 0%, #ff1f0f 100%);
-    color: white;
-    box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
-
-    &:hover {
-      box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
-    }
-  }
+  // Maintaining your action colors but keeping them "Dark Mode" friendly
+  &__clean  { color: #ffd60a; border-color: rgba(255, 214, 10, 0.5); }
+  &__pause  { color: #ff9f0a; border-color: rgba(255, 159, 10, 0.5); }
+  &__resume { color: #32d74b; border-color: rgba(50, 215, 75, 0.5); }
+  &__stop   { color: #ff453a; border-color: rgba(255, 69, 58, 0.5); }
 
   &__dock {
-    background: var(--surface-tertiary, #e8e8e8);
-    color: var(--text-primary, #1a1a1a);
-
-    &:hover {
-      background: var(--surface-secondary, #ddd);
-    }
-  }
-
-  &__icon {
-    font-size: 18px;
+    background: #3a3a3c;
+    color: #8e8e93;
   }
 }

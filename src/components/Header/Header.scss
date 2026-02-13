@@ -47,6 +47,7 @@
     font-size: 16px;
     color: var(--text-primary, #1a1a1a);
     margin-top: 14px;
+    align-items: center;
   }
 
   &__stat {
@@ -55,7 +56,20 @@
     gap: 4px;
   }
 
+  &__stat-icon {
+    display: flex;
+
+    &--cleaning-time, &--area {
+      display: flex; 
+      
+      svg {
+        scale: 0.8;
+      }
+    }
+  }
+
   &__stat-value {
+    display: flex;
     font-weight: 500;
   }
 }
