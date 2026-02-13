@@ -94,21 +94,16 @@
   &__zone {
     position: absolute;
     border: 0.1875rem solid #007aff;
-    background: rgba(0, 122, 255, 0.15);
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(0, 122, 255, 0.1),
+      rgba(0, 122, 255, 0.1) 0.625rem,
+      rgba(0, 122, 255, 0.05) 0.625rem,
+      rgba(0, 122, 255, 0.05) 1.25rem
+    );
     pointer-events: auto;
     border-radius: 0.5rem;
     box-shadow: 0 0.125rem 0.75rem rgba(0, 122, 255, 0.3);
-
-    &::before {
-      content: '🧹';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.5rem;
-      opacity: 0.6;
-      pointer-events: none;
-    }
   }
 
   &__zone-handle {

@@ -21,6 +21,8 @@ export const darkTheme: Theme = {
     accentColorHover: '#409cff',
     accentBg: 'rgba(10, 132, 255, 0.2)',
     accentBgHover: 'rgba(10, 132, 255, 0.3)',
+    accentBgSecondary: 'rgba(10, 132, 255, 0.1)',
+    accentBgSecondaryHover: 'rgba(10, 132, 255, 0.2)',
     accentBgTransparent: 'rgba(10, 132, 255, 0.2)',
     accentShadow: 'rgba(10, 132, 255, 0.4)',
     accentColorShadowColor: 'rgba(88, 101, 242, 0.25)',

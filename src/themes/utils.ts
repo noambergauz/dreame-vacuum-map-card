@@ -53,6 +53,8 @@ export function themeToCSSVariables(colors: ThemeColors): Record<string, string>
     '--accent-color-hover': colors.accentColorHover,
     '--accent-bg': colors.accentBg,
     '--accent-bg-hover': colors.accentBgHover,
+    '--accent-bg-secondary': colors.accentBgSecondary,
+    '--accent-bg-secondary-hover': colors.accentBgSecondaryHover,
     '--accent-bg-transparent': colors.accentBgTransparent,
     '--accent-shadow': colors.accentShadow,
     '--accent-color-shadow-color': colors.accentColorShadowColor,

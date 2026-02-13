@@ -143,7 +143,7 @@ export function CustomMode({
               onChange={(e) => setNumber(entityIds.wetnessLevel, parseInt(e.target.value))}
               className="cleaning-mode-modal__slider"
               style={{
-                background: `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${wetnessPercent}%, #e0e0e0 ${wetnessPercent}%, #e0e0e0 100%)`
+                background: `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${wetnessPercent}%, var(--accent-bg-secondary-hover) ${wetnessPercent}%, var(--accent-bg-secondary-hover) 100%)`
               }}
             />
             <div 
@@ -213,8 +213,8 @@ export function CustomMode({
               className="cleaning-mode-modal__slider"
               style={{
                 background: selfCleanFrequency === 'By area'
-                  ? `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${selfCleanAreaPercent}%, #e0e0e0 ${selfCleanAreaPercent}%, #e0e0e0 100%)`
-                  : `linear-gradient(to right, #D4AF37 0%, #D4AF37 ${selfCleanTimePercent}%, #e0e0e0 ${selfCleanTimePercent}%, #e0e0e0 100%)`
+                  ? `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) 100%)`
+                  : `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) 100%)`
               }}
             />
             <div 

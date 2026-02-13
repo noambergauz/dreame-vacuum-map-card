@@ -21,6 +21,8 @@ export const lightTheme: Theme = {
     accentColorHover: '#0051d5',
     accentBg: '#e3f2fd',
     accentBgHover: '#bbdefb',
+    accentBgSecondary: '#999999',
+    accentBgSecondaryHover: '#666666',
     accentBgTransparent: 'rgba(0, 122, 255, 0.15)',
     accentShadow: 'rgba(0, 122, 255, 0.3)',
     accentColorShadowColor: 'rgba(0, 122, 255, 0.25)',
@@ -42,8 +44,8 @@ export const lightTheme: Theme = {
     backdropBg: 'rgba(0, 0, 0, 0.4)',
 
     // Toggle specific
-    toggleActive: '#007aff',
-    toggleActiveBorder: '#5865f2',
-    toggleActiveShadowColor: 'rgba(88, 101, 242, 0.25)',
+    toggleActive: 'rgba(0, 122, 255, 0.25)',
+    toggleActiveBorder: '#0051d5',
+    toggleActiveShadowColor: '#ffffff',
   },
 };

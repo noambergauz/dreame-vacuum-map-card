@@ -17,6 +17,8 @@ export interface ThemeColors {
   accentColorHover: string;
   accentBg: string;
   accentBgHover: string;
+  accentBgSecondary: string;
+  accentBgSecondaryHover: string;
   accentBgTransparent: string;
   accentShadow: string;
   accentColorShadowColor: string;
