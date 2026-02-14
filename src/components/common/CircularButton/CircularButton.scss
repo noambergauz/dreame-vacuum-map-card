@@ -4,6 +4,10 @@
   align-items: center;
   gap: 0.5rem;
 
+  &:hover {
+    transform: translateY(-0.125rem);
+  }
+
   &__circle {
     border-radius: 50%;
     background: var(--surface-secondary, #f5f5f5);
