@@ -1,11 +1,11 @@
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, type RefObject } from 'react';
 import type { Theme, ThemeType, CustomThemeConfig } from '../themes';
 import { getTheme, applyCSSVariables } from '../themes';
 
 interface UseThemeOptions {
   themeType?: ThemeType;
   customThemeConfig?: CustomThemeConfig;
-  containerRef?: HTMLElement | null;
+  containerRef?: RefObject<HTMLElement | null>;
 }
 
 /**
@@ -21,8 +21,8 @@ export function useTheme({ themeType = 'light', customThemeConfig, containerRef 
 
   // Apply CSS variables when theme changes
   useEffect(() => {
-    if (containerRef) {
-      applyCSSVariables(containerRef, theme);
+    if (containerRef?.current) {
+      applyCSSVariables(containerRef.current, theme);
     }
   }, [theme, containerRef]);
 

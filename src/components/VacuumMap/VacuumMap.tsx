@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import type { Hass, RoomPosition, CleaningMode, Zone } from '../../types/homeassistant';
+import type { Hass, RoomPosition, CleaningMode, Zone, CalibrationPoint } from '../../types/homeassistant';
 import type { SupportedLanguage } from '../../i18n/locales';
 import { useTranslation } from '../../hooks';
 import { parseRoomsFromCamera } from '../../utils/roomParser';
@@ -41,7 +41,7 @@ export function VacuumMap({
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   
   const parsedRooms = parseRoomsFromCamera(hass, mapEntityId);
-  const calibrationPoints = (mapEntity?.attributes?.calibration_points as any) || [];
+  const calibrationPoints = (mapEntity?.attributes?.calibration_points as CalibrationPoint[] | undefined) ?? [];
   
   const zoneSelector = ZoneSelector({
     zone,

@@ -82,3 +82,8 @@ export interface Zone {
   x2: number;
   y2: number;
 }
+
+export interface CalibrationPoint {
+  vacuum: { x: number; y: number };
+  map: { x: number; y: number };
+}

@@ -31,7 +31,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const theme = useTheme({
     themeType,
     customThemeConfig: config.custom_theme,
-    containerRef: containerRef.current,
+    containerRef,
   });
 
   // Track map image dimensions
