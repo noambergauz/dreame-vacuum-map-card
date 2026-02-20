@@ -44,19 +44,26 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 
 ## Installation
 
-### 1. Download the card
+### Via [HACS](https://hacs.xyz/)
+<a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=noambergauz&repository=dreame-vacuum-map-card&category=integration" target="_blank"><img src="https://my.home-assistant.io/badges/hacs_repository.svg" alt="Open your Home Assistant instance and open a repository inside the Home Assistant Community Store." /></a>
+
+### Manual:
+
+#### 1. Download the card
 Download `dreame-vacuum-map-card.js` from the releases page
 
-### 2. Add to Home Assistant
+#### 2. Add to Home Assistant
 Copy the file to your Home Assistant config directory:
 ```
 /config/www/dreame-vacuum-map-card/dreame-vacuum-map-card.js
 ```
 
-### 3. Add resource to Lovelace
+#### 3. Add resource to Lovelace
 Go to Settings → Dashboards → Resources → Add Resource:
 - URL: `/local/dreame-vacuum-map-card/dreame-vacuum-map-card.js`
 - Resource type: JavaScript Module
+
+## Usage
 
 ### 4. Add card to dashboard
 ```yaml
