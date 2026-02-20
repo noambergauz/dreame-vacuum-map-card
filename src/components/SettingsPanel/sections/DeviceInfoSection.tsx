@@ -1,4 +1,5 @@
 import { useTranslation } from '../../../hooks';
+import { getAttr, isString, isNumber } from '../../../utils';
 import type { HassEntity } from '../../../types/homeassistant';
 import './DeviceInfoSection.scss';
 
@@ -17,10 +18,10 @@ export function DeviceInfoSection({ entity }: DeviceInfoSectionProps) {
   const attributes = entity.attributes;
 
   const rawFirmware = attributes.firmware_version;
-  const firmwareVersion = typeof rawFirmware === 'string' || typeof rawFirmware === 'number' ? rawFirmware : '-';
-  const totalCleanedArea = typeof attributes.total_cleaned_area === 'number' ? attributes.total_cleaned_area : 0;
-  const totalCleaningTime = typeof attributes.total_cleaning_time === 'number' ? attributes.total_cleaning_time : 0;
-  const cleaningCount = typeof attributes.cleaning_count === 'number' ? attributes.cleaning_count : 0;
+  const firmwareVersion = isString(rawFirmware) || isNumber(rawFirmware) ? rawFirmware : '-';
+  const totalCleanedArea = getAttr(attributes.total_cleaned_area, 0);
+  const totalCleaningTime = getAttr(attributes.total_cleaning_time, 0);
+  const cleaningCount = getAttr(attributes.cleaning_count, 0);
 
   // Network info is nested under 'ap' in some implementations
   const apInfo = attributes.ap as { ssid?: string; rssi?: number; ip?: string } | undefined;

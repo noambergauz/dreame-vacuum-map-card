@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Toggle } from '../../common';
 import { useTranslation } from '../../../hooks';
+import { isBoolean, isNumber, isObject } from '../../../utils';
 import type { Hass, HassEntity } from '../../../types/homeassistant';
 import './QuickSettingsSection.scss';
 
@@ -73,9 +74,9 @@ export function QuickSettingsSection({ hass, entity }: QuickSettingsSectionProps
   const isEnabled = (key: string): boolean => {
     const value = attributes[key];
     // Handle various boolean representations
-    if (typeof value === 'boolean') return value;
-    if (typeof value === 'number') return value > 0;
-    if (typeof value === 'object' && value !== null) {
+    if (isBoolean(value)) return value;
+    if (isNumber(value)) return value > 0;
+    if (isObject(value)) {
       // DND is an object with enabled property
       return (value as { enabled?: boolean }).enabled ?? false;
     }

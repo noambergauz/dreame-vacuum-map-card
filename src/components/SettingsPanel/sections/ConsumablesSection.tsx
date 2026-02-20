@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useTranslation } from '../../../hooks';
+import { getAttr } from '../../../utils';
 import type { Hass, HassEntity } from '../../../types/homeassistant';
 import './ConsumablesSection.scss';
 
@@ -60,16 +61,6 @@ export function ConsumablesSection({ hass, entity }: ConsumablesSectionProps) {
     [hass, entity.entity_id]
   );
 
-  const getPercentage = (key: string): number => {
-    const value = attributes[key];
-    return typeof value === 'number' ? value : 0;
-  };
-
-  const getHoursLeft = (key: string): number => {
-    const value = attributes[key];
-    return typeof value === 'number' ? value : 0;
-  };
-
   const getProgressColor = (percent: number): string => {
     if (percent >= 50) return 'var(--consumable-good, #34c759)';
     if (percent >= 20) return 'var(--consumable-warning, #ff9500)';
@@ -79,8 +70,8 @@ export function ConsumablesSection({ hass, entity }: ConsumablesSectionProps) {
   return (
     <div className="consumables-section">
       {CONSUMABLES.map((consumable) => {
-        const percent = getPercentage(consumable.percentKey);
-        const hours = getHoursLeft(consumable.hoursKey);
+        const percent = getAttr(attributes[consumable.percentKey], 0);
+        const hours = getAttr(attributes[consumable.hoursKey], 0);
         const progressColor = getProgressColor(percent);
 
         return (

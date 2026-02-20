@@ -9,7 +9,7 @@ import { SettingsPanel } from '../SettingsPanel';
 import { RoomSelectionDisplay } from '../RoomSelectionDisplay';
 import { Toast } from '../common';
 import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useTheme } from '../../hooks';
-import { extractEntityData, getEffectiveCleaningMode } from '../../utils/entityHelpers';
+import { extractEntityData, getEffectiveCleaningMode, getAttr } from '../../utils';
 import type { Hass, HassConfig } from '../../types/homeassistant';
 import { useState, useRef } from 'react';
 import './DreameVacuumCard.scss';
@@ -116,22 +116,16 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           onZoneChange={setSelectedZone}
           onImageDimensionsChange={(width, height) => setImageDimensions({ width, height })}
           language={language}
-          isStarted={typeof entity.attributes.started === 'boolean' ? entity.attributes.started : false}
+          isStarted={getAttr(entity.attributes.started, false)}
         />
 
         <CleaningModeButton
-          cleanGeniusMode={
-            typeof entity.attributes.cleangenius_mode === 'string' ? entity.attributes.cleangenius_mode : ''
-          }
-          cleaningMode={
-            typeof entity.attributes.cleaning_mode === 'string'
-              ? entity.attributes.cleaning_mode
-              : 'Sweeping and mopping'
-          }
-          cleangenius={typeof entity.attributes.cleangenius === 'string' ? entity.attributes.cleangenius : 'Off'}
+          cleanGeniusMode={getAttr(entity.attributes.cleangenius_mode, '')}
+          cleaningMode={getAttr(entity.attributes.cleaning_mode, 'Sweeping and mopping')}
+          cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
           onClick={() => setModalOpened(true)}
           onShortcutsClick={() => setShortcutsModalOpened(true)}
-          disabled={typeof entity.attributes.started === 'boolean' ? entity.attributes.started : false}
+          disabled={getAttr(entity.attributes.started, false)}
           language={language}
         />
 
@@ -141,20 +135,16 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           <ModeTabs
             selectedMode={effectiveMode}
             onModeChange={handleModeChange}
-            disabled={typeof entity.attributes.started === 'boolean' ? entity.attributes.started : false}
+            disabled={getAttr(entity.attributes.started, false)}
             language={language}
           />
 
           <ActionButtons
             selectedMode={selectedMode}
             selectedRoomsCount={selectedRooms.size}
-            isRunning={typeof entity.attributes.running === 'boolean' ? entity.attributes.running : false}
-            isPaused={typeof entity.attributes.paused === 'boolean' ? entity.attributes.paused : false}
-            isDocked={
-              entity.state === 'docked' ||
-              (typeof entity.attributes.docked === 'boolean' && entity.attributes.docked) ||
-              false
-            }
+            isRunning={getAttr(entity.attributes.running, false)}
+            isPaused={getAttr(entity.attributes.paused, false)}
+            isDocked={entity.state === 'docked' || getAttr(entity.attributes.docked, false)}
             onClean={handleCleanAction}
             onPause={handlePause}
             onResume={handleResume}

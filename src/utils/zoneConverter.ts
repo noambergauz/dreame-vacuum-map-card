@@ -1,4 +1,5 @@
 import type { HassEntity } from '../types/homeassistant';
+import { isNumber } from './typeGuards';
 
 /**
  * Calibration point structure from map entity attributes
@@ -187,14 +188,14 @@ export function getMapDimensions(mapEntity: HassEntity | undefined): MapDimensio
   }
 
   // Try to get dimensions from attributes
-  const top = typeof attrs.top === 'number' ? attrs.top : undefined;
-  const left = typeof attrs.left === 'number' ? attrs.left : undefined;
-  const height = typeof attrs.height === 'number' ? attrs.height : undefined;
-  const width = typeof attrs.width === 'number' ? attrs.width : undefined;
-  const gridSize = typeof attrs.grid_size === 'number' ? attrs.grid_size : undefined;
+  const top = isNumber(attrs.top) ? attrs.top : undefined;
+  const left = isNumber(attrs.left) ? attrs.left : undefined;
+  const height = isNumber(attrs.height) ? attrs.height : undefined;
+  const width = isNumber(attrs.width) ? attrs.width : undefined;
+  const gridSize = isNumber(attrs.grid_size) ? attrs.grid_size : undefined;
 
   if (top !== undefined && left !== undefined && height && width && gridSize) {
-    const scale = typeof attrs.scale === 'number' ? attrs.scale : 1;
+    const scale = isNumber(attrs.scale) ? attrs.scale : 1;
     const padding = Array.isArray(attrs.padding) ? (attrs.padding as number[]) : [0, 0, 0, 0];
     const crop = Array.isArray(attrs.crop) ? (attrs.crop as number[]) : [0, 0, 0, 0];
 
@@ -218,8 +219,8 @@ export function getMapDimensions(mapEntity: HassEntity | undefined): MapDimensio
  */
 export function getImageDimensions(mapEntity: HassEntity | undefined): { width: number; height: number } | null {
   // Try to get dimensions from attributes
-  const width = typeof mapEntity?.attributes?.width === 'number' ? mapEntity.attributes.width : undefined;
-  const height = typeof mapEntity?.attributes?.height === 'number' ? mapEntity.attributes.height : undefined;
+  const width = isNumber(mapEntity?.attributes?.width) ? mapEntity.attributes.width : undefined;
+  const height = isNumber(mapEntity?.attributes?.height) ? mapEntity.attributes.height : undefined;
 
   if (width && height) {
     return { width, height };

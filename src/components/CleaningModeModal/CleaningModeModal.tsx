@@ -7,7 +7,7 @@ import type { CleanGeniusState } from '../../types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
 import { useTranslation } from '../../hooks/useTranslation';
 import type { SupportedLanguage } from '../../i18n/locales';
-import { convertCleanGeniusStateToService, extractBaseEntityId } from '../../utils';
+import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '../../utils';
 import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS } from '../../constants';
 import './CleaningModeModal.scss';
 
@@ -25,45 +25,30 @@ export function CleaningModeModal({ opened, onClose, entity, hass, language }: C
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
 
-  // Helper functions for type-safe attribute access
-  const getStringAttr = (key: string, defaultValue: string): string => {
-    const value = entity.attributes[key];
-    return typeof value === 'string' ? value : defaultValue;
-  };
-
-  const getNumberAttr = (key: string, defaultValue: number): number => {
-    const value = entity.attributes[key];
-    return typeof value === 'number' ? value : defaultValue;
-  };
-
-  const getBooleanAttr = (key: string, defaultValue: boolean): boolean => {
-    const value = entity.attributes[key];
-    return typeof value === 'boolean' ? value : defaultValue;
-  };
-
+  // Helper function for type-safe array attribute access
   const getStringArrayAttr = (key: string, defaultValue: string[]): string[] => {
     const value = entity.attributes[key];
     return Array.isArray(value) ? (value as string[]) : defaultValue;
   };
 
-  const cleangenius = getStringAttr('cleangenius', CLEANGENIUS_STATE.OFF);
+  const cleangenius = getAttr(entity.attributes.cleangenius, CLEANGENIUS_STATE.OFF);
   const [isCleanGenius, setIsCleanGenius] = useState(cleangenius !== CLEANGENIUS_STATE.OFF);
 
-  const cleaningMode = getStringAttr('cleaning_mode', DEFAULTS.CLEANING_MODE);
-  const cleangeniusMode = getStringAttr('cleangenius_mode', DEFAULTS.CLEANGENIUS_MODE);
-  const suctionLevel = getStringAttr('suction_level', DEFAULTS.SUCTION_LEVEL);
-  const wetnessLevel = getNumberAttr('wetness_level', DEFAULTS.WETNESS_LEVEL);
-  const cleaningRoute = getStringAttr('cleaning_route', DEFAULTS.CLEANING_ROUTE);
-  const maxSuctionPower = getBooleanAttr('max_suction_power', DEFAULTS.MAX_SUCTION_POWER);
-  const selfCleanArea = getNumberAttr('self_clean_area', DEFAULTS.SELF_CLEAN_AREA);
-  const selfCleanFrequency = getStringAttr('self_clean_frequency', DEFAULTS.SELF_CLEAN_FREQUENCY);
+  const cleaningMode = getAttr(entity.attributes.cleaning_mode, DEFAULTS.CLEANING_MODE);
+  const cleangeniusMode = getAttr(entity.attributes.cleangenius_mode, DEFAULTS.CLEANGENIUS_MODE);
+  const suctionLevel = getAttr(entity.attributes.suction_level, DEFAULTS.SUCTION_LEVEL);
+  const wetnessLevel = getAttr(entity.attributes.wetness_level, DEFAULTS.WETNESS_LEVEL);
+  const cleaningRoute = getAttr(entity.attributes.cleaning_route, DEFAULTS.CLEANING_ROUTE);
+  const maxSuctionPower = getAttr(entity.attributes.max_suction_power, DEFAULTS.MAX_SUCTION_POWER);
+  const selfCleanArea = getAttr(entity.attributes.self_clean_area, DEFAULTS.SELF_CLEAN_AREA);
+  const selfCleanFrequency = getAttr(entity.attributes.self_clean_frequency, DEFAULTS.SELF_CLEAN_FREQUENCY);
   const selfCleanFrequencyList = getStringArrayAttr('self_clean_frequency_list', ['By area', 'By time', 'By room']);
-  const selfCleanAreaMin = getNumberAttr('self_clean_area_min', DEFAULTS.SELF_CLEAN_AREA_MIN);
-  const selfCleanAreaMax = getNumberAttr('self_clean_area_max', DEFAULTS.SELF_CLEAN_AREA_MAX);
-  const selfCleanTime = getNumberAttr('previous_self_clean_time', DEFAULTS.SELF_CLEAN_TIME);
-  const selfCleanTimeMin = getNumberAttr('self_clean_time_min', DEFAULTS.SELF_CLEAN_TIME_MIN);
-  const selfCleanTimeMax = getNumberAttr('self_clean_time_max', DEFAULTS.SELF_CLEAN_TIME_MAX);
-  const mopPadHumidity = getStringAttr('mop_pad_humidity', DEFAULTS.MOP_PAD_HUMIDITY);
+  const selfCleanAreaMin = getAttr(entity.attributes.self_clean_area_min, DEFAULTS.SELF_CLEAN_AREA_MIN);
+  const selfCleanAreaMax = getAttr(entity.attributes.self_clean_area_max, DEFAULTS.SELF_CLEAN_AREA_MAX);
+  const selfCleanTime = getAttr(entity.attributes.previous_self_clean_time, DEFAULTS.SELF_CLEAN_TIME);
+  const selfCleanTimeMin = getAttr(entity.attributes.self_clean_time_min, DEFAULTS.SELF_CLEAN_TIME_MIN);
+  const selfCleanTimeMax = getAttr(entity.attributes.self_clean_time_max, DEFAULTS.SELF_CLEAN_TIME_MAX);
+  const mopPadHumidity = getAttr(entity.attributes.mop_pad_humidity, DEFAULTS.MOP_PAD_HUMIDITY);
 
   const modeOptions = [
     { value: UI_MODE_TYPE.CLEANGENIUS, label: t('cleaning_mode.clean_genius') },

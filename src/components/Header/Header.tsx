@@ -1,5 +1,6 @@
 import { Settings } from 'lucide-react';
 import type { HassEntity } from '../../types/homeassistant';
+import { getAttr, isNumber } from '../../utils';
 import './Header.scss';
 import {
   BATTERY_EMPTY_ICON_SVG,
@@ -17,29 +18,14 @@ interface HeaderProps {
 }
 
 export function Header({ entity, deviceName, onSettingsClick }: HeaderProps) {
-  const getStatusText = () => {
-    const status = entity.attributes.status;
-    return typeof status === 'string' ? status : entity.state;
-  };
-
-  const getCleanedArea = () => {
-    const area = entity.attributes.cleaned_area;
-    return typeof area === 'number' ? area : 0;
-  };
-
-  const getCleaningTime = () => {
-    const time = entity.attributes.cleaning_time;
-    return typeof time === 'number' ? time : 0;
-  };
-
-  const getBatteryLevel = () => {
-    const battery = entity.attributes.battery;
-    return typeof battery === 'number' ? battery : 0;
-  };
+  const statusText = getAttr(entity.attributes.status, entity.state);
+  const cleanedArea = getAttr(entity.attributes.cleaned_area, 0);
+  const cleaningTime = getAttr(entity.attributes.cleaning_time, 0);
+  const batteryLevel = getAttr(entity.attributes.battery, 0);
 
   const getBatteryLevelIcon = () => {
     const battery = entity.attributes.battery;
-    if (typeof battery !== 'number') return null;
+    if (!isNumber(battery)) return null;
 
     if (battery >= 80) return BATTERY_FULL_ICON_SVG;
     if (battery >= 60) return BATTERY_MEDIUM_ICON_SVG;
@@ -47,13 +33,7 @@ export function Header({ entity, deviceName, onSettingsClick }: HeaderProps) {
     return BATTERY_EMPTY_ICON_SVG;
   };
 
-  const progress = (() => {
-    const cleaningProgress = entity.attributes.cleaning_progress;
-    const dryingProgress = entity.attributes.drying_progress;
-    const cp = typeof cleaningProgress === 'number' ? cleaningProgress : 0;
-    const dp = typeof dryingProgress === 'number' ? dryingProgress : 0;
-    return cp || dp;
-  })();
+  const progress = getAttr(entity.attributes.cleaning_progress, 0) || getAttr(entity.attributes.drying_progress, 0);
 
   const status = entity.attributes.status;
 
@@ -62,7 +42,7 @@ export function Header({ entity, deviceName, onSettingsClick }: HeaderProps) {
       <div className="header__top">
         <div className="header__title-wrapper">
           <h2 className="header__title">{deviceName}</h2>
-          <p className="header__status">{getStatusText()}</p>
+          <p className="header__status">{statusText}</p>
         </div>
         {onSettingsClick && (
           <button className="header__settings-btn" onClick={onSettingsClick} type="button" aria-label="Settings">
@@ -82,15 +62,15 @@ export function Header({ entity, deviceName, onSettingsClick }: HeaderProps) {
       <div className="header__stats">
         <div className="header__stat">
           <span className="header__stat-icon--area">{AREA_ICON_SVG}</span>
-          <span className="header__stat-value">{getCleanedArea()} m²</span>
+          <span className="header__stat-value">{cleanedArea} m²</span>
         </div>
         <div className="header__stat">
           <span className="header__stat-icon--cleaning-time">{HISTORY_ICON_SVG}</span>
-          <span className="header__stat-value">{getCleaningTime()} min</span>
+          <span className="header__stat-value">{cleaningTime} min</span>
         </div>
         <div className="header__stat">
           <span className="header__stat-icon">{getBatteryLevelIcon()}</span>
-          <span className="header__stat-value">{getBatteryLevel()} %</span>
+          <span className="header__stat-value">{batteryLevel} %</span>
         </div>
       </div>
     </div>

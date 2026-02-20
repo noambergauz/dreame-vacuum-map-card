@@ -1,4 +1,5 @@
 import type { HassEntity, HassConfig, RoomPosition, CleaningMode } from '../types/homeassistant';
+import { getAttr } from './typeGuards';
 
 export function extractEntityData(entity: HassEntity | undefined, config: HassConfig) {
   if (!entity) {
@@ -27,7 +28,7 @@ export function extractEntityData(entity: HassEntity | undefined, config: HassCo
 }
 
 export function getEffectiveCleaningMode(entity: HassEntity, selectedMode: CleaningMode): CleaningMode {
-  const vacuumStatus = typeof entity.attributes.status === 'string' ? entity.attributes.status : '';
+  const vacuumStatus = getAttr(entity.attributes.status, '');
   const isSegmentCleaning = entity.attributes.segment_cleaning || false;
   const isZoneCleaning = entity.attributes.zone_cleaning || false;
 
