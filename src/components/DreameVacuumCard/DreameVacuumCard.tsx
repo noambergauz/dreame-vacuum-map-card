@@ -177,6 +177,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         hass={hass}
         entity={entity}
         config={config}
+        language={language}
       />
 
       {toast && <Toast message={toast} onClose={hideToast} />}

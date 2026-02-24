@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Toggle } from '../../common';
 import { useTranslation } from '../../../hooks';
+import type { SupportedLanguage } from '../../../i18n/locales';
 import { getAttr, isBoolean, isNumber, isString } from '../../../utils';
 import type { Hass, HassEntity } from '../../../types/homeassistant';
 import './CarpetSettingsSection.scss';
@@ -8,6 +9,7 @@ import './CarpetSettingsSection.scss';
 interface CarpetSettingsSectionProps {
   hass: Hass;
   entity: HassEntity;
+  language?: SupportedLanguage;
 }
 
 interface CarpetToggle {
@@ -44,8 +46,8 @@ const CARPET_TOGGLES: CarpetToggle[] = [
 
 const CARPET_SENSITIVITY_OPTIONS = ['low', 'medium', 'high'] as const;
 
-export function CarpetSettingsSection({ hass, entity }: CarpetSettingsSectionProps) {
-  const { t } = useTranslation();
+export function CarpetSettingsSection({ hass, entity, language }: CarpetSettingsSectionProps) {
+  const { t } = useTranslation(language);
   const attributes = entity.attributes;
   const entityName = entity.entity_id.split('.')[1] ?? '';
 

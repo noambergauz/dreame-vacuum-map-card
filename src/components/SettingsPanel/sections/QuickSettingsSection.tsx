@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { Toggle } from '../../common';
 import { useTranslation } from '../../../hooks';
+import type { SupportedLanguage } from '../../../i18n/locales';
 import { isBoolean, isNumber, isObject } from '../../../utils';
 import type { Hass, HassEntity } from '../../../types/homeassistant';
 import './QuickSettingsSection.scss';
@@ -8,6 +9,7 @@ import './QuickSettingsSection.scss';
 interface QuickSettingsSectionProps {
   hass: Hass;
   entity: HassEntity;
+  language?: SupportedLanguage;
 }
 
 interface QuickSetting {
@@ -56,8 +58,8 @@ const QUICK_SETTINGS: QuickSetting[] = [
   },
 ];
 
-export function QuickSettingsSection({ hass, entity }: QuickSettingsSectionProps) {
-  const { t } = useTranslation();
+export function QuickSettingsSection({ hass, entity, language }: QuickSettingsSectionProps) {
+  const { t } = useTranslation(language);
   const attributes = entity.attributes;
   const entityName = entity.entity_id.split('.')[1] ?? '';
 

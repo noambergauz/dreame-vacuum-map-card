@@ -1,10 +1,12 @@
 import { useTranslation } from '../../../hooks';
+import type { SupportedLanguage } from '../../../i18n/locales';
 import { getAttr, isString, isNumber } from '../../../utils';
 import type { HassEntity } from '../../../types/homeassistant';
 import './DeviceInfoSection.scss';
 
 interface DeviceInfoSectionProps {
   entity: HassEntity;
+  language?: SupportedLanguage;
 }
 
 interface InfoItem {
@@ -13,8 +15,8 @@ interface InfoItem {
   unit?: string;
 }
 
-export function DeviceInfoSection({ entity }: DeviceInfoSectionProps) {
-  const { t } = useTranslation();
+export function DeviceInfoSection({ entity, language }: DeviceInfoSectionProps) {
+  const { t } = useTranslation(language);
   const attributes = entity.attributes;
 
   const rawFirmware = attributes.firmware_version;
