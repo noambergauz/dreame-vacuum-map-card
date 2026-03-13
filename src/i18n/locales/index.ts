@@ -1,4 +1,5 @@
 import { en } from './en';
+import { fr } from './fr';
 import { de } from './de';
 import { ru } from './ru';
 import { zh } from './zh';
@@ -9,6 +10,7 @@ import { pl } from './pl';
 
 export const locales = {
   en,
+  fr,
   de,
   ru,
   zh,
