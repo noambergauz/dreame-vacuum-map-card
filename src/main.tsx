@@ -45,6 +45,7 @@ class DreameVacuumMapCard extends HTMLElement {
         type: 'custom:dreame-vacuum-map-card',
         title: devConfig.mockEntityTitle,
         theme: 'dark',
+        language: 'he',
       };
 
       // Attach dev utilities to window for console access

@@ -51,10 +51,10 @@ export function createTranslator(language: SupportedLanguage = 'en') {
 }
 
 /**
- * Get the plural form for a count (handles EN and DE pluralization rules)
+ * Get the plural form for a count (handles EN, DE, and HE pluralization rules)
  */
 export function getPluralKey(baseKey: string, count: number): string {
-  // Both EN and DE use plural form when count !== 1
+  // EN, DE, and HE use plural form when count !== 1
   return count === 1 ? baseKey : `${baseKey}_plural`;
 }
 

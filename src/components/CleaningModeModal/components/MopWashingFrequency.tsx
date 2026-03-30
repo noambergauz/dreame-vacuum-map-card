@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CircularButton } from '../../common';
 import type { SelfCleanFrequency } from '../../../types/vacuum';
 import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '../../../utils';
@@ -57,8 +57,13 @@ export function MopWashingFrequency({
   timeEntityId,
   t,
 }: MopWashingFrequencyProps) {
+  const [localFrequency, setLocalFrequency] = useState(selfCleanFrequency);
   const [localArea, setLocalArea] = useState(selfCleanArea);
   const [localTime, setLocalTime] = useState(selfCleanTime);
+
+  useEffect(() => {
+    setLocalFrequency(selfCleanFrequency);
+  }, [selfCleanFrequency]);
 
   const selfCleanAreaPercent = ((localArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
   const selfCleanTimePercent = ((localTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100;
@@ -72,9 +77,14 @@ export function MopWashingFrequency({
   const squareMetersUnit = t ? t('units.square_meters') : 'm²';
   const minutesShortUnit = t ? t('units.minutes_short') : 'm';
 
+  const handleFrequencySelect = (freq: string) => {
+    setLocalFrequency(freq);
+    onSelectFrequency(frequencyEntityId, convertSelfCleanFrequencyToService(freq as SelfCleanFrequency));
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (selfCleanFrequency === 'By area') {
+    if (localFrequency === 'By area') {
       setLocalArea(value);
     } else {
       setLocalTime(value);
@@ -82,9 +92,9 @@ export function MopWashingFrequency({
   };
 
   const handleCommit = () => {
-    if (selfCleanFrequency === 'By area' && localArea !== selfCleanArea) {
+    if (localFrequency === 'By area' && localArea !== selfCleanArea) {
       onChangeArea(areaEntityId, localArea);
-    } else if (selfCleanFrequency === 'By time' && localTime !== selfCleanTime) {
+    } else if (localFrequency === 'By time' && localTime !== selfCleanTime) {
       onChangeTime(timeEntityId, localTime);
     }
   };
@@ -97,10 +107,8 @@ export function MopWashingFrequency({
           <div key={idx} className="cleaning-mode-modal__mode-option">
             <CircularButton
               size="small"
-              selected={freq === selfCleanFrequency}
-              onClick={() =>
-                onSelectFrequency(frequencyEntityId, convertSelfCleanFrequencyToService(freq as SelfCleanFrequency))
-              }
+              selected={freq === localFrequency}
+              onClick={() => handleFrequencySelect(freq)}
               icon={getSelfCleanFrequencyIcon(freq as SelfCleanFrequency)}
             />
             <span className="cleaning-mode-modal__mode-option-label">{getFrequencyLabel(freq, t)}</span>
@@ -109,21 +117,21 @@ export function MopWashingFrequency({
       </div>
 
       {/* Slider for By area or By time */}
-      {(selfCleanFrequency === 'By area' || selfCleanFrequency === 'By time') && (
+      {(localFrequency === 'By area' || localFrequency === 'By time') && (
         <div className="cleaning-mode-modal__slider-container" style={{ marginTop: '1rem' }}>
           <div className="cleaning-mode-modal__slider-wrapper">
             <input
               type="range"
-              min={selfCleanFrequency === 'By area' ? selfCleanAreaMin : selfCleanTimeMin}
-              max={selfCleanFrequency === 'By area' ? selfCleanAreaMax : selfCleanTimeMax}
-              value={selfCleanFrequency === 'By area' ? localArea : localTime}
+              min={localFrequency === 'By area' ? selfCleanAreaMin : selfCleanTimeMin}
+              max={localFrequency === 'By area' ? selfCleanAreaMax : selfCleanTimeMax}
+              value={localFrequency === 'By area' ? localArea : localTime}
               onChange={handleChange}
               onMouseUp={handleCommit}
               onTouchEnd={handleCommit}
               className="cleaning-mode-modal__slider"
               style={{
                 background:
-                  selfCleanFrequency === 'By area'
+                  localFrequency === 'By area'
                     ? `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) 100%)`
                     : `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) 100%)`,
               }}
@@ -131,10 +139,10 @@ export function MopWashingFrequency({
             <div
               className="cleaning-mode-modal__slider-tooltip"
               style={{
-                left: selfCleanFrequency === 'By area' ? areaTooltipLeft : timeTooltipLeft,
+                left: localFrequency === 'By area' ? areaTooltipLeft : timeTooltipLeft,
               }}
             >
-              {selfCleanFrequency === 'By area' ? `${localArea}${squareMetersUnit}` : `${localTime}${minutesShortUnit}`}
+              {localFrequency === 'By area' ? `${localArea}${squareMetersUnit}` : `${localTime}${minutesShortUnit}`}
             </div>
           </div>
         </div>
