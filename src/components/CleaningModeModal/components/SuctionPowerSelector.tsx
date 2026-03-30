@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { CircularButton, Toggle } from '../../common';
 import type { SuctionLevel } from '../../../types/vacuum';
 import { getSuctionLevelIcon, convertToLowerCase, getSuctionLevelFriendlyName } from '../../../utils';
@@ -27,6 +28,27 @@ export function SuctionPowerSelector({
   maxPlusDescription,
   t,
 }: SuctionPowerSelectorProps) {
+  const [localLevel, setLocalLevel] = useState(suctionLevel);
+  const [localMaxPower, setLocalMaxPower] = useState(maxSuctionPower);
+
+  useEffect(() => {
+    setLocalLevel(suctionLevel);
+  }, [suctionLevel]);
+
+  useEffect(() => {
+    setLocalMaxPower(maxSuctionPower);
+  }, [maxSuctionPower]);
+
+  const handleSelectLevel = (level: string) => {
+    setLocalLevel(level);
+    onSelectSuctionLevel(suctionLevelEntityId, convertToLowerCase(level));
+  };
+
+  const handleToggleMaxPower = (checked: boolean) => {
+    setLocalMaxPower(checked);
+    onToggleMaxPower(maxSuctionPowerEntityId, checked);
+  };
+
   return (
     <>
       <div className="cleaning-mode-modal__power-grid">
@@ -34,8 +56,8 @@ export function SuctionPowerSelector({
           <div key={idx} className="cleaning-mode-modal__power-option">
             <CircularButton
               size="small"
-              selected={level === suctionLevel}
-              onClick={() => onSelectSuctionLevel(suctionLevelEntityId, convertToLowerCase(level))}
+              selected={level === localLevel}
+              onClick={() => handleSelectLevel(level)}
               icon={getSuctionLevelIcon(level as SuctionLevel)}
             />
             <span className="cleaning-mode-modal__power-label">
@@ -50,8 +72,8 @@ export function SuctionPowerSelector({
         <div className="cleaning-mode-modal__max-plus-header">
           <span className="cleaning-mode-modal__max-plus-title">Max+</span>
           <Toggle
-            checked={maxSuctionPower}
-            onChange={(checked) => onToggleMaxPower(maxSuctionPowerEntityId, checked)}
+            checked={localMaxPower}
+            onChange={handleToggleMaxPower}
           />
         </div>
         <p className="cleaning-mode-modal__max-plus-description">{maxPlusDescription}</p>
