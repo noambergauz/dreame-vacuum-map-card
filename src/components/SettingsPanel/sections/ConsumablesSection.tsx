@@ -16,7 +16,7 @@ interface ConsumableItem {
   labelKey: string;
   percentKey: string;
   hoursKey: string;
-  resetCommand: string;
+  consumableKey: string;
 }
 
 const CONSUMABLES: ConsumableItem[] = [
@@ -25,28 +25,28 @@ const CONSUMABLES: ConsumableItem[] = [
     labelKey: 'settings.consumables.main_brush',
     percentKey: 'main_brush_left',
     hoursKey: 'main_brush_time_left',
-    resetCommand: 'reset_main_brush',
+    consumableKey: 'main_brush',
   },
   {
     key: 'side_brush',
     labelKey: 'settings.consumables.side_brush',
     percentKey: 'side_brush_left',
     hoursKey: 'side_brush_time_left',
-    resetCommand: 'reset_side_brush',
+    consumableKey: 'side_brush',
   },
   {
     key: 'filter',
     labelKey: 'settings.consumables.filter',
     percentKey: 'filter_left',
     hoursKey: 'filter_time_left',
-    resetCommand: 'reset_filter',
+    consumableKey: 'filter',
   },
   {
     key: 'sensor',
     labelKey: 'settings.consumables.sensor',
     percentKey: 'sensor_dirty_left',
     hoursKey: 'sensor_dirty_time_left',
-    resetCommand: 'reset_sensor',
+    consumableKey: 'sensor',
   },
 ];
 
@@ -55,9 +55,10 @@ export function ConsumablesSection({ hass, entity, language }: ConsumablesSectio
   const attributes = entity.attributes;
 
   const handleReset = useCallback(
-    (resetCommand: string) => {
-      hass.callService('dreame_vacuum', resetCommand, {
+    (consumableKey: string) => {
+      hass.callService('dreame_vacuum', 'vacuum_reset_consumable', {
         entity_id: entity.entity_id,
+        consumable: consumableKey,
       });
     },
     [hass, entity.entity_id]
@@ -95,7 +96,7 @@ export function ConsumablesSection({ hass, entity, language }: ConsumablesSectio
             </div>
             <button
               className="consumables-section__reset"
-              onClick={() => handleReset(consumable.resetCommand)}
+              onClick={() => handleReset(consumable.consumableKey)}
               type="button"
             >
               {t('settings.consumables.reset')}
