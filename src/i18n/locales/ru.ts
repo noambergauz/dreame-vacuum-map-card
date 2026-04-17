@@ -19,6 +19,9 @@ export const ru: Translation = {
     switch_to_map: 'Переключить на карту',
     room_list_overlay: 'Нажмите на комнаты для выбора уборки',
     no_rooms: 'Нет доступных комнат',
+    zoom_in: 'Увеличить',
+    zoom_out: 'Уменьшить',
+    zoom_reset: 'Сбросить масштаб',
   },
 
   // Mode Tabs

@@ -19,6 +19,9 @@ export const nl: Translation = {
     switch_to_map: 'Naar kaartweergave',
     room_list_overlay: 'Tik op kamers om te selecteren voor reiniging',
     no_rooms: 'Geen kamers beschikbaar',
+    zoom_in: 'Inzoomen',
+    zoom_out: 'Uitzoomen',
+    zoom_reset: 'Zoom resetten',
   },
 
   // Modus Tabbladen

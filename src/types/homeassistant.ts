@@ -59,10 +59,24 @@ export interface HassConfig {
   default_room_view?: RoomViewMode;
 }
 
+export interface HassUnitSystem {
+  area?: string;
+  length?: string;
+  temperature?: string;
+  mass?: string;
+  volume?: string;
+  pressure?: string;
+  wind_speed?: string;
+  accumulated_precipitation?: string;
+}
+
 export interface Hass {
   states: Record<string, HassEntity>;
   callService: (domain: string, service: string, data?: Record<string, unknown>) => Promise<void>;
   hassUrl: (path: string) => string;
+  config?: {
+    unit_system?: HassUnitSystem;
+  };
 }
 
 export type CleaningMode = 'room' | 'all' | 'zone';

@@ -1,7 +1,6 @@
 import { Modal } from '../common';
-import type { Hass, HassEntity } from '../../types/homeassistant';
 import { useTranslation } from '../../hooks/useTranslation';
-import type { SupportedLanguage } from '../../i18n/locales';
+import { useEntity, useHass } from '../../contexts';
 import './ShortcutsModal.scss';
 import { SHORTCUT_START_CLEANING_ICON_SVG } from '../../constants/icons';
 
@@ -13,13 +12,12 @@ interface ShortcutData {
 interface ShortcutsModalProps {
   opened: boolean;
   onClose: () => void;
-  entity: HassEntity;
-  hass: Hass;
-  language?: SupportedLanguage;
 }
 
-export function ShortcutsModal({ opened, onClose, entity, hass, language }: ShortcutsModalProps) {
-  const { t } = useTranslation(language);
+export function ShortcutsModal({ opened, onClose }: ShortcutsModalProps) {
+  const { t } = useTranslation();
+  const entity = useEntity();
+  const hass = useHass();
   const shortcutsObj = (entity.attributes.shortcuts || {}) as Record<string, ShortcutData>;
   const shortcuts = Object.entries(shortcutsObj).map(([id, data]) => ({
     id: parseInt(id),

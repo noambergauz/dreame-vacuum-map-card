@@ -19,6 +19,9 @@ export const zh: Translation = {
     switch_to_map: '切换到地图视图',
     room_list_overlay: '点击房间进行选择',
     no_rooms: '暂无可用房间',
+    zoom_in: '放大',
+    zoom_out: '缩小',
+    zoom_reset: '重置缩放',
   },
 
   // Mode Tabs (模式切换标签)

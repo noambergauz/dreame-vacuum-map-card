@@ -20,6 +20,9 @@ export const de: Translation = {
     switch_to_map: 'Zur Kartenansicht wechseln',
     room_list_overlay: 'Räume antippen, um sie für die Reinigung auszuwählen',
     no_rooms: 'Keine Räume verfügbar',
+    zoom_in: 'Vergrößern',
+    zoom_out: 'Verkleinern',
+    zoom_reset: 'Zoom zurücksetzen',
   },
 
   // Mode Tabs

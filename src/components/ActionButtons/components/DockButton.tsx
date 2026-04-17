@@ -1,15 +1,13 @@
-import type { SupportedLanguage } from '../../../i18n/locales';
 import { useTranslation } from '../../../hooks';
 import '../ActionButtons.scss';
 import { DOCK_ICON_SVG } from '../../../constants/icons';
 
 interface DockButtonProps {
   onClick: () => void;
-  language?: SupportedLanguage;
 }
 
-export function DockButton({ onClick, language = 'en' }: DockButtonProps) {
-  const { t } = useTranslation(language);
+export function DockButton({ onClick }: DockButtonProps) {
+  const { t } = useTranslation();
 
   return (
     <button onClick={onClick} className="action-buttons__dock">

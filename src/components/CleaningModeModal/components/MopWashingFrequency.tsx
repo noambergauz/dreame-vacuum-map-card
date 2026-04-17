@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CircularButton } from '../../common';
 import type { SelfCleanFrequency } from '../../../types/vacuum';
 import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '../../../utils';
+import { useAreaUnit } from '../../../contexts';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
@@ -59,6 +60,7 @@ export function MopWashingFrequency({
 }: MopWashingFrequencyProps) {
   const [localArea, setLocalArea] = useState(selfCleanArea);
   const [localTime, setLocalTime] = useState(selfCleanTime);
+  const areaUnit = useAreaUnit();
 
   const selfCleanAreaPercent = ((localArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
   const selfCleanTimePercent = ((localTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100;
@@ -69,7 +71,6 @@ export function MopWashingFrequency({
   const timeTooltipLeft = `calc(${selfCleanTimePercent}% + ${thumbWidth / 2 - (selfCleanTimePercent * thumbWidth) / 100}px)`;
 
   // Get translated unit strings
-  const squareMetersUnit = t ? t('units.square_meters') : 'm²';
   const minutesShortUnit = t ? t('units.minutes_short') : 'm';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,7 +135,7 @@ export function MopWashingFrequency({
                 left: selfCleanFrequency === 'By area' ? areaTooltipLeft : timeTooltipLeft,
               }}
             >
-              {selfCleanFrequency === 'By area' ? `${localArea}${squareMetersUnit}` : `${localTime}${minutesShortUnit}`}
+              {selfCleanFrequency === 'By area' ? `${localArea}${areaUnit}` : `${localTime}${minutesShortUnit}`}
             </div>
           </div>
         </div>

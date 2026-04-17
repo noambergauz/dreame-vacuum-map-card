@@ -8,21 +8,15 @@ import { MapManagementSection } from './sections/MapManagementSection';
 import { QuickSettingsSection } from './sections/QuickSettingsSection';
 import { VolumeSection } from './sections/VolumeSection';
 import { Brain, Gauge, Info, Layers, Map, Settings2, Volume2 } from 'lucide-react';
-import type { Hass, HassEntity, HassConfig } from '../../types/homeassistant';
-import type { SupportedLanguage } from '../../i18n/locales';
 import './SettingsPanel.scss';
 
 interface SettingsPanelProps {
   opened: boolean;
   onClose: () => void;
-  hass: Hass;
-  entity: HassEntity;
-  config: HassConfig;
-  language?: SupportedLanguage;
 }
 
-export function SettingsPanel({ opened, onClose, hass, entity, config, language }: SettingsPanelProps) {
-  const { t } = useTranslation(language);
+export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
+  const { t } = useTranslation();
 
   return (
     <Modal opened={opened} onClose={onClose}>
@@ -32,31 +26,31 @@ export function SettingsPanel({ opened, onClose, hass, entity, config, language 
         <div className="settings-panel__scroll-wrapper">
           <div className="settings-panel__sections">
             <Accordion title={t('settings.consumables.title')} icon={<Gauge />} defaultOpen>
-              <ConsumablesSection hass={hass} entity={entity} language={language} />
+              <ConsumablesSection />
             </Accordion>
 
             <Accordion title={t('settings.device_info.title')} icon={<Info />}>
-              <DeviceInfoSection entity={entity} language={language} />
+              <DeviceInfoSection />
             </Accordion>
 
             <Accordion title={t('settings.map_management.title')} icon={<Map />}>
-              <MapManagementSection hass={hass} entity={entity} config={config} language={language} />
+              <MapManagementSection />
             </Accordion>
 
             <Accordion title={t('settings.volume.title')} icon={<Volume2 />}>
-              <VolumeSection hass={hass} entity={entity} language={language} />
+              <VolumeSection />
             </Accordion>
 
             <Accordion title={t('settings.quick_settings.title')} icon={<Settings2 />}>
-              <QuickSettingsSection hass={hass} entity={entity} language={language} />
+              <QuickSettingsSection />
             </Accordion>
 
             <Accordion title={t('settings.carpet.title')} icon={<Layers />}>
-              <CarpetSettingsSection hass={hass} entity={entity} language={language} />
+              <CarpetSettingsSection />
             </Accordion>
 
             <Accordion title={t('settings.ai_detection.title')} icon={<Brain />}>
-              <AIDetectionSection hass={hass} entity={entity} language={language} />
+              <AIDetectionSection />
             </Accordion>
           </div>
         </div>

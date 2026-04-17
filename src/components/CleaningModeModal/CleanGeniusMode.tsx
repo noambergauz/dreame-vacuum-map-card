@@ -1,9 +1,8 @@
 import { Toggle } from '../common';
-import type { Hass } from '../../types/homeassistant';
 import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '../../types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
 import { useTranslation } from '../../hooks/useTranslation';
-import type { SupportedLanguage } from '../../i18n/locales';
+import { useHass } from '../../contexts';
 import {
   getCleanGeniusModeIcon,
   getCleanGeniusModeFriendlyName,
@@ -18,8 +17,6 @@ interface CleanGeniusModeProps {
   cleangeniusModeList: string[];
   cleangenius: string;
   baseEntityId: string;
-  hass: Hass;
-  language?: SupportedLanguage;
 }
 
 export function CleanGeniusMode({
@@ -27,11 +24,10 @@ export function CleanGeniusMode({
   cleangeniusModeList,
   cleangenius,
   baseEntityId,
-  hass,
-  language,
 }: CleanGeniusModeProps) {
+  const hass = useHass();
   const { setSelectOption } = useHomeAssistantServices(hass);
-  const { t } = useTranslation(language);
+  const { t } = useTranslation();
 
   const entityIds = useVacuumEntityIds(baseEntityId);
 

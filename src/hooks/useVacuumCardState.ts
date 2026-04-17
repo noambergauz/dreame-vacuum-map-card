@@ -25,23 +25,22 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
     setSelectedZone(null);
   }, []);
 
-  const handleRoomToggle = useCallback(
-    (roomId: number, roomName: string) => {
-      setSelectedRooms((prevSelected) => {
-        const newSelected = new Map(prevSelected);
-        if (newSelected.has(roomId)) {
-          console.debug('[UI] Room deselected:', { roomId, roomName });
-          newSelected.delete(roomId);
-        } else {
-          console.debug('[UI] Room selected:', { roomId, roomName });
-          newSelected.set(roomId, roomName);
-        }
-        return newSelected;
-      });
-      return selectedRooms.has(roomId);
-    },
-    [selectedRooms]
-  );
+  const handleRoomToggle = useCallback((roomId: number, roomName: string): boolean => {
+    let wasSelected = false;
+    setSelectedRooms((prevSelected) => {
+      wasSelected = prevSelected.has(roomId);
+      const newSelected = new Map(prevSelected);
+      if (wasSelected) {
+        console.debug('[UI] Room deselected:', { roomId, roomName });
+        newSelected.delete(roomId);
+      } else {
+        console.debug('[UI] Room selected:', { roomId, roomName });
+        newSelected.set(roomId, roomName);
+      }
+      return newSelected;
+    });
+    return wasSelected;
+  }, []);
 
   const handleModalOpen = useCallback((opened: boolean) => {
     console.debug('[UI] Cleaning mode modal:', opened ? 'opened' : 'closed');

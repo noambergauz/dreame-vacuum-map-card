@@ -4,17 +4,33 @@
   border-radius: 0.9375rem;
   overflow: hidden;
   background: var(--surface-bg, #fff);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-shadow: 0 0.25rem 0.9375rem var(--card-shadow, rgba(0, 0, 0, 0.1));
   min-height: 18.75rem;
 
-  &__image {
+  // Landscape orientation: constrain map height to fit within viewport
+  // This prevents scrolling on tablets/displays in landscape mode
+  // 280px accounts for: header (~80px) + controls (~150px) + padding (~50px)
+  @media (orientation: landscape) {
+    max-height: calc(100vh - 280px);
+    max-height: calc(100dvh - 280px); // Use dynamic viewport height where supported
+    min-height: min(18.75rem, calc(100vh - 280px)); // Don't enforce min-height larger than available space
+  }
+
+  // Content wrapper for the zoomable map area
+  &__content {
+    position: relative;
+    display: inline-block;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+  }
+
+  &__image {
+    display: block;
+    width: 100%;
+    height: auto;
     border-radius: 0.9375rem;
+    user-select: none;
+    -webkit-user-drag: none;
   }
 
   // Dark mode filter for map image
@@ -72,6 +88,16 @@
     pointer-events: auto;
     border-radius: 0.5rem;
     box-shadow: 0 0.125rem 0.75rem rgba(0, 122, 255, 0.3);
+  }
+
+  // Zone container for click handling inside TransformComponent
+  &__zone-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: auto;
   }
 
   &__zone-handle {
@@ -169,7 +195,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: auto;
+    pointer-events: none; // Let clicks pass through to segments
+
+    // Segments inside should be clickable
+    path {
+      pointer-events: auto;
+    }
   }
 
   &__room-segment {

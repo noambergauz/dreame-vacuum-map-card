@@ -19,6 +19,9 @@ export const es: Translation = {
     switch_to_map: 'Cambiar a vista de mapa',
     room_list_overlay: 'Toque las habitaciones para seleccionarlas para la limpieza',
     no_rooms: 'No hay habitaciones disponibles',
+    zoom_in: 'Acercar',
+    zoom_out: 'Alejar',
+    zoom_reset: 'Restablecer zoom',
   },
 
   // Mode Tabs

@@ -21,6 +21,9 @@ export function RoomSegments({
   imageHeight,
   isStarted,
 }: RoomSegmentsProps) {
+  // Debug: log when component renders
+  console.debug('[RoomSegments] Render, selectedRooms:', Array.from(selectedRooms.keys()));
+
   const roomPaths = useMemo(() => {
     return rooms
       .filter((room) => room.visibility !== 'Hidden')
@@ -31,6 +34,7 @@ export function RoomSegments({
   }, [rooms, calibrationPoints, imageWidth, imageHeight]);
 
   const handleRoomClick = (roomId: number, roomName: string) => {
+    console.debug('[RoomSegments] Click on room:', roomId, roomName);
     onRoomToggle(roomId, roomName);
   };
 
@@ -41,18 +45,8 @@ export function RoomSegments({
   return (
     <svg
       className="vacuum-map__room-segments"
-      width="100%"
-      height="100%"
       viewBox={`0 0 ${imageWidth} ${imageHeight}`}
-      preserveAspectRatio="none"
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'auto',
-      }}
+      preserveAspectRatio="xMidYMid meet"
     >
       {roomPaths.map(({ room, path }) => {
         const isSelected = selectedRooms.has(room.id);
@@ -64,7 +58,7 @@ export function RoomSegments({
 
         return (
           <path
-            key={room.id}
+            key={`${room.id}-${isSelected}`}
             d={path}
             className={`vacuum-map__room-segment ${isSelected ? 'vacuum-map__room-segment--selected' : ''}`}
             fill={isSelected ? 'var(--accent-bg, rgba(212, 175, 55, 0.3))' : 'transparent'}
@@ -73,9 +67,14 @@ export function RoomSegments({
             style={{
               cursor: 'pointer',
               transition: 'all 0.2s ease',
+              touchAction: 'none',
             }}
-            onClick={(e) => {
+            onPointerDown={(e) => {
               e.stopPropagation();
+            }}
+            onPointerUp={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
               handleRoomClick(room.id, room.name);
             }}
             data-room-id={room.id}

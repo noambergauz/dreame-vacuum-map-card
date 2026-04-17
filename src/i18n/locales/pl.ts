@@ -17,6 +17,9 @@ export const pl = {
     switch_to_map: 'Przełącz na widok mapy',
     room_list_overlay: 'Dotknij pokoje, aby wybrać do sprzątania',
     no_rooms: 'Brak dostępnych pokoi',
+    zoom_in: 'Powiększ',
+    zoom_out: 'Pomniejsz',
+    zoom_reset: 'Resetuj powiększenie',
   },
 
   // Mode Tabs

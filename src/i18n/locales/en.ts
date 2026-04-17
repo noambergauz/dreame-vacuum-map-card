@@ -17,6 +17,9 @@ export const en = {
     switch_to_map: 'Switch to map view',
     room_list_overlay: 'Tap rooms to select for cleaning',
     no_rooms: 'No rooms available',
+    zoom_in: 'Zoom in',
+    zoom_out: 'Zoom out',
+    zoom_reset: 'Reset zoom',
   },
 
   // Mode Tabs
