@@ -124,8 +124,8 @@ export const he: Translation = {
   // יחידות מידה
   units: {
     square_meters: 'מ"ר',
-    minutes: 'דק\'',
-    minutes_short: 'ד\'',
+    minutes: "דק'",
+    minutes_short: "ד'",
     percent: '%',
     decibels: 'dBm',
   },
