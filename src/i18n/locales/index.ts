@@ -7,6 +7,7 @@ import { nl } from './nl';
 import { it } from './it';
 import { pl } from './pl';
 import { fr_FR } from './fr';
+import { he } from './he';
 
 export const locales = {
   en,
@@ -18,6 +19,7 @@ export const locales = {
   it,
   pl,
   fr_FR,
+  he,
 };
 
 export type SupportedLanguage = keyof typeof locales;
