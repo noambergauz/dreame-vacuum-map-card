@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Modal, SegmentedControl } from '../common';
 import { CleanGeniusMode } from './CleanGeniusMode';
 import { CustomMode } from './CustomMode';
-import type { Hass, HassEntity } from '../../types/homeassistant';
 import type { CleanGeniusState } from '../../types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
 import { useTranslation } from '../../hooks/useTranslation';
-import type { SupportedLanguage } from '../../i18n/locales';
+import { useEntity, useHass } from '../../contexts';
 import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '../../utils';
 import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS } from '../../constants';
 import './CleaningModeModal.scss';
@@ -14,13 +13,12 @@ import './CleaningModeModal.scss';
 interface CleaningModeModalProps {
   opened: boolean;
   onClose: () => void;
-  entity: HassEntity;
-  hass: Hass;
-  language?: SupportedLanguage;
 }
 
-export function CleaningModeModal({ opened, onClose, entity, hass, language }: CleaningModeModalProps) {
-  const { t } = useTranslation(language);
+export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
+  const { t } = useTranslation();
+  const entity = useEntity();
+  const hass = useHass();
   const baseEntityId = extractBaseEntityId(entity.entity_id);
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
@@ -105,8 +103,6 @@ export function CleaningModeModal({ opened, onClose, entity, hass, language }: C
               cleangeniusModeList={cleangeniusModeList}
               cleangenius={cleangenius}
               baseEntityId={baseEntityId}
-              hass={hass}
-              language={language}
             />
           ) : (
             <CustomMode
@@ -128,8 +124,6 @@ export function CleaningModeModal({ opened, onClose, entity, hass, language }: C
               selfCleanTimeMin={selfCleanTimeMin}
               selfCleanTimeMax={selfCleanTimeMax}
               baseEntityId={baseEntityId}
-              hass={hass}
-              language={language}
             />
           )}
         </div>

@@ -1,2 +1,2 @@
-export { HassProvider } from './HassProvider';
-export { useHass, useAreaUnit } from './useHass';
+export { VacuumCardProvider } from './VacuumCardProvider';
+export { useHass, useEntity, useConfig, useLanguage, useAreaUnit } from './useVacuumCard';

@@ -1,6 +1,5 @@
 import './CleaningModeButton.scss';
 import { useTranslation } from '../../hooks/useTranslation';
-import type { SupportedLanguage } from '../../i18n/locales';
 import {
   SHORTCUTS_ICON_SVG,
   VACUUM_MOP_ICON_SVG,
@@ -18,7 +17,6 @@ interface CleaningModeButtonProps {
   onClick: () => void;
   onShortcutsClick?: () => void;
   disabled?: boolean;
-  language?: SupportedLanguage;
 }
 
 export function CleaningModeButton({
@@ -28,9 +26,8 @@ export function CleaningModeButton({
   onClick,
   onShortcutsClick,
   disabled = false,
-  language,
 }: CleaningModeButtonProps) {
-  const { t } = useTranslation(language);
+  const { t } = useTranslation();
   const getIcon = (mode: string): ReactElement => {
     if (mode === CLEANING_MODE.SWEEPING) {
       return VACUUM_ICON_SVG;

@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import type { Hass, CleaningMode, Zone } from '../types/homeassistant';
-import type { SupportedLanguage } from '../i18n/locales';
 import { useTranslation } from './useTranslation';
 import { convertUIZoneToVacuumZone } from '../utils/zoneConverter';
 
@@ -9,14 +8,13 @@ interface VacuumServicesParams {
   entityId: string;
   mapEntityId: string;
   onSuccess?: (message: string) => void;
-  language?: SupportedLanguage;
 }
 
 /**
  * Hook providing vacuum service operations
  */
-export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, language = 'en' }: VacuumServicesParams) {
-  const { t } = useTranslation(language);
+export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: VacuumServicesParams) {
+  const { t } = useTranslation();
 
   const handleStart = useCallback(() => {
     console.debug('[Vacuum] Start full clean', entityId);

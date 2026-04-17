@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
-import type { Hass, RoomPosition, CleaningMode, Zone, CalibrationPoint, RoomViewMode } from '../../types/homeassistant';
-import type { SupportedLanguage } from '../../i18n/locales';
+import type { RoomPosition, CleaningMode, Zone, CalibrationPoint, RoomViewMode } from '../../types/homeassistant';
 import { useTranslation } from '../../hooks';
+import { useHass } from '../../contexts';
 import { parseRoomsFromCamera } from '../../utils/roomParser';
 import { ZoneSelector } from './ZoneSelector';
 import { RoomSegments } from './RoomSegments';
@@ -10,7 +10,6 @@ import { RoomListView } from './RoomListView';
 import './VacuumMap.scss';
 
 interface VacuumMapProps {
-  hass: Hass;
   mapEntityId: string;
   selectedMode: CleaningMode;
   selectedRooms: Map<number, string>;
@@ -19,13 +18,11 @@ interface VacuumMapProps {
   zone: Zone | null;
   onZoneChange: (zone: Zone | null) => void;
   onImageDimensionsChange?: (width: number, height: number) => void;
-  language?: SupportedLanguage;
   isStarted?: boolean;
   defaultRoomView?: RoomViewMode;
 }
 
 export function VacuumMap({
-  hass,
   mapEntityId,
   selectedMode,
   selectedRooms,
@@ -33,11 +30,11 @@ export function VacuumMap({
   zone,
   onZoneChange,
   onImageDimensionsChange,
-  language = 'en',
   isStarted = false,
   defaultRoomView = 'map',
 }: VacuumMapProps) {
-  const { t } = useTranslation(language);
+  const { t } = useTranslation();
+  const hass = useHass();
   const mapEntity = hass.states[mapEntityId];
   const mapUrl = mapEntity?.attributes?.entity_picture;
   const mapRef = useRef<HTMLDivElement>(null);
@@ -156,12 +153,7 @@ export function VacuumMap({
               )}
             </>
           ) : (
-            <RoomListView
-              rooms={parsedRooms}
-              selectedRooms={selectedRooms}
-              onRoomToggle={onRoomToggle}
-              language={language}
-            />
+            <RoomListView rooms={parsedRooms} selectedRooms={selectedRooms} onRoomToggle={onRoomToggle} />
           )}
         </>
       )}

@@ -1,23 +1,18 @@
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from '../../../hooks';
-import type { Hass, HassEntity, HassConfig } from '../../../types/homeassistant';
-import type { SupportedLanguage } from '../../../i18n/locales';
+import { useEntity, useHass, useConfig } from '../../../contexts';
 import './MapManagementSection.scss';
-
-interface MapManagementSectionProps {
-  hass: Hass;
-  entity: HassEntity;
-  config: HassConfig;
-  language?: SupportedLanguage;
-}
 
 interface MapInfo {
   id: number;
   name: string;
 }
 
-export function MapManagementSection({ hass, entity, config, language }: MapManagementSectionProps) {
-  const { t } = useTranslation(language);
+export function MapManagementSection() {
+  const { t } = useTranslation();
+  const entity = useEntity();
+  const hass = useHass();
+  const config = useConfig();
   const attributes = entity.attributes;
 
   // Get available maps from entity attributes

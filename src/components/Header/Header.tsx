@@ -1,8 +1,6 @@
 import { Settings } from 'lucide-react';
-import type { HassEntity } from '../../types/homeassistant';
-import type { SupportedLanguage } from '../../i18n/locales';
 import { useTranslation } from '../../hooks';
-import { useAreaUnit } from '../../contexts';
+import { useAreaUnit, useEntity } from '../../contexts';
 import { getAttr, isNumber } from '../../utils';
 import './Header.scss';
 import {
@@ -15,15 +13,14 @@ import {
 } from '../../constants/icons';
 
 interface HeaderProps {
-  entity: HassEntity;
   deviceName: string;
   onSettingsClick?: () => void;
-  language?: SupportedLanguage;
 }
 
-export function Header({ entity, deviceName, onSettingsClick, language }: HeaderProps) {
-  const { t } = useTranslation(language);
+export function Header({ deviceName, onSettingsClick }: HeaderProps) {
+  const { t } = useTranslation();
   const areaUnit = useAreaUnit();
+  const entity = useEntity();
   const statusText = getAttr(entity.attributes.status, entity.state);
   const cleanedArea = getAttr(entity.attributes.cleaned_area, 0);
   const cleaningTime = getAttr(entity.attributes.cleaning_time, 0);

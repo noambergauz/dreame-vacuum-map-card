@@ -1,5 +1,4 @@
 import type { CleaningMode } from '../../types/homeassistant';
-import type { SupportedLanguage } from '../../i18n/locales';
 import { useTranslation } from '../../hooks';
 import { CleanButton, PauseButton, ResumeButton, StopButton, DockButton } from './components';
 import './ActionButtons.scss';
@@ -15,7 +14,6 @@ interface ActionButtonsProps {
   onResume: () => void;
   onStop: () => void;
   onDock: () => void;
-  language?: SupportedLanguage;
 }
 
 export function ActionButtons({
@@ -29,9 +27,8 @@ export function ActionButtons({
   onResume,
   onStop,
   onDock,
-  language = 'en',
 }: ActionButtonsProps) {
-  const { t, getRoomCountTranslation } = useTranslation(language);
+  const { t, getRoomCountTranslation } = useTranslation();
 
   const getCleanButtonText = (): string => {
     switch (selectedMode) {
@@ -52,8 +49,8 @@ export function ActionButtons({
   if (isRunning && !isPaused && !isDocked) {
     return (
       <div className="action-buttons">
-        <PauseButton onClick={onPause} language={language} />
-        <StopButton onClick={onStop} language={language} />
+        <PauseButton onClick={onPause} />
+        <StopButton onClick={onStop} />
       </div>
     );
   }
@@ -62,8 +59,8 @@ export function ActionButtons({
   if (isPaused) {
     return (
       <div className="action-buttons">
-        <ResumeButton onClick={onResume} language={language} />
-        <StopButton onClick={onStop} language={language} />
+        <ResumeButton onClick={onResume} />
+        <StopButton onClick={onStop} />
       </div>
     );
   }
@@ -72,7 +69,7 @@ export function ActionButtons({
   return (
     <div className="action-buttons">
       <CleanButton onClick={onClean} text={cleanButtonText} />
-      <DockButton onClick={onDock} language={language} />
+      <DockButton onClick={onDock} />
     </div>
   );
 }

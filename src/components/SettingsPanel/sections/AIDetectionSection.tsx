@@ -1,16 +1,9 @@
 import { useCallback } from 'react';
 import { Toggle } from '../../common';
 import { useTranslation } from '../../../hooks';
+import { useEntity, useHass } from '../../../contexts';
 import { isBoolean, isNumber } from '../../../utils';
-import type { Hass, HassEntity } from '../../../types/homeassistant';
-import type { SupportedLanguage } from '../../../i18n/locales';
 import './AIDetectionSection.scss';
-
-interface AIDetectionSectionProps {
-  hass: Hass;
-  entity: HassEntity;
-  language?: SupportedLanguage;
-}
 
 interface AIToggle {
   key: string;
@@ -93,8 +86,10 @@ const AI_TOGGLES: AIToggle[] = [
   },
 ];
 
-export function AIDetectionSection({ hass, entity, language }: AIDetectionSectionProps) {
-  const { t } = useTranslation(language);
+export function AIDetectionSection() {
+  const { t } = useTranslation();
+  const entity = useEntity();
+  const hass = useHass();
   const attributes = entity.attributes;
   const entityName = entity.entity_id.split('.')[1] ?? '';
 

@@ -1,7 +1,6 @@
-import type { Hass } from '../../types/homeassistant';
 import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
 import { useTranslation } from '../../hooks/useTranslation';
-import type { SupportedLanguage } from '../../i18n/locales';
+import { useHass } from '../../contexts';
 import { CLEANING_MODE } from '../../constants';
 import {
   CleaningModeSelector,
@@ -30,8 +29,6 @@ interface CustomModeProps {
   selfCleanTimeMin: number;
   selfCleanTimeMax: number;
   baseEntityId: string;
-  hass: Hass;
-  language?: SupportedLanguage;
 }
 
 export function CustomMode({
@@ -53,12 +50,11 @@ export function CustomMode({
   selfCleanTimeMin,
   selfCleanTimeMax,
   baseEntityId,
-  hass,
-  language,
 }: CustomModeProps) {
+  const hass = useHass();
   const { setSelectOption, setSwitch, setNumber } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
-  const { t } = useTranslation(language);
+  const { t } = useTranslation();
 
   return (
     <div className="cleaning-mode-modal__content">

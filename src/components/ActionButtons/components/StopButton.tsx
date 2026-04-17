@@ -1,15 +1,13 @@
-import type { SupportedLanguage } from '../../../i18n/locales';
 import { useTranslation } from '../../../hooks';
 import '../ActionButtons.scss';
 import { STOP_CLEANING_ICON_SVG } from '../../../constants/icons';
 
 interface StopButtonProps {
   onClick: () => void;
-  language?: SupportedLanguage;
 }
 
-export function StopButton({ onClick, language = 'en' }: StopButtonProps) {
-  const { t } = useTranslation(language);
+export function StopButton({ onClick }: StopButtonProps) {
+  const { t } = useTranslation();
 
   return (
     <button onClick={onClick} className="action-buttons__stop">
