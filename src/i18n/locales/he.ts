@@ -148,6 +148,14 @@ export const he: Translation = {
     by_time: 'לפי זמן',
   },
 
+  // מסלולי ניקוי
+  cleaning_routes: {
+    quick: 'מהיר',
+    standard: 'רגיל',
+    intensive: 'אינטנסיבי',
+    deep: 'עמוק',
+  },
+
   // שגיאות
   errors: {
     entity_not_found: 'ישות לא נמצאה: {{entity}}',

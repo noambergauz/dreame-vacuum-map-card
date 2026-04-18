@@ -64,14 +64,14 @@ export function Header({ deviceName, onSettingsClick }: HeaderProps) {
 
       <div className="header__stats">
         <div className="header__stat">
-          <span className="header__stat-icon--area">{AREA_ICON_SVG}</span>
+          <span className="header__stat-icon">{AREA_ICON_SVG}</span>
           <span className="header__stat-value">
             {cleanedArea} {areaUnit}
           </span>
         </div>
         <div className="header__stat">
-          <span className="header__stat-icon--cleaning-time">{HISTORY_ICON_SVG}</span>
-          <span className="header__stat-value">
+          <span className="header__stat-icon">{HISTORY_ICON_SVG}</span>
+          <span className="header__stat-value--cleaning-time">
             {cleaningTime} {t('units.minutes')}
           </span>
         </div>

@@ -146,6 +146,14 @@ export const en = {
     by_time: 'By time',
   },
 
+  // Cleaning Routes
+  cleaning_routes: {
+    quick: 'Quick',
+    standard: 'Standard',
+    intensive: 'Intensive',
+    deep: 'Deep',
+  },
+
   // Errors
   errors: {
     entity_not_found: 'Entity not found: {{entity}}',

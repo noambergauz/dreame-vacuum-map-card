@@ -10,6 +10,7 @@ import { RoomSelectionDisplay } from '../RoomSelectionDisplay';
 import { Toast } from '../common';
 import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useTheme } from '../../hooks';
 import { extractEntityData, getEffectiveCleaningMode, getAttr } from '../../utils';
+import { isRtlLanguage } from '../../i18n';
 import { VacuumCardProvider } from '../../contexts';
 import type { Hass, HassConfig } from '../../types/homeassistant';
 import type { SupportedLanguage } from '../../i18n/locales';
@@ -25,6 +26,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const entity = hass.states[config.entity];
   const themeType = config.theme || 'light';
   const language = config.language || 'en';
+  const isRtl = isRtlLanguage(language as SupportedLanguage);
   const { t } = useTranslation(language);
 
   // Container ref for applying theme
@@ -103,7 +105,11 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
 
   return (
     <VacuumCardProvider hass={hass} entity={entity} config={config} language={language as SupportedLanguage}>
-      <div ref={containerRef} className={`dreame-vacuum-card dreame-vacuum-card--${theme.name}`}>
+      <div
+        ref={containerRef}
+        className={`dreame-vacuum-card dreame-vacuum-card--${theme.name}`}
+        dir={isRtl ? 'rtl' : 'ltr'}
+      >
         <div className="dreame-vacuum-card__container">
           <Header deviceName={deviceName} onSettingsClick={() => setSettingsPanelOpened(true)} />
 

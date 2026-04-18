@@ -148,6 +148,14 @@ export const nl: Translation = {
     by_time: 'Per tijd',
   },
 
+  // Cleaning Routes
+  cleaning_routes: {
+    quick: 'Snel',
+    standard: 'Standaard',
+    intensive: 'Intensief',
+    deep: 'Diep',
+  },
+
   // Fouten
   errors: {
     entity_not_found: 'Entiteit niet gevonden: {{entity}}',

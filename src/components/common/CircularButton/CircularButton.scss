@@ -1,3 +1,5 @@
+@use '../../../styles/rtl' as *;
+
 .circular-button {
   display: flex;
   flex-direction: column;
@@ -18,6 +20,11 @@
     border: 0.0625rem solid var(--text-primary, black);
     transition: all 0.2s ease;
     color: var(--text-primary);
+
+    // For icons with 3 elements (e.g., vacuum + arrow + mop), rotate the middle icon in RTL
+    [dir='rtl'] & > :nth-child(2):not(:last-child) {
+      rotate: 180deg;
+    }
 
     &--small {
       width: 3.5rem;

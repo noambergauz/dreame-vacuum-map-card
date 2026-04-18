@@ -149,6 +149,14 @@ export const it: Translation = {
     by_time: 'Per tempo',
   },
 
+  // Cleaning Routes
+  cleaning_routes: {
+    quick: 'Veloce',
+    standard: 'Standard',
+    intensive: 'Intensivo',
+    deep: 'Profondo',
+  },
+
   // Errors
   errors: {
     entity_not_found: 'Entità non trovata: {{entity}}',

@@ -31,3 +31,7 @@ export function useAreaUnit(): string {
   const hass = useHass();
   return hass.config?.unit_system?.area ?? 'm²';
 }
+
+export function useIsRtl(): boolean {
+  return useVacuumCardContext().isRtl;
+}

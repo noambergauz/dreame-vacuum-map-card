@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SLIDER_CONFIG, MOP_PAD_HUMIDITY } from '../../../constants';
+import { useIsRtl } from '../../../contexts';
 
 interface WetnessSliderProps {
   wetnessLevel: number;
@@ -21,12 +22,13 @@ export function WetnessSlider({
   wetLabel,
 }: WetnessSliderProps) {
   const [localValue, setLocalValue] = useState(wetnessLevel);
+  const isRtl = useIsRtl();
   const wetnessPercent =
     ((localValue - SLIDER_CONFIG.WETNESS.MIN) / (SLIDER_CONFIG.WETNESS.MAX - SLIDER_CONFIG.WETNESS.MIN)) * 100;
 
   // Calculate tooltip position accounting for thumb width (20px = 1.25rem)
   const thumbWidth = 20; // in pixels
-  const tooltipLeft = `calc(${wetnessPercent}% + ${thumbWidth / 2 - (wetnessPercent * thumbWidth) / 100}px)`;
+  const tooltipPosition = `calc(${wetnessPercent}% + ${thumbWidth / 2 - (wetnessPercent * thumbWidth) / 100}px)`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(parseInt(e.target.value));
@@ -37,6 +39,9 @@ export function WetnessSlider({
       onChangeWetness(entityId, localValue);
     }
   };
+
+  // For RTL, flip the gradient direction
+  const gradientDirection = isRtl ? 'to left' : 'to right';
 
   return (
     <>
@@ -53,14 +58,12 @@ export function WetnessSlider({
             onTouchEnd={handleCommit}
             className="cleaning-mode-modal__slider"
             style={{
-              background: `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${wetnessPercent}%, var(--accent-bg-secondary-hover) ${wetnessPercent}%, var(--accent-bg-secondary-hover) 100%)`,
+              background: `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${wetnessPercent}%, var(--accent-bg-secondary-hover) ${wetnessPercent}%, var(--accent-bg-secondary-hover) 100%)`,
             }}
           />
           <div
             className="cleaning-mode-modal__slider-tooltip"
-            style={{
-              left: tooltipLeft,
-            }}
+            style={isRtl ? { right: tooltipPosition } : { left: tooltipPosition }}
           >
             {localValue}
           </div>

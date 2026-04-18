@@ -146,6 +146,14 @@ export const pl = {
     by_time: 'Według czasu',
   },
 
+  // Cleaning Routes
+  cleaning_routes: {
+    quick: 'Szybki',
+    standard: 'Standardowy',
+    intensive: 'Intensywny',
+    deep: 'Głęboki',
+  },
+
   // Errors
   errors: {
     entity_not_found: 'Nie znaleziono encji: {{entity}}',

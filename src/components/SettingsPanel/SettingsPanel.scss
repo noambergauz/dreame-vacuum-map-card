@@ -1,3 +1,5 @@
+@use '../../styles/rtl' as *;
+
 .settings-panel {
   height: 100%;
 
@@ -18,7 +20,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    padding-right: 0.25rem;
+
+    @include padding-end(0.25rem);
 
     &::-webkit-scrollbar {
       width: 4px;

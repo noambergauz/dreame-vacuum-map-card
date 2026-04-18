@@ -1,3 +1,5 @@
+@use '../../styles/rtl' as *;
+
 .cleaning-mode-modal {
   height: 100%;
 
@@ -106,6 +108,16 @@
     align-items: center;
     justify-content: center;
     font-size: 1.75rem;
+
+    // For icons with 3 elements (e.g., vacuum + arrow + mop), rotate the middle icon in RTL
+    &--mop-after,
+    &--vac-mop {
+      [dir='rtl'] & {
+        > :nth-child(2) {
+          rotate: 180deg;
+        }
+      }
+    }
   }
 
   &__mode-label {
@@ -117,7 +129,9 @@
   &__mode-checkmark {
     position: absolute;
     top: 0.75rem;
-    right: 0.75rem;
+
+    @include position-end(0.75rem);
+
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
@@ -261,7 +275,6 @@
   &__slider-tooltip {
     position: absolute;
     top: -0.5rem;
-    left: 0;
     transform: translateX(-50%);
     background: var(--accent-color, #d4af37);
     color: white;
@@ -272,6 +285,10 @@
     white-space: nowrap;
     pointer-events: none;
     box-shadow: 0 0.125rem 0.375rem var(--accent-shadow, rgba(0, 0, 0, 0.2));
+
+    [dir='rtl'] & {
+      transform: translateX(50%);
+    }
 
     &::after {
       content: '';

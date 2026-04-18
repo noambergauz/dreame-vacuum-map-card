@@ -1,0 +1,90 @@
+// RTL (Right-to-Left) Support Mixins
+// Usage: @use '../../styles/rtl' as *; then @include position-end(0.75rem);
+
+// Position on end side (right in LTR, left in RTL)
+@mixin position-end($value) {
+  right: $value;
+  [dir='rtl'] & {
+    right: auto;
+    left: $value;
+  }
+}
+
+// Position on start side (left in LTR, right in RTL)
+@mixin position-start($value) {
+  left: $value;
+  [dir='rtl'] & {
+    left: auto;
+    right: $value;
+  }
+}
+
+// Margin on end side
+@mixin margin-end($value) {
+  margin-right: $value;
+  [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: $value;
+  }
+}
+
+// Margin on start side
+@mixin margin-start($value) {
+  margin-left: $value;
+  [dir='rtl'] & {
+    margin-left: 0;
+    margin-right: $value;
+  }
+}
+
+// Padding on end side
+@mixin padding-end($value) {
+  padding-right: $value;
+  [dir='rtl'] & {
+    padding-right: 0;
+    padding-left: $value;
+  }
+}
+
+// Padding on start side
+@mixin padding-start($value) {
+  padding-left: $value;
+  [dir='rtl'] & {
+    padding-left: 0;
+    padding-right: $value;
+  }
+}
+
+// Text alignment to start
+@mixin text-align-start {
+  text-align: left;
+  [dir='rtl'] & {
+    text-align: right;
+  }
+}
+
+// Text alignment to end
+@mixin text-align-end {
+  text-align: right;
+  [dir='rtl'] & {
+    text-align: left;
+  }
+}
+
+// Border on end side
+@mixin border-end($value) {
+  border-right: $value;
+  [dir='rtl'] & {
+    border-right: none;
+    border-left: $value;
+  }
+}
+
+// Border on start side
+@mixin border-start($value) {
+  border-left: $value;
+  [dir='rtl'] & {
+    border-left: none;
+    border-right: $value;
+  }
+}

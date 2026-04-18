@@ -1,3 +1,5 @@
+@use '../../styles/rtl' as *;
+
 .vacuum-map {
   position: relative;
   margin: 0 1.25rem;
@@ -67,7 +69,9 @@
 
   &__cycles {
     position: absolute;
-    right: 1rem;
+
+    @include position-end(1rem);
+
     bottom: 1rem;
     width: 2.5rem;
     height: 2.5rem;
@@ -134,33 +138,59 @@
 
     &--tl {
       top: -0.75rem;
-      left: -0.75rem;
+
+      @include position-start(-0.75rem);
+
       cursor: nwse-resize;
+
+      [dir='rtl'] & {
+        cursor: nesw-resize;
+      }
     }
 
     &--tr {
       top: -0.75rem;
-      right: -0.75rem;
+
+      @include position-end(-0.75rem);
+
       cursor: nesw-resize;
+
+      [dir='rtl'] & {
+        cursor: nwse-resize;
+      }
     }
 
     &--bl {
       bottom: -0.75rem;
-      left: -0.75rem;
+
+      @include position-start(-0.75rem);
+
       cursor: nesw-resize;
+
+      [dir='rtl'] & {
+        cursor: nwse-resize;
+      }
     }
 
     &--br {
       bottom: -0.75rem;
-      right: -0.75rem;
+
+      @include position-end(-0.75rem);
+
       cursor: nwse-resize;
+
+      [dir='rtl'] & {
+        cursor: nesw-resize;
+      }
     }
   }
 
   &__zone-clear {
     position: absolute;
     top: -0.75rem;
-    right: -0.75rem;
+
+    @include position-end(-0.75rem);
+
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;

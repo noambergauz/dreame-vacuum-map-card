@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Volume2, VolumeX, MapPin } from 'lucide-react';
 import { useTranslation } from '../../../hooks';
-import { useEntity, useHass } from '../../../contexts';
+import { useEntity, useHass, useIsRtl } from '../../../contexts';
 import { getAttr } from '../../../utils';
 import './VolumeSection.scss';
 
@@ -12,6 +12,7 @@ export function VolumeSection() {
   const { t } = useTranslation();
   const entity = useEntity();
   const hass = useHass();
+  const isRtl = useIsRtl();
   const entityName = entity.entity_id.split('.')[1] ?? '';
   const currentVolume = getAttr(entity.attributes.volume, 50);
 
@@ -20,7 +21,10 @@ export function VolumeSection() {
 
   // Calculate tooltip position accounting for thumb width
   const thumbWidth = 20;
-  const tooltipLeft = `calc(${volumePercent}% + ${thumbWidth / 2 - (volumePercent * thumbWidth) / 100}px)`;
+  const tooltipPosition = `calc(${volumePercent}% + ${thumbWidth / 2 - (volumePercent * thumbWidth) / 100}px)`;
+
+  // For RTL, flip the gradient direction
+  const gradientDirection = isRtl ? 'to left' : 'to right';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLocalValue(parseInt(e.target.value));
@@ -62,10 +66,13 @@ export function VolumeSection() {
               onTouchEnd={handleCommit}
               className="volume-section__slider"
               style={{
-                background: `linear-gradient(to right, var(--accent-color, #007aff) 0%, var(--accent-color, #007aff) ${volumePercent}%, var(--surface-secondary, #e5e5e5) ${volumePercent}%, var(--surface-secondary, #e5e5e5) 100%)`,
+                background: `linear-gradient(${gradientDirection}, var(--accent-color, #007aff) 0%, var(--accent-color, #007aff) ${volumePercent}%, var(--surface-secondary, #e5e5e5) ${volumePercent}%, var(--surface-secondary, #e5e5e5) 100%)`,
               }}
             />
-            <div className="volume-section__tooltip" style={{ left: tooltipLeft }}>
+            <div
+              className="volume-section__tooltip"
+              style={isRtl ? { right: tooltipPosition } : { left: tooltipPosition }}
+            >
               {isMuted ? t('settings.volume.muted') : `${localValue}%`}
             </div>
           </div>

@@ -1,7 +1,11 @@
+@use '../../styles/rtl' as *;
+
 .map-controls {
   position: absolute;
   top: 0.75rem;
-  right: 0.75rem;
+
+  @include position-end(0.75rem);
+
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

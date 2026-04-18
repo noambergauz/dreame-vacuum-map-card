@@ -1,3 +1,5 @@
+@use '../../../styles/rtl' as *;
+
 .accordion {
   border-radius: 0.75rem;
   background: var(--card-bg, rgba(255, 255, 255, 0.8));
@@ -16,7 +18,9 @@
     color: var(--text-primary, #000);
     font-size: 0.9375rem;
     font-weight: 500;
-    text-align: left;
+
+    @include text-align-start;
+
     transition: background-color 0.2s ease;
 
     &:hover {

@@ -83,6 +83,10 @@
     white-space: nowrap;
     pointer-events: none;
 
+    [dir='rtl'] & {
+      transform: translateX(50%);
+    }
+
     &::after {
       content: '';
       position: absolute;

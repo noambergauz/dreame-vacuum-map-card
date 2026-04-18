@@ -1,3 +1,5 @@
+@use '../../styles/rtl' as *;
+
 .room-list-view {
   position: absolute;
   top: 0;
@@ -12,7 +14,10 @@
 
   &__header {
     padding: 0.75rem 1rem;
-    padding-right: 3.5rem; // Space for toggle button
+
+    @include padding-end(3.5rem); // Space for toggle button
+    @include padding-start(1rem); // Restore start padding in RTL
+
     font-size: 0.875rem;
     color: var(--text-secondary, #666);
     background: var(--surface-secondary, #f5f5f5);
@@ -62,7 +67,8 @@
     cursor: pointer;
     transition: all 0.2s ease;
     width: 100%;
-    text-align: left;
+
+    @include text-align-start;
 
     &:hover {
       background: var(--surface-tertiary, #ebebeb);

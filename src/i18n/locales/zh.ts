@@ -148,6 +148,14 @@ export const zh: Translation = {
     by_time: '按时间',
   },
 
+  // Cleaning Routes (清扫路线)
+  cleaning_routes: {
+    quick: '快速',
+    standard: '标准',
+    intensive: '强力',
+    deep: '深度',
+  },
+
   // Errors (错误提示)
   errors: {
     entity_not_found: '未找到实体：{{entity}}',

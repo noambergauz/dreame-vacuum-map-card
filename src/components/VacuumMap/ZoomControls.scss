@@ -1,7 +1,11 @@
+@use '../../styles/rtl' as *;
+
 .zoom-controls {
   position: absolute;
   top: 3.5rem; // Below the view toggle button
-  right: 0.75rem;
+
+  @include position-end(0.75rem);
+
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

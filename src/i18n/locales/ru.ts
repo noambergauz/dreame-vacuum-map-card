@@ -149,6 +149,14 @@ export const ru: Translation = {
     by_time: 'По времени',
   },
 
+  // Cleaning Routes
+  cleaning_routes: {
+    quick: 'Быстрый',
+    standard: 'Стандартный',
+    intensive: 'Интенсивный',
+    deep: 'Глубокий',
+  },
+
   // Errors
   errors: {
     entity_not_found: 'Сущность не найдена: {{entity}}',

@@ -69,3 +69,15 @@ export function getRoomCountTranslation(t: ReturnType<typeof createTranslator>, 
   const key = count === 1 ? 'actions.clean_rooms' : 'actions.clean_rooms_plural';
   return t(key, { count: String(count) });
 }
+
+/**
+ * Languages that use Right-to-Left text direction
+ */
+export const RTL_LANGUAGES: SupportedLanguage[] = ['he'];
+
+/**
+ * Check if a language uses Right-to-Left text direction
+ */
+export function isRtlLanguage(lang: SupportedLanguage): boolean {
+  return RTL_LANGUAGES.includes(lang);
+}

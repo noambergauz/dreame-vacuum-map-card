@@ -150,6 +150,14 @@ export const de: Translation = {
     by_time: 'Nach Zeit',
   },
 
+  // Cleaning Routes
+  cleaning_routes: {
+    quick: 'Schnell',
+    standard: 'Standard',
+    intensive: 'Intensiv',
+    deep: 'Tief',
+  },
+
   // Errors
   errors: {
     entity_not_found: 'Entität nicht gefunden: {{entity}}',

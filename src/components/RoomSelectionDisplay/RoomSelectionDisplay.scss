@@ -1,3 +1,5 @@
+@use '../../styles/rtl' as *;
+
 .room-selection-display {
   padding: 0.75rem 1rem;
   background: var(--accent-bg, #e3f2fd);
@@ -9,7 +11,9 @@
 
 .room-selection-display__label {
   font-weight: 600;
-  margin-right: 0.5rem;
+
+  @include margin-end(0.5rem);
+
   color: var(--accent-color, #007aff);
 }
 

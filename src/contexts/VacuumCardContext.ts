@@ -7,6 +7,7 @@ export interface VacuumCardContextValue {
   entity: HassEntity;
   config: HassConfig;
   language: SupportedLanguage;
+  isRtl: boolean;
 }
 
 export const VacuumCardContext = createContext<VacuumCardContextValue | null>(null);

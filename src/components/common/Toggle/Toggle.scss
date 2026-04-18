@@ -1,3 +1,5 @@
+@use '../../../styles/rtl' as *;
+
 .toggle {
   position: relative;
   display: inline-block;
@@ -26,7 +28,9 @@
     position: absolute;
     height: 1.6875rem;
     width: 1.6875rem;
-    left: 0.125rem;
+
+    @include position-start(0.125rem);
+
     bottom: 0.125rem;
     background-color: var(--surface-bg, white);
     transition: 0.4s;
@@ -42,6 +46,10 @@
 
   &__input:checked + &__slider &__knob {
     transform: translateX(1.25rem);
+
+    [dir='rtl'] & {
+      transform: translateX(-1.25rem);
+    }
   }
 
   &--disabled {

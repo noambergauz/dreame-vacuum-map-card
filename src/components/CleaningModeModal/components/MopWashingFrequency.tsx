@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { CircularButton } from '../../common';
 import type { SelfCleanFrequency } from '../../../types/vacuum';
 import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '../../../utils';
-import { useAreaUnit } from '../../../contexts';
+import { useAreaUnit, useIsRtl } from '../../../contexts';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
@@ -61,17 +61,21 @@ export function MopWashingFrequency({
   const [localArea, setLocalArea] = useState(selfCleanArea);
   const [localTime, setLocalTime] = useState(selfCleanTime);
   const areaUnit = useAreaUnit();
+  const isRtl = useIsRtl();
 
   const selfCleanAreaPercent = ((localArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
   const selfCleanTimePercent = ((localTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100;
 
   // Calculate tooltip position accounting for thumb width (20px = 1.25rem)
   const thumbWidth = 20; // in pixels
-  const areaTooltipLeft = `calc(${selfCleanAreaPercent}% + ${thumbWidth / 2 - (selfCleanAreaPercent * thumbWidth) / 100}px)`;
-  const timeTooltipLeft = `calc(${selfCleanTimePercent}% + ${thumbWidth / 2 - (selfCleanTimePercent * thumbWidth) / 100}px)`;
+  const areaTooltipPosition = `calc(${selfCleanAreaPercent}% + ${thumbWidth / 2 - (selfCleanAreaPercent * thumbWidth) / 100}px)`;
+  const timeTooltipPosition = `calc(${selfCleanTimePercent}% + ${thumbWidth / 2 - (selfCleanTimePercent * thumbWidth) / 100}px)`;
 
   // Get translated unit strings
   const minutesShortUnit = t ? t('units.minutes_short') : 'm';
+
+  // For RTL, flip the gradient direction
+  const gradientDirection = isRtl ? 'to left' : 'to right';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
@@ -125,15 +129,17 @@ export function MopWashingFrequency({
               style={{
                 background:
                   selfCleanFrequency === 'By area'
-                    ? `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) 100%)`
-                    : `linear-gradient(to right, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) 100%)`,
+                    ? `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) 100%)`
+                    : `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) 100%)`,
               }}
             />
             <div
               className="cleaning-mode-modal__slider-tooltip"
-              style={{
-                left: selfCleanFrequency === 'By area' ? areaTooltipLeft : timeTooltipLeft,
-              }}
+              style={
+                isRtl
+                  ? { right: selfCleanFrequency === 'By area' ? areaTooltipPosition : timeTooltipPosition }
+                  : { left: selfCleanFrequency === 'By area' ? areaTooltipPosition : timeTooltipPosition }
+              }
             >
               {selfCleanFrequency === 'By area' ? `${localArea}${areaUnit}` : `${localTime}${minutesShortUnit}`}
             </div>
