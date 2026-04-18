@@ -79,6 +79,7 @@ export const he: Translation = {
     prefix_custom: 'מותאם אישית: ',
     prefix_cleangenius: 'CleanGenius: ',
     view_shortcuts: 'צפה בקיצורי דרך',
+    repeats_tooltip: 'חזרות',
     vac_and_mop: 'שאיבה ושטיפה',
     mop_after_vac: 'שטיפה אחרי שאיבה',
     vacuum: 'שאיבה',

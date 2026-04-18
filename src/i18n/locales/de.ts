@@ -80,6 +80,7 @@ export const de: Translation = {
     prefix_custom: 'Benutzerdefiniert: ',
     prefix_cleangenius: 'CleanGenius: ',
     view_shortcuts: 'Verknüpfungen anzeigen',
+    repeats_tooltip: 'Reinigungsdurchgänge',
     vac_and_mop: 'Saugen & Wischen',
     mop_after_vac: 'Wischen nach Saugen',
     vacuum: 'Saugen',

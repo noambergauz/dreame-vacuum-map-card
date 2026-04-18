@@ -77,6 +77,7 @@ export const en = {
     prefix_custom: 'Custom: ',
     prefix_cleangenius: 'CleanGenius: ',
     view_shortcuts: 'View shortcuts',
+    repeats_tooltip: 'Cleaning passes',
     vac_and_mop: 'Vac & Mop',
     mop_after_vac: 'Mop after Vac',
     vacuum: 'Vacuum',

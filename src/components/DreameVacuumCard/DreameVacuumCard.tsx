@@ -50,12 +50,14 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     modalOpened,
     shortcutsModalOpened,
     settingsPanelOpened,
+    repeatCount,
     setSelectedZone,
     setModalOpened,
     setShortcutsModalOpened,
     setSettingsPanelOpened,
     handleModeChange,
     handleRoomToggle,
+    cycleRepeatCount,
   } = useVacuumCardState({ defaultMode: config.default_mode });
 
   // Toast notifications
@@ -80,7 +82,14 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
 
   // Handle clean action
   const handleCleanAction = () => {
-    handleClean(selectedMode, selectedRooms, selectedZone, imageDimensions?.width, imageDimensions?.height);
+    handleClean(
+      selectedMode,
+      selectedRooms,
+      selectedZone,
+      imageDimensions?.width,
+      imageDimensions?.height,
+      repeatCount
+    );
   };
 
   // Handle resume (just calls start)
@@ -131,6 +140,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
             onClick={() => setModalOpened(true)}
             onShortcutsClick={() => setShortcutsModalOpened(true)}
+            onRepeatClick={cycleRepeatCount}
+            repeatCount={repeatCount}
             disabled={getAttr(entity.attributes.started, false)}
           />
 

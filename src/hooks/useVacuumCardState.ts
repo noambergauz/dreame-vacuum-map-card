@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 import type { CleaningMode, Zone } from '../types/homeassistant';
 import { DEFAULTS } from '../constants';
 
+export type RepeatCount = 1 | 2 | 3;
+
 interface UseVacuumCardStateOptions {
   defaultMode?: CleaningMode;
 }
@@ -17,6 +19,7 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
   const [modalOpened, setModalOpened] = useState(false);
   const [shortcutsModalOpened, setShortcutsModalOpened] = useState(false);
   const [settingsPanelOpened, setSettingsPanelOpened] = useState(false);
+  const [repeatCount, setRepeatCount] = useState<RepeatCount>(1);
 
   const handleModeChange = useCallback((mode: CleaningMode) => {
     console.debug('[UI] Mode changed:', mode);
@@ -62,6 +65,11 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
     setSelectedZone(zone);
   }, []);
 
+  const cycleRepeatCount = useCallback(() => {
+    setRepeatCount((prev) => ((prev % 3) + 1) as RepeatCount);
+    console.debug('[UI] Repeat count cycled');
+  }, []);
+
   return {
     selectedMode,
     selectedRooms,
@@ -69,6 +77,7 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
     modalOpened,
     shortcutsModalOpened,
     settingsPanelOpened,
+    repeatCount,
     setSelectedMode,
     setSelectedRooms,
     setSelectedZone: handleZoneChange,
@@ -77,5 +86,6 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
     setSettingsPanelOpened: handleSettingsPanelOpen,
     handleModeChange,
     handleRoomToggle,
+    cycleRepeatCount,
   };
 }

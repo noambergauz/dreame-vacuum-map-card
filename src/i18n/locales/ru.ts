@@ -79,6 +79,7 @@ export const ru: Translation = {
     prefix_custom: 'Настроить уборку: ',
     prefix_cleangenius: 'CleanGenius: ',
     view_shortcuts: 'Посмотреть шорткаты',
+    repeats_tooltip: 'Количество проходов',
     vac_and_mop: 'Сухая и влажная',
     mop_after_vac: 'Влажная после сухой',
     vacuum: 'Сухая уборка',

@@ -79,6 +79,7 @@ export const es: Translation = {
     prefix_custom: 'Personalizado: ',
     prefix_cleangenius: 'CleanGenius: ',
     view_shortcuts: 'Ver accesos directos',
+    repeats_tooltip: 'Pasadas de limpieza',
     vac_and_mop: 'Aspirar y Trapear',
     mop_after_vac: 'Trapear después de aspirar',
     vacuum: 'Aspirar',

@@ -8,6 +8,7 @@ import {
   MOP_AFTER_VACUUM_ICON_SVG,
 } from '../../constants/icons';
 import type { ReactElement } from 'react';
+import type { RepeatCount } from '../../hooks/useVacuumCardState';
 import { CLEANGENIUS_MODE, CLEANING_MODE } from '../../constants';
 
 interface CleaningModeButtonProps {
@@ -16,6 +17,8 @@ interface CleaningModeButtonProps {
   cleangenius: string;
   onClick: () => void;
   onShortcutsClick?: () => void;
+  onRepeatClick?: () => void;
+  repeatCount?: RepeatCount;
   disabled?: boolean;
 }
 
@@ -25,6 +28,8 @@ export function CleaningModeButton({
   cleangenius,
   onClick,
   onShortcutsClick,
+  onRepeatClick,
+  repeatCount = 1,
   disabled = false,
 }: CleaningModeButtonProps) {
   const { t } = useTranslation();
@@ -73,6 +78,11 @@ export function CleaningModeButton({
     onShortcutsClick?.();
   };
 
+  const handleRepeatClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRepeatClick?.();
+  };
+
   return (
     <div className="cleaning-mode-button-wrapper">
       <button
@@ -91,6 +101,16 @@ export function CleaningModeButton({
         </div>
         <span className="cleaning-mode-button__arrow">›</span>
       </button>
+      {onRepeatClick && (
+        <button
+          className="cleaning-mode-button-wrapper__repeats"
+          onClick={handleRepeatClick}
+          title={t('cleaning_mode_button.repeats_tooltip')}
+          disabled={disabled}
+        >
+          x{repeatCount}
+        </button>
+      )}
       {cleangenius === 'Off' && onShortcutsClick && (
         <button
           className="cleaning-mode-button-wrapper__shortcuts"

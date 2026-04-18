@@ -5,6 +5,41 @@
   align-items: center;
   gap: 0.5rem;
 
+  &__repeats {
+    background: var(--accent-color, #007aff);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition:
+      transform 0.2s,
+      opacity 0.2s;
+    box-shadow: 0 0.125rem 0.5rem var(--card-shadow, rgba(0, 0, 0, 0.08));
+
+    &:hover:not(:disabled) {
+      transform: scale(1.1);
+      opacity: 0.9;
+      box-shadow: 0 0.25rem 0.75rem var(--card-shadow-hover, rgba(0, 0, 0, 0.12));
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
   &__shortcuts {
     background: var(--accent-color, #007aff);
     color: white;

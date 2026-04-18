@@ -79,6 +79,7 @@ export const zh: Translation = {
     prefix_custom: '自定义：',
     prefix_cleangenius: '智能托管：',
     view_shortcuts: '查看快捷指令',
+    repeats_tooltip: '清洁次数',
     vac_and_mop: '扫拖同步',
     mop_after_vac: '先扫后拖',
     vacuum: '单扫',

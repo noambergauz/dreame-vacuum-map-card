@@ -79,6 +79,7 @@ export const nl: Translation = {
     prefix_custom: 'Aangepast: ',
     prefix_cleangenius: 'CleanGenius: ',
     view_shortcuts: 'Snelkoppelingen bekijken',
+    repeats_tooltip: 'Reinigingspassen',
     vac_and_mop: 'Stofzuigen & Dweilen',
     mop_after_vac: 'Dweilen na Stofzuigen',
     vacuum: 'Stofzuigen',
