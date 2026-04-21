@@ -6,7 +6,7 @@ export function extractEntityData(entity: HassEntity | undefined, config: HassCo
     return null;
   }
 
-  const deviceName = entity.attributes?.friendly_name || config.title || 'Dreame Vacuum';
+  const deviceName = config.title || entity.attributes?.friendly_name || 'Dreame Vacuum';
   const mapEntityId = config.map_entity || `camera.${config.entity.split('.')[1]}_map`;
 
   const entityRooms = entity.attributes?.rooms?.[entity.attributes?.selected_map || ''];

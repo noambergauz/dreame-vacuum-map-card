@@ -24,6 +24,7 @@ interface DreameVacuumCardProps {
 
 export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const entity = hass.states[config.entity];
+  console.debug('DreameVacuumCard: Loaded entity', entity);
   const themeType = config.theme || 'light';
   const language = config.language || 'en';
   const isRtl = isRtlLanguage(language as SupportedLanguage);
