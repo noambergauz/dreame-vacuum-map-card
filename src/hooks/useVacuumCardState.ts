@@ -4,6 +4,39 @@ import { DEFAULTS } from '../constants';
 
 export type RepeatCount = 1 | 2 | 3;
 
+const REPEAT_COUNT_STORAGE_KEY = 'dreame-vacuum-card:repeat_count';
+
+function loadRepeatCount(): RepeatCount {
+  try {
+    const stored = localStorage.getItem(REPEAT_COUNT_STORAGE_KEY);
+    if (stored) {
+      const value = parseInt(stored, 10);
+      if (value >= 1 && value <= 3) {
+        return value as RepeatCount;
+      }
+    }
+  } catch {
+    // localStorage not available
+  }
+  return 1;
+}
+
+function saveRepeatCount(count: RepeatCount): void {
+  try {
+    localStorage.setItem(REPEAT_COUNT_STORAGE_KEY, String(count));
+  } catch {
+    // localStorage not available
+  }
+}
+
+function clearRepeatCount(): void {
+  try {
+    localStorage.removeItem(REPEAT_COUNT_STORAGE_KEY);
+  } catch {
+    // localStorage not available
+  }
+}
+
 interface UseVacuumCardStateOptions {
   defaultMode?: CleaningMode;
 }
@@ -19,7 +52,7 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
   const [modalOpened, setModalOpened] = useState(false);
   const [shortcutsModalOpened, setShortcutsModalOpened] = useState(false);
   const [settingsPanelOpened, setSettingsPanelOpened] = useState(false);
-  const [repeatCount, setRepeatCount] = useState<RepeatCount>(1);
+  const [repeatCount, setRepeatCount] = useState<RepeatCount>(loadRepeatCount);
 
   const handleModeChange = useCallback((mode: CleaningMode) => {
     console.debug('[UI] Mode changed:', mode);
@@ -66,8 +99,18 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
   }, []);
 
   const cycleRepeatCount = useCallback(() => {
-    setRepeatCount((prev) => ((prev % 3) + 1) as RepeatCount);
-    console.debug('[UI] Repeat count cycled');
+    setRepeatCount((prev) => {
+      const next = ((prev % 3) + 1) as RepeatCount;
+      saveRepeatCount(next);
+      console.debug('[UI] Repeat count cycled to', next);
+      return next;
+    });
+  }, []);
+
+  const resetRepeatCount = useCallback(() => {
+    setRepeatCount(1);
+    clearRepeatCount();
+    console.debug('[UI] Repeat count reset to 1');
   }, []);
 
   return {
@@ -87,5 +130,6 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
     handleModeChange,
     handleRoomToggle,
     cycleRepeatCount,
+    resetRepeatCount,
   };
 }

@@ -14,7 +14,7 @@ import { isRtlLanguage } from '../../i18n';
 import { VacuumCardProvider } from '../../contexts';
 import type { Hass, HassConfig } from '../../types/homeassistant';
 import type { SupportedLanguage } from '../../i18n/locales';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './DreameVacuumCard.scss';
 
 interface DreameVacuumCardProps {
@@ -59,7 +59,16 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     handleModeChange,
     handleRoomToggle,
     cycleRepeatCount,
+    resetRepeatCount,
   } = useVacuumCardState({ defaultMode: config.default_mode });
+
+  // Reset repeat count when vacuum stops running
+  const isRunning = entity ? getAttr(entity.attributes.running, false) : false;
+  useEffect(() => {
+    if (!isRunning) {
+      resetRepeatCount();
+    }
+  }, [isRunning, resetRepeatCount]);
 
   // Toast notifications
   const { toast, showToast, hideToast } = useToast();
