@@ -18,6 +18,13 @@
     min-height: min(18.75rem, calc(100vh - 280px)); // Don't enforce min-height larger than available space
   }
 
+  // Locked state: allow page scrolling through the map
+  &--locked {
+    .react-transform-wrapper {
+      touch-action: pan-y;
+    }
+  }
+
   // Content wrapper for the zoomable map area
   &__content {
     position: relative;

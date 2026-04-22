@@ -22,6 +22,8 @@ export const es: Translation = {
     zoom_in: 'Acercar',
     zoom_out: 'Alejar',
     zoom_reset: 'Restablecer zoom',
+    lock_map: 'Bloquear mapa',
+    unlock_map: 'Desbloquear mapa',
   },
 
   // Mode Tabs

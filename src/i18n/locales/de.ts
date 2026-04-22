@@ -23,6 +23,8 @@ export const de: Translation = {
     zoom_in: 'Vergrößern',
     zoom_out: 'Verkleinern',
     zoom_reset: 'Zoom zurücksetzen',
+    lock_map: 'Karte sperren',
+    unlock_map: 'Karte entsperren',
   },
 
   // Mode Tabs

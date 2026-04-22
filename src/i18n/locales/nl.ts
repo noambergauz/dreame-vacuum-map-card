@@ -22,6 +22,8 @@ export const nl: Translation = {
     zoom_in: 'Inzoomen',
     zoom_out: 'Uitzoomen',
     zoom_reset: 'Zoom resetten',
+    lock_map: 'Kaart vergrendelen',
+    unlock_map: 'Kaart ontgrendelen',
   },
 
   // Modus Tabbladen

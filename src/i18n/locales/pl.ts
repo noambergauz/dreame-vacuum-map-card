@@ -22,6 +22,8 @@ export const pl: Translation = {
     zoom_in: 'Powiększ',
     zoom_out: 'Pomniejsz',
     zoom_reset: 'Resetuj powiększenie',
+    lock_map: 'Zablokuj mapę',
+    unlock_map: 'Odblokuj mapę',
   },
 
   // Mode Tabs

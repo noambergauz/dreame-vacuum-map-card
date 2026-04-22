@@ -1,9 +1,10 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
 import type { CleaningMode, Zone, CalibrationPoint, RoomViewMode } from '../../types/homeassistant';
 import { useTranslation } from '../../hooks';
 import { useHass } from '../../contexts';
 import { parseRoomsFromCamera } from '../../utils/roomParser';
+import { STORAGE_KEY } from '../../constants';
 import { RoomSegments } from './RoomSegments';
 import { MapControls } from './MapControls';
 import { RoomListView } from './RoomListView';
@@ -28,10 +29,27 @@ interface MapControlsWrapperProps {
   showZoomControls: boolean;
   viewMode: RoomViewMode;
   onViewToggle: () => void;
+  isMapLocked: boolean;
+  onToggleLock: () => void;
+  onResetTransformReady: (resetFn: () => void) => void;
 }
 
-function MapControlsWrapper({ showViewToggle, showZoomControls, viewMode, onViewToggle }: MapControlsWrapperProps) {
+function MapControlsWrapper({
+  showViewToggle,
+  showZoomControls,
+  viewMode,
+  onViewToggle,
+  isMapLocked,
+  onToggleLock,
+  onResetTransformReady,
+}: MapControlsWrapperProps) {
   const { zoomIn, zoomOut, resetTransform } = useControls();
+
+  // Pass resetTransform to parent via callback in effect
+  useEffect(() => {
+    onResetTransformReady(resetTransform);
+  }, [resetTransform, onResetTransformReady]);
+
   return (
     <MapControls
       showViewToggle={showViewToggle}
@@ -41,6 +59,8 @@ function MapControlsWrapper({ showViewToggle, showZoomControls, viewMode, onView
       onZoomIn={() => zoomIn()}
       onZoomOut={() => zoomOut()}
       onZoomReset={() => resetTransform()}
+      isMapLocked={isMapLocked}
+      onToggleLock={onToggleLock}
     />
   );
 }
@@ -62,8 +82,30 @@ export function VacuumMap({
   const mapUrl = mapEntity?.attributes?.entity_picture;
   const mapRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const resetTransformRef = useRef<(() => void) | null>(null);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   const [roomViewMode, setRoomViewMode] = useState<RoomViewMode>(defaultRoomView);
+
+  // Map lock state - persisted to localStorage, default: locked
+  const [isMapLocked, setIsMapLocked] = useState(() => {
+    const stored = localStorage.getItem(STORAGE_KEY.MAP_LOCKED);
+    return stored === null ? true : stored === 'true';
+  });
+
+  // Callback to receive resetTransform from child component
+  const handleResetTransformReady = useCallback((resetFn: () => void) => {
+    resetTransformRef.current = resetFn;
+  }, []);
+
+  // Handle lock toggle - reset transform when locking
+  const handleToggleLock = useCallback(() => {
+    const newLocked = !isMapLocked;
+    if (newLocked && resetTransformRef.current) {
+      resetTransformRef.current();
+    }
+    setIsMapLocked(newLocked);
+    localStorage.setItem(STORAGE_KEY.MAP_LOCKED, String(newLocked));
+  }, [isMapLocked]);
 
   // Effective view mode: use user selection only in room mode, otherwise default
   const effectiveRoomViewMode = selectedMode === 'room' ? roomViewMode : defaultRoomView;
@@ -82,11 +124,14 @@ export function VacuumMap({
     [onImageDimensionsChange]
   );
 
-  // Determine if panning should be enabled (disabled for zone mode to allow zone creation)
-  const isPanningEnabled = selectedMode !== 'zone';
+  // Determine if panning should be enabled (disabled when locked or in zone mode for zone creation)
+  const isPanningEnabled = !isMapLocked && selectedMode !== 'zone';
+
+  // Determine map container class
+  const mapClassName = `vacuum-map${isMapLocked ? ' vacuum-map--locked' : ''}`;
 
   return (
-    <div className="vacuum-map" ref={mapRef}>
+    <div className={mapClassName} ref={mapRef}>
       {mapEntity && mapUrl ? (
         <TransformWrapper
           initialScale={1}
@@ -97,9 +142,11 @@ export function VacuumMap({
           limitToBounds={false}
           wheel={{
             step: 0.05,
+            disabled: isMapLocked,
           }}
           pinch={{
             step: 0.5,
+            disabled: isMapLocked,
           }}
           panning={{
             disabled: !isPanningEnabled,
@@ -113,6 +160,9 @@ export function VacuumMap({
             showZoomControls={selectedMode !== 'room' || effectiveRoomViewMode === 'map'}
             viewMode={effectiveRoomViewMode}
             onViewToggle={() => setRoomViewMode((v) => (v === 'map' ? 'list' : 'map'))}
+            isMapLocked={isMapLocked}
+            onToggleLock={handleToggleLock}
+            onResetTransformReady={handleResetTransformReady}
           />
           <TransformComponent
             wrapperStyle={{

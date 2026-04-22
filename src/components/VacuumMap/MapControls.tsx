@@ -1,4 +1,4 @@
-import { Map, List, Plus, Minus, Maximize2 } from 'lucide-react';
+import { Map, List, Plus, Minus, Maximize2, Lock, LockOpen } from 'lucide-react';
 import type { RoomViewMode } from '../../types/homeassistant';
 import { useTranslation } from '../../hooks';
 import './MapControls.scss';
@@ -11,6 +11,8 @@ interface MapControlsProps {
   onZoomReset: () => void;
   showViewToggle?: boolean;
   showZoomControls?: boolean;
+  isMapLocked: boolean;
+  onToggleLock: () => void;
 }
 
 export function MapControls({
@@ -21,11 +23,15 @@ export function MapControls({
   onZoomReset,
   showViewToggle = false,
   showZoomControls = true,
+  isMapLocked,
+  onToggleLock,
 }: MapControlsProps) {
   const { t } = useTranslation();
   const isMapView = viewMode === 'map';
   const viewLabel = isMapView ? t('vacuum_map.switch_to_list') : t('vacuum_map.switch_to_map');
   const ViewIcon = isMapView ? List : Map;
+  const lockLabel = isMapLocked ? t('vacuum_map.unlock_map') : t('vacuum_map.lock_map');
+  const LockIcon = isMapLocked ? Lock : LockOpen;
 
   return (
     <div className="map-controls">
@@ -34,7 +40,7 @@ export function MapControls({
           <ViewIcon size={18} />
         </button>
       )}
-      {showZoomControls && (
+      {showZoomControls && !isMapLocked && (
         <>
           <button
             className="map-controls__button"
@@ -62,6 +68,14 @@ export function MapControls({
           </button>
         </>
       )}
+      <button
+        className={`map-controls__button map-controls__button--lock${isMapLocked ? ' map-controls__button--locked' : ''}`}
+        onClick={onToggleLock}
+        aria-label={lockLabel}
+        title={lockLabel}
+      >
+        <LockIcon size={16} />
+      </button>
     </div>
   );
 }

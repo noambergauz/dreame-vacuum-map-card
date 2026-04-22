@@ -22,6 +22,8 @@ export const zh: Translation = {
     zoom_in: '放大',
     zoom_out: '缩小',
     zoom_reset: '重置缩放',
+    lock_map: '锁定地图',
+    unlock_map: '解锁地图',
   },
 
   // Mode Tabs (模式切换标签)

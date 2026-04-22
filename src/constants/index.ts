@@ -166,6 +166,11 @@ export const UI = {
   SLIDER_VALUE_BUBBLE_SIZE: 40,
 } as const;
 
+// LocalStorage keys
+export const STORAGE_KEY = {
+  MAP_LOCKED: 'dreame-vacuum-map-locked',
+} as const;
+
 // Default values
 export const DEFAULTS = {
   MODE: VACUUM_MODE_TYPE.ALL,

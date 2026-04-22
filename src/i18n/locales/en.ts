@@ -20,6 +20,8 @@ export const en = {
     zoom_in: 'Zoom in',
     zoom_out: 'Zoom out',
     zoom_reset: 'Reset zoom',
+    lock_map: 'Lock map',
+    unlock_map: 'Unlock map',
   },
 
   // Mode Tabs

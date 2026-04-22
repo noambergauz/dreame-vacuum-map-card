@@ -22,6 +22,8 @@ export const ru: Translation = {
     zoom_in: 'Увеличить',
     zoom_out: 'Уменьшить',
     zoom_reset: 'Сбросить масштаб',
+    lock_map: 'Заблокировать карту',
+    unlock_map: 'Разблокировать карту',
   },
 
   // Mode Tabs

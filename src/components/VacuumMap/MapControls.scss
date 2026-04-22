@@ -37,5 +37,20 @@
     svg {
       transition: transform 0.2s ease;
     }
+
+    &--lock {
+      margin-top: 0.25rem;
+    }
+
+    &--locked {
+      background: var(--accent-color, #007aff);
+      border-color: var(--accent-color, #007aff);
+      color: #fff;
+
+      &:hover {
+        background: var(--accent-hover, #0066d6);
+        border-color: var(--accent-hover, #0066d6);
+      }
+    }
   }
 }

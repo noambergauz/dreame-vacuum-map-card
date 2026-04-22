@@ -22,6 +22,8 @@ export const he: Translation = {
     zoom_in: 'הגדל',
     zoom_out: 'הקטן',
     zoom_reset: 'אפס זום',
+    lock_map: 'נעל מפה',
+    unlock_map: 'בטל נעילת מפה',
   },
 
   // לשוניות מצבים
