@@ -1,6 +1,10 @@
+<img src="icon.png" alt="Dreame" align="left" width="64" height="64" style="margin-right: 16px;">
+
 # Dreame Vacuum Map Card
 
 A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot vacuums. Built with React, TypeScript, and SCSS.
+
+<br clear="left">
 
 ## Features
 
