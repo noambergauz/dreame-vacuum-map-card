@@ -1,6 +1,6 @@
-import { useTranslation } from '../../../hooks';
+import { useTranslation } from '@/hooks';
 import '../ActionButtons.scss';
-import { PAUSE_CLEANING_ICON_SVG } from '../../../constants/icons';
+import { PAUSE_CLEANING_ICON_SVG } from '@/constants/icons';
 
 interface PauseButtonProps {
   onClick: () => void;

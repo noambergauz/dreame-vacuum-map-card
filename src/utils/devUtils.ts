@@ -1,4 +1,4 @@
-import type { Hass } from '../types/homeassistant';
+import type { Hass } from '@/types/homeassistant';
 import { updateMockEntityState } from './mock';
 
 /**

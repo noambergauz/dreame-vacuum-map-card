@@ -1,0 +1,20 @@
+export * from './homeassistant';
+export type {
+  VacuumCleaningMode,
+  CleanGeniusMode,
+  CleanGeniusState,
+  SuctionLevel,
+  CleaningRoute,
+  MopPadHumidity,
+  VacuumModeType,
+  SelfCleanFrequency,
+  VacuumMap,
+  VacuumEntityAttributes,
+  ServiceCallData,
+  SelectOptionData,
+  SetValueData,
+  VacuumCleanSegmentData,
+  RoomCleaningConfig,
+  CustomizeCleaningState,
+  PersistedCustomizeConfig,
+} from './vacuum';

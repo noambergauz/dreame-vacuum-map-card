@@ -1,7 +1,7 @@
-import { CircularButton } from '../../common';
-import type { CleaningRoute } from '../../../types/vacuum';
-import { getCleaningRouteIcon, convertToLowerCase } from '../../../utils';
-import { useTranslation } from '../../../hooks';
+import { CircularButton } from '@/components/common';
+import type { CleaningRoute } from '@/types/vacuum';
+import { getCleaningRouteIcon, convertToLowerCase } from '@/utils';
+import { useTranslation } from '@/hooks';
 
 interface RouteSelectorProps {
   cleaningRoute: string;

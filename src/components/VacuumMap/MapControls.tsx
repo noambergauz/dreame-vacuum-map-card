@@ -1,6 +1,6 @@
 import { Map, List, Plus, Minus, RotateCcw, Lock, LockOpen } from 'lucide-react';
-import type { RoomViewMode } from '../../types/homeassistant';
-import { useTranslation } from '../../hooks';
+import type { RoomViewMode } from '@/types/homeassistant';
+import { useTranslation } from '@/hooks';
 import './MapControls.scss';
 
 interface MapControlsProps {

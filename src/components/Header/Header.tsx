@@ -1,7 +1,7 @@
 import { Settings } from 'lucide-react';
-import { useTranslation } from '../../hooks';
-import { useAreaUnit, useEntity } from '../../contexts';
-import { getAttr, isNumber } from '../../utils';
+import { useTranslation } from '@/hooks';
+import { useAreaUnit, useEntity } from '@/contexts';
+import { getAttr, isNumber } from '@/utils';
 import './Header.scss';
 import {
   BATTERY_EMPTY_ICON_SVG,
@@ -10,7 +10,7 @@ import {
   BATTERY_FULL_ICON_SVG,
   HISTORY_ICON_SVG,
   AREA_ICON_SVG,
-} from '../../constants/icons';
+} from '@/constants/icons';
 
 interface HeaderProps {
   deviceName: string;

@@ -1,6 +1,7 @@
-import { useMemo } from 'react';
-import type { Room } from '../../types/homeassistant';
-import { createRoomPath } from '../../utils/roomParser';
+import { useMemo, useCallback, memo } from 'react';
+import type { Room } from '@/types/homeassistant';
+import { createRoomPath } from '@/utils/roomParser';
+import { logger } from '@/utils/logger';
 
 interface RoomSegmentsProps {
   rooms: Room[];
@@ -12,7 +13,14 @@ interface RoomSegmentsProps {
   isStarted?: boolean;
 }
 
-export function RoomSegments({
+// Extracted style constant to avoid recreation
+const ROOM_PATH_STYLE: React.CSSProperties = {
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  touchAction: 'none',
+};
+
+function RoomSegmentsInner({
   rooms,
   selectedRooms,
   onRoomToggle,
@@ -21,8 +29,7 @@ export function RoomSegments({
   imageHeight,
   isStarted,
 }: RoomSegmentsProps) {
-  // Debug: log when component renders
-  console.debug('[RoomSegments] Render, selectedRooms:', Array.from(selectedRooms.keys()));
+  logger.debug('RoomSegments', 'Render, selectedRooms:', Array.from(selectedRooms.keys()));
 
   const roomPaths = useMemo(() => {
     return rooms
@@ -33,10 +40,21 @@ export function RoomSegments({
       }));
   }, [rooms, calibrationPoints, imageWidth, imageHeight]);
 
-  const handleRoomClick = (roomId: number, roomName: string) => {
-    console.debug('[RoomSegments] Click on room:', roomId, roomName);
-    onRoomToggle(roomId, roomName);
-  };
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    e.stopPropagation();
+  }, []);
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<SVGPathElement>) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const roomId = Number(e.currentTarget.dataset.roomId);
+      const roomName = e.currentTarget.dataset.roomName ?? '';
+      logger.debug('RoomSegments', 'Click on room:', roomId, roomName);
+      onRoomToggle(roomId, roomName);
+    },
+    [onRoomToggle]
+  );
 
   if (!imageWidth || !imageHeight) {
     return null;
@@ -52,31 +70,21 @@ export function RoomSegments({
         const isSelected = selectedRooms.has(room.id);
 
         if (!path) {
-          console.warn('No path for room:', room.id, room.name);
+          logger.warn('No path for room:', room.id, room.name);
           return null;
         }
 
         return (
           <path
-            key={`${room.id}-${isSelected}`}
+            key={room.id}
             d={path}
             className={`vacuum-map__room-segment ${isSelected ? 'vacuum-map__room-segment--selected' : ''}`}
             fill={isSelected ? 'var(--accent-bg, rgba(212, 175, 55, 0.3))' : 'transparent'}
             stroke={!isStarted && isSelected ? 'var(--accent-color, #D4AF37)' : 'rgba(255, 255, 255, 0.2)'}
             strokeWidth="2"
-            style={{
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              touchAction: 'none',
-            }}
-            onPointerDown={(e) => {
-              e.stopPropagation();
-            }}
-            onPointerUp={(e) => {
-              e.stopPropagation();
-              e.preventDefault();
-              handleRoomClick(room.id, room.name);
-            }}
+            style={ROOM_PATH_STYLE}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
             data-room-id={room.id}
             data-room-name={room.name}
           >
@@ -87,3 +95,6 @@ export function RoomSegments({
     </svg>
   );
 }
+
+// Wrap with memo for better performance
+export const RoomSegments = memo(RoomSegmentsInner);

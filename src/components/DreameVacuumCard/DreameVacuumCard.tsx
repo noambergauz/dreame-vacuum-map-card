@@ -1,21 +1,22 @@
-import { Header } from '../Header';
-import { MapSelector } from '../MapSelector';
-import { CleaningModeButton } from '../CleaningModeButton';
-import { VacuumMap } from '../VacuumMap';
-import { ModeTabs } from '../ModeTabs';
-import { ActionButtons } from '../ActionButtons';
-import { CleaningModeModal } from '../CleaningModeModal';
-import { ShortcutsModal } from '../ShortcutsModal';
-import { SettingsPanel } from '../SettingsPanel';
-import { RoomSelectionDisplay } from '../RoomSelectionDisplay';
-import { Toast } from '../common';
-import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useTheme } from '../../hooks';
-import { extractEntityData, getEffectiveCleaningMode, getAttr } from '../../utils';
-import { isRtlLanguage } from '../../i18n';
-import { VacuumCardProvider } from '../../contexts';
-import type { Hass, HassConfig } from '../../types/homeassistant';
-import type { SupportedLanguage } from '../../i18n/locales';
+import { Header } from '@/components/Header';
+import { MapSelector } from '@/components/MapSelector';
+import { CleaningModeButton } from '@/components/CleaningModeButton';
+import { VacuumMap } from '@/components/VacuumMap';
+import { ModeTabs } from '@/components/ModeTabs';
+import { ActionButtons } from '@/components/ActionButtons';
+import { CleaningModeModal } from '@/components/CleaningModeModal';
+import { ShortcutsModal } from '@/components/ShortcutsModal';
+import { SettingsPanel } from '@/components/SettingsPanel';
+import { RoomSelectionDisplay } from '@/components/RoomSelectionDisplay';
+import { Toast } from '@/components/common';
+import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useTheme } from '@/hooks';
+import { extractEntityData, getEffectiveCleaningMode, getAttr } from '@/utils';
+import { isRtlLanguage } from '@/i18n';
+import { VacuumCardProvider } from '@/contexts';
+import type { Hass, HassConfig } from '@/types/homeassistant';
+import type { SupportedLanguage } from '@/i18n/locales';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { logger } from '@/utils/logger';
 import './DreameVacuumCard.scss';
 
 interface DreameVacuumCardProps {
@@ -25,7 +26,7 @@ interface DreameVacuumCardProps {
 
 export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const entity = hass.states[config.entity];
-  console.debug('DreameVacuumCard: Loaded entity', entity);
+  logger.debug('DreameVacuumCard', 'Loaded entity', entity);
   const themeType = config.theme || 'light';
   const language = config.language || 'en';
   const isRtl = isRtlLanguage(language as SupportedLanguage);
@@ -80,12 +81,21 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   // Toast notifications
   const { toast, showToast, hideToast } = useToast();
 
+  // Show error messages via toast with error styling
+  const showError = useCallback(
+    (message: string) => {
+      showToast(message);
+    },
+    [showToast]
+  );
+
   // Vacuum services
   const { handlePause, handleStop, handleDock, handleClean } = useVacuumServices({
     hass,
     entityId: config.entity,
     mapEntityId,
     onSuccess: showToast,
+    onError: showError,
   });
 
   // Handle room toggle with toast
@@ -113,14 +123,37 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   }, [selectedMode, selectedRooms, selectedZone, imageDimensions, repeatCount, handleClean]);
 
   // Handle resume (just calls start)
-  const handleResume = () => {
+  const handleResume = useCallback(() => {
     hass.callService('vacuum', 'start', { entity_id: config.entity });
     showToast(t('toast.resuming'));
-  };
+  }, [hass, config.entity, showToast, t]);
+
+  // Memoized handlers for modal/panel open/close
+  const handleSettingsOpen = useCallback(() => setSettingsPanelOpened(true), [setSettingsPanelOpened]);
+  const handleSettingsClose = useCallback(() => setSettingsPanelOpened(false), [setSettingsPanelOpened]);
+  const handleModalOpen = useCallback(() => setModalOpened(true), [setModalOpened]);
+  const handleModalClose = useCallback(() => setModalOpened(false), [setModalOpened]);
+  const handleShortcutsOpen = useCallback(() => setShortcutsModalOpened(true), [setShortcutsModalOpened]);
+  const handleShortcutsClose = useCallback(() => setShortcutsModalOpened(false), [setShortcutsModalOpened]);
+
+  // Memoized handler for image dimensions
+  const handleImageDimensionsChange = useCallback(
+    (width: number, height: number) => setImageDimensions({ width, height }),
+    []
+  );
 
   // Error handling
   if (!entity) {
     return <div className="dreame-vacuum-card__error">{t('errors.entity_not_found', { entity: config.entity })}</div>;
+  }
+
+  // Handle unavailable or unknown entity state
+  if (entity.state === 'unavailable' || entity.state === 'unknown') {
+    return (
+      <div className="dreame-vacuum-card__error dreame-vacuum-card__error--unavailable">
+        {t('errors.entity_unavailable')}
+      </div>
+    );
   }
 
   // Extract entity data
@@ -142,7 +175,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         dir={isRtl ? 'rtl' : 'ltr'}
       >
         <div className="dreame-vacuum-card__container">
-          <Header deviceName={deviceName} onSettingsClick={() => setSettingsPanelOpened(true)} />
+          <Header deviceName={deviceName} onSettingsClick={handleSettingsOpen} />
 
           <MapSelector />
 
@@ -153,7 +186,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             onRoomToggle={handleRoomToggleWithToast}
             zone={selectedZone}
             onZoneChange={setSelectedZone}
-            onImageDimensionsChange={(width, height) => setImageDimensions({ width, height })}
+            onImageDimensionsChange={handleImageDimensionsChange}
             isStarted={getAttr(entity.attributes.started, false)}
             defaultRoomView={config.default_room_view}
           />
@@ -162,8 +195,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             cleanGeniusMode={getAttr(entity.attributes.cleangenius_mode, '')}
             cleaningMode={getAttr(entity.attributes.cleaning_mode, 'Sweeping and mopping')}
             cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
-            onClick={() => setModalOpened(true)}
-            onShortcutsClick={() => setShortcutsModalOpened(true)}
+            onClick={handleModalOpen}
+            onShortcutsClick={handleShortcutsOpen}
             onRepeatClick={cycleRepeatCount}
             repeatCount={repeatCount}
             disabled={isRunning}
@@ -194,11 +227,11 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           </div>
         </div>
 
-        <CleaningModeModal opened={modalOpened} onClose={() => setModalOpened(false)} isRunning={isRunning} />
+        <CleaningModeModal opened={modalOpened} onClose={handleModalClose} isRunning={isRunning} />
 
-        <ShortcutsModal opened={shortcutsModalOpened} onClose={() => setShortcutsModalOpened(false)} />
+        <ShortcutsModal opened={shortcutsModalOpened} onClose={handleShortcutsClose} />
 
-        <SettingsPanel opened={settingsPanelOpened} onClose={() => setSettingsPanelOpened(false)} />
+        <SettingsPanel opened={settingsPanelOpened} onClose={handleSettingsClose} />
 
         {toast && <Toast message={toast} onClose={hideToast} />}
       </div>

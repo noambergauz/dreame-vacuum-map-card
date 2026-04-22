@@ -1,10 +1,10 @@
-import type { CleaningMode, StopAction } from '../../types/homeassistant';
-import { useTranslation, useButtonConfig } from '../../hooks';
+import type { CleaningSelectionMode, StopAction } from '@/types/homeassistant';
+import { useTranslation, useButtonConfig } from '@/hooks';
 import { CleanButton, PauseButton, ResumeButton, StopButton, DockButton } from './components';
 import './ActionButtons.scss';
 
 interface ActionButtonsProps {
-  selectedMode: CleaningMode;
+  selectedMode: CleaningSelectionMode;
   selectedRoomsCount: number;
   isRunning: boolean;
   isPaused: boolean;

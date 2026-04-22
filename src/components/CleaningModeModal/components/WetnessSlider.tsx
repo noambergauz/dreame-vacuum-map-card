@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { SLIDER_CONFIG, MOP_PAD_HUMIDITY } from '../../../constants';
-import { useIsRtl } from '../../../contexts';
+import { SLIDER_CONFIG, MOP_PAD_HUMIDITY } from '@/constants';
+import { useIsRtl } from '@/contexts';
 
 interface WetnessSliderProps {
   wetnessLevel: number;

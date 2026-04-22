@@ -1,4 +1,4 @@
-import type { CustomThemeConfig } from '../themes';
+import type { CustomThemeConfig } from '@/themes';
 
 export interface HassEntity {
   entity_id: string;
@@ -55,7 +55,7 @@ export interface HassConfig {
   theme?: 'light' | 'dark' | 'custom';
   custom_theme?: CustomThemeConfig;
   language?: 'en' | 'de' | 'ru' | 'pl' | 'it' | 'nl' | 'es' | 'zh' | 'he' | 'fr_FR';
-  default_mode?: CleaningMode;
+  default_mode?: CleaningSelectionMode;
   default_room_view?: RoomViewMode;
   buttons?: ButtonConfig[];
 }
@@ -80,7 +80,7 @@ export interface Hass {
   };
 }
 
-export type CleaningMode = 'room' | 'all' | 'zone';
+export type CleaningSelectionMode = 'room' | 'all' | 'zone';
 export type CleaningStrategy = 'CleanGenius' | 'Custom';
 export type RoomViewMode = 'map' | 'list';
 

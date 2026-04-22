@@ -1,66 +1,143 @@
 import { useCallback } from 'react';
-import type { Hass, CleaningMode, Zone, StopAction } from '../types/homeassistant';
-import type { RoomCleaningConfig } from '../types/vacuum';
+import type { Hass, CleaningSelectionMode, Zone, StopAction } from '@/types/homeassistant';
+import type { RoomCleaningConfig } from '@/types/vacuum';
 import { useTranslation } from './useTranslation';
-import { convertUIZoneToVacuumZone } from '../utils/zoneConverter';
+import { convertUIZoneToVacuumZone } from '@/utils/zoneConverter';
+import { logger } from '@/utils/logger';
 
 interface VacuumServicesParams {
   hass: Hass;
   entityId: string;
   mapEntityId: string;
   onSuccess?: (message: string) => void;
+  onError?: (message: string) => void;
+}
+
+/**
+ * Safely call a Home Assistant service with error handling
+ */
+async function safeCallService(
+  hass: Hass,
+  domain: string,
+  service: string,
+  data: Record<string, unknown>,
+  onError?: (message: string) => void,
+  errorMessage?: string
+): Promise<boolean> {
+  try {
+    await hass.callService(domain, service, data);
+    return true;
+  } catch (error) {
+    logger.error(`Service call failed: ${domain}.${service}`, error);
+    if (onError && errorMessage) {
+      onError(errorMessage);
+    }
+    return false;
+  }
 }
 
 /**
  * Hook providing vacuum service operations
  */
-export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: VacuumServicesParams) {
+export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, onError }: VacuumServicesParams) {
   const { t } = useTranslation();
 
-  const handleStart = useCallback(() => {
-    console.debug('[Vacuum] Start full clean', entityId);
-    hass.callService('vacuum', 'start', { entity_id: entityId });
-    onSuccess?.(t('toast.starting_full_clean'));
-  }, [hass, entityId, onSuccess, t]);
+  const handleStart = useCallback(async () => {
+    logger.debug('Vacuum', 'Start full clean', entityId);
+    const success = await safeCallService(
+      hass,
+      'vacuum',
+      'start',
+      { entity_id: entityId },
+      onError,
+      t('errors.service_call_failed')
+    );
+    if (success) {
+      onSuccess?.(t('toast.starting_full_clean'));
+    }
+  }, [hass, entityId, onSuccess, onError, t]);
 
-  const handlePause = useCallback(() => {
-    console.debug('[Vacuum] Pause', entityId);
-    hass.callService('vacuum', 'pause', { entity_id: entityId });
-    onSuccess?.(t('toast.pausing_vacuum'));
-  }, [hass, entityId, onSuccess, t]);
+  const handlePause = useCallback(async () => {
+    logger.debug('Vacuum', 'Pause', entityId);
+    const success = await safeCallService(
+      hass,
+      'vacuum',
+      'pause',
+      { entity_id: entityId },
+      onError,
+      t('errors.service_call_failed')
+    );
+    if (success) {
+      onSuccess?.(t('toast.pausing_vacuum'));
+    }
+  }, [hass, entityId, onSuccess, onError, t]);
 
   const handleStop = useCallback(
-    (action: StopAction = 'stop') => {
-      console.debug('[Vacuum] Stop', { action, entityId });
-      hass.callService('vacuum', 'stop', { entity_id: entityId });
-      if (action === 'stop_and_dock') {
-        hass.callService('vacuum', 'return_to_base', { entity_id: entityId });
-        onSuccess?.(t('toast.stopping_and_docking'));
-      } else {
-        onSuccess?.(t('toast.stopping_vacuum'));
+    async (action: StopAction = 'stop') => {
+      logger.debug('Vacuum', 'Stop', { action, entityId });
+      const success = await safeCallService(
+        hass,
+        'vacuum',
+        'stop',
+        { entity_id: entityId },
+        onError,
+        t('errors.service_call_failed')
+      );
+      if (success) {
+        if (action === 'stop_and_dock') {
+          await safeCallService(
+            hass,
+            'vacuum',
+            'return_to_base',
+            { entity_id: entityId },
+            onError,
+            t('errors.service_call_failed')
+          );
+          onSuccess?.(t('toast.stopping_and_docking'));
+        } else {
+          onSuccess?.(t('toast.stopping_vacuum'));
+        }
       }
     },
-    [hass, entityId, onSuccess, t]
+    [hass, entityId, onSuccess, onError, t]
   );
 
-  const handleDock = useCallback(() => {
-    console.debug('[Vacuum] Return to dock', entityId);
-    hass.callService('vacuum', 'return_to_base', { entity_id: entityId });
-    onSuccess?.(t('toast.vacuum_docking'));
-  }, [hass, entityId, onSuccess, t]);
+  const handleDock = useCallback(async () => {
+    logger.debug('Vacuum', 'Return to dock', entityId);
+    const success = await safeCallService(
+      hass,
+      'vacuum',
+      'return_to_base',
+      { entity_id: entityId },
+      onError,
+      t('errors.service_call_failed')
+    );
+    if (success) {
+      onSuccess?.(t('toast.vacuum_docking'));
+    }
+  }, [hass, entityId, onSuccess, onError, t]);
 
   const handleCleanSegments = useCallback(
-    (segments: number[], count: number, repeats: number = 1) => {
-      console.debug('[Vacuum] Clean segments', { entityId, segments, count, repeats });
-      hass.callService('dreame_vacuum', 'vacuum_clean_segment', {
-        entity_id: entityId,
-        segments,
-        repeats,
-      });
-      const key = count === 1 ? 'toast.starting_room_clean' : 'toast.starting_room_clean_plural';
-      onSuccess?.(t(key, { count: String(count) }));
+    async (segments: number[], count: number, repeats: number = 1) => {
+      logger.debug('Vacuum', 'Clean segments', { entityId, segments, count, repeats });
+      const success = await safeCallService(
+        hass,
+        'dreame_vacuum',
+        'vacuum_clean_segment',
+        {
+          entity_id: entityId,
+          segments,
+          repeats,
+        },
+        onError,
+        t('errors.service_call_failed')
+      );
+      if (success) {
+        const key = count === 1 ? 'toast.starting_room_clean' : 'toast.starting_room_clean_plural';
+        onSuccess?.(t(key, { count: String(count) }));
+      }
     },
-    [hass, entityId, onSuccess, t]
+    [hass, entityId, onSuccess, onError, t]
   );
 
   /**
@@ -68,9 +145,9 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
    * Sends arrays of per-room settings to the Dreame vacuum service
    */
   const handleCleanSegmentsCustomized = useCallback(
-    (roomConfigs: RoomCleaningConfig[]) => {
+    async (roomConfigs: RoomCleaningConfig[]) => {
       if (roomConfigs.length === 0) {
-        console.debug('[Vacuum] No room configs provided');
+        logger.debug('Vacuum', 'No room configs provided');
         return;
       }
 
@@ -79,7 +156,7 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
       const suctionLevels = roomConfigs.map((c) => c.suctionLevel);
       const waterVolumes = roomConfigs.map((c) => c.mopWetness);
 
-      console.debug('[Vacuum] Clean segments with custom config', {
+      logger.debug('Vacuum', 'Clean segments with custom config', {
         entityId,
         segments,
         repeats,
@@ -88,26 +165,35 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
         roomConfigs,
       });
 
-      hass.callService('dreame_vacuum', 'vacuum_clean_segment', {
-        entity_id: entityId,
-        segments,
-        repeats,
-        suction_level: suctionLevels,
-        water_volume: waterVolumes,
-      });
+      const success = await safeCallService(
+        hass,
+        'dreame_vacuum',
+        'vacuum_clean_segment',
+        {
+          entity_id: entityId,
+          segments,
+          repeats,
+          suction_level: suctionLevels,
+          water_volume: waterVolumes,
+        },
+        onError,
+        t('errors.service_call_failed')
+      );
 
-      const count = roomConfigs.length;
-      const key = count === 1 ? 'toast.starting_room_clean' : 'toast.starting_room_clean_plural';
-      onSuccess?.(t(key, { count: String(count) }));
+      if (success) {
+        const count = roomConfigs.length;
+        const key = count === 1 ? 'toast.starting_room_clean' : 'toast.starting_room_clean_plural';
+        onSuccess?.(t(key, { count: String(count) }));
+      }
     },
-    [hass, entityId, onSuccess, t]
+    [hass, entityId, onSuccess, onError, t]
   );
 
   const handleCleanZone = useCallback(
-    (zone: Zone, imageWidth: number, imageHeight: number, repeats: number = 1) => {
+    async (zone: Zone, imageWidth: number, imageHeight: number, repeats: number = 1) => {
       const mapEntity = hass.states[mapEntityId];
 
-      console.debug('[Vacuum] Clean zone - input:', {
+      logger.debug('Vacuum', 'Clean zone - input:', {
         uiZone: zone,
         imageWidth,
         imageHeight,
@@ -119,21 +205,30 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
       // Convert UI zone (percentage) to vacuum coordinates
       const vacuumZone = convertUIZoneToVacuumZone(zone, mapEntity, imageWidth, imageHeight);
 
-      console.debug('[Vacuum] Clean zone - converted:', vacuumZone);
+      logger.debug('Vacuum', 'Clean zone - converted:', vacuumZone);
 
-      hass.callService('dreame_vacuum', 'vacuum_clean_zone', {
-        entity_id: entityId,
-        zone: [vacuumZone.x1, vacuumZone.y1, vacuumZone.x2, vacuumZone.y2],
-        repeats,
-      });
-      onSuccess?.(t('toast.starting_zone_clean'));
+      const success = await safeCallService(
+        hass,
+        'dreame_vacuum',
+        'vacuum_clean_zone',
+        {
+          entity_id: entityId,
+          zone: [vacuumZone.x1, vacuumZone.y1, vacuumZone.x2, vacuumZone.y2],
+          repeats,
+        },
+        onError,
+        t('errors.service_call_failed')
+      );
+      if (success) {
+        onSuccess?.(t('toast.starting_zone_clean'));
+      }
     },
-    [hass, entityId, mapEntityId, onSuccess, t]
+    [hass, entityId, mapEntityId, onSuccess, onError, t]
   );
 
   const handleClean = useCallback(
     (
-      mode: CleaningMode,
+      mode: CleaningSelectionMode,
       selectedRooms: Map<number, string>,
       selectedZone: Zone | null,
       imageWidth?: number,
@@ -141,7 +236,7 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
       repeats: number = 1,
       roomConfigs?: RoomCleaningConfig[]
     ) => {
-      console.debug('[Vacuum] Handle clean', {
+      logger.debug('Vacuum', 'Handle clean', {
         mode,
         selectedRooms: Array.from(selectedRooms.entries()),
         selectedZone,
@@ -176,7 +271,7 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
               handleCleanSegments(Array.from(selectedRooms.keys()), selectedRooms.size, repeats);
             }
           } else {
-            console.debug('[Vacuum] No rooms selected');
+            logger.debug('Vacuum', 'No rooms selected');
             onSuccess?.(t('toast.select_rooms_first'));
           }
           break;
@@ -184,10 +279,10 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess }: Va
           if (selectedZone && imageWidth && imageHeight) {
             handleCleanZone(selectedZone, imageWidth, imageHeight, repeats);
           } else if (selectedZone) {
-            console.debug('[Vacuum] Zone selected but no image dimensions');
+            logger.debug('Vacuum', 'Zone selected but no image dimensions');
             onSuccess?.(t('toast.cannot_determine_map'));
           } else {
-            console.debug('[Vacuum] No zone selected');
+            logger.debug('Vacuum', 'No zone selected');
             onSuccess?.(t('toast.select_zone_first'));
           }
           break;

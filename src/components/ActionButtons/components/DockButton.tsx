@@ -1,6 +1,6 @@
-import { useTranslation } from '../../../hooks';
+import { useTranslation } from '@/hooks';
 import '../ActionButtons.scss';
-import { DOCK_ICON_SVG } from '../../../constants/icons';
+import { DOCK_ICON_SVG } from '@/constants/icons';
 
 interface DockButtonProps {
   onClick: () => void;

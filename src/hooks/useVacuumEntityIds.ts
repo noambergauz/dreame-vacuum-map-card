@@ -4,8 +4,8 @@
  */
 
 import { useMemo } from 'react';
-import { ENTITY_SUFFIX } from '../constants';
-import { buildEntityId, buildSwitchEntityId, buildNumberEntityId, extractBaseEntityId } from '../utils/converters';
+import { ENTITY_SUFFIX } from '@/constants';
+import { buildEntityId, buildSwitchEntityId, buildNumberEntityId, extractBaseEntityId } from '@/utils/converters';
 
 export interface VacuumEntityIds {
   base: string;

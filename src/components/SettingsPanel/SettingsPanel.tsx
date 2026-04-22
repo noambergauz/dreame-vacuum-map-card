@@ -1,5 +1,5 @@
-import { Modal, Accordion } from '../common';
-import { useTranslation } from '../../hooks';
+import { Modal, Accordion } from '@/components/common';
+import { useTranslation } from '@/hooks';
 import { AIDetectionSection } from './sections/AIDetectionSection';
 import { CarpetSettingsSection } from './sections/CarpetSettingsSection';
 import { ConsumablesSection } from './sections/ConsumablesSection';

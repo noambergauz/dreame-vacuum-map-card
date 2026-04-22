@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { useTranslation } from '../../../hooks';
-import { useEntity, useHass } from '../../../contexts';
-import { getAttr } from '../../../utils';
+import { useTranslation } from '@/hooks';
+import { useEntity, useHass } from '@/contexts';
+import { getAttr } from '@/utils';
 import './ConsumablesSection.scss';
 
 interface ConsumableItem {

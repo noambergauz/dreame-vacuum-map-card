@@ -185,6 +185,8 @@ export const en = {
   errors: {
     entity_not_found: 'Entity not found: {{entity}}',
     failed_to_load: 'Failed to load entity data',
+    service_call_failed: 'Failed to send command to vacuum',
+    entity_unavailable: 'Vacuum is unavailable',
   },
 
   // Settings Panel

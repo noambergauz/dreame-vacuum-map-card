@@ -1,6 +1,6 @@
-import { useTranslation } from '../../../hooks';
-import { useAreaUnit, useEntity } from '../../../contexts';
-import { getAttr, isString, isNumber } from '../../../utils';
+import { useTranslation } from '@/hooks';
+import { useAreaUnit, useEntity } from '@/contexts';
+import { getAttr, isString, isNumber } from '@/utils';
 import './DeviceInfoSection.scss';
 
 interface InfoItem {

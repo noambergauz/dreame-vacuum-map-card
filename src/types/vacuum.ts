@@ -11,10 +11,9 @@ import type {
   MOP_PAD_HUMIDITY,
   VACUUM_MODE_TYPE,
   SELF_CLEAN_FREQUENCY,
-} from '../constants';
+} from '@/constants';
 
-// Extract the type from const objects
-export type CleaningMode = (typeof CLEANING_MODE)[keyof typeof CLEANING_MODE];
+export type VacuumCleaningMode = (typeof CLEANING_MODE)[keyof typeof CLEANING_MODE];
 export type CleanGeniusMode = (typeof CLEANGENIUS_MODE)[keyof typeof CLEANGENIUS_MODE];
 export type CleanGeniusState = (typeof CLEANGENIUS_STATE)[keyof typeof CLEANGENIUS_STATE];
 export type SuctionLevel = (typeof SUCTION_LEVEL)[keyof typeof SUCTION_LEVEL];
@@ -40,11 +39,9 @@ export interface VacuumMap {
   recovery_map?: string[];
 }
 
-// Vacuum entity attributes interface
 export interface VacuumEntityAttributes {
-  // Cleaning modes
-  cleaning_mode?: CleaningMode;
-  cleaning_mode_list?: CleaningMode[];
+  cleaning_mode?: VacuumCleaningMode;
+  cleaning_mode_list?: VacuumCleaningMode[];
   cleangenius?: CleanGeniusState;
   cleangenius_list?: CleanGeniusState[];
   cleangenius_mode?: CleanGeniusMode;

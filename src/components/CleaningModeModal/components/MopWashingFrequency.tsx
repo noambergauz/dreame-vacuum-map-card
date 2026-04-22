@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { CircularButton } from '../../common';
-import type { SelfCleanFrequency } from '../../../types/vacuum';
-import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '../../../utils';
-import { useAreaUnit, useIsRtl } from '../../../contexts';
+import { CircularButton } from '@/components/common';
+import type { SelfCleanFrequency } from '@/types/vacuum';
+import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '@/utils';
+import { useAreaUnit, useIsRtl } from '@/contexts';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 

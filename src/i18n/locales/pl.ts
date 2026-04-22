@@ -186,7 +186,9 @@ export const pl: Translation = {
   // Errors
   errors: {
     entity_not_found: 'Nie znaleziono encji: {{entity}}',
-    failed_to_load: 'Błąd ładowania danych encji',
+    failed_to_load: 'Nie udało się załadować danych encji',
+    service_call_failed: 'Nie udało się wysłać polecenia do odkurzacza',
+    entity_unavailable: 'Odkurzacz niedostępny',
   },
 
   // Settings Panel

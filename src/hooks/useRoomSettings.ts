@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
-import type { Hass } from '../types/homeassistant';
+import type { Hass } from '@/types/homeassistant';
+import { logger } from '@/utils/logger';
 
 export interface RoomSetting {
   roomId: number;
@@ -40,25 +41,33 @@ interface UseRoomSettingsReturn {
  * - select.{device}_room_{id}_cleaning_times
  */
 export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOptions): UseRoomSettingsReturn {
+  // Extract only the entity IDs we need to avoid depending on entire hass.states
+  const roomEntityIds = useMemo(() => {
+    return rooms.map((room) => ({
+      roomId: room.id,
+      roomName: room.name,
+      suctionEntityId: `select.${baseEntityId}_room_${room.id}_suction_level`,
+      wetnessEntityId: `number.${baseEntityId}_room_${room.id}_wetness_level`,
+      cleaningTimesEntityId: `select.${baseEntityId}_room_${room.id}_cleaning_times`,
+    }));
+  }, [baseEntityId, rooms]);
+
   // Build room settings map from HA entity states
+  // Only recalculate when relevant entities change
   const roomSettings = useMemo(() => {
     const settings = new Map<number, RoomSetting>();
 
-    for (const room of rooms) {
-      const suctionEntityId = `select.${baseEntityId}_room_${room.id}_suction_level`;
-      const wetnessEntityId = `number.${baseEntityId}_room_${room.id}_wetness_level`;
-      const cleaningTimesEntityId = `select.${baseEntityId}_room_${room.id}_cleaning_times`;
-
-      const suctionEntity = hass.states[suctionEntityId];
-      const wetnessEntity = hass.states[wetnessEntityId];
-      const cleaningTimesEntity = hass.states[cleaningTimesEntityId];
+    for (const entityIds of roomEntityIds) {
+      const suctionEntity = hass.states[entityIds.suctionEntityId];
+      const wetnessEntity = hass.states[entityIds.wetnessEntityId];
+      const cleaningTimesEntity = hass.states[entityIds.cleaningTimesEntityId];
 
       // Check if at least one entity exists
       const hasEntities = !!(suctionEntity || wetnessEntity || cleaningTimesEntity);
 
-      settings.set(room.id, {
-        roomId: room.id,
-        roomName: room.name,
+      settings.set(entityIds.roomId, {
+        roomId: entityIds.roomId,
+        roomName: entityIds.roomName,
         // Suction level
         suctionLevel: suctionEntity?.state ?? null,
         suctionLevelOptions: (suctionEntity?.attributes?.options as string[]) ?? [],
@@ -74,13 +83,13 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
     }
 
     return settings;
-  }, [hass.states, baseEntityId, rooms]);
+  }, [hass.states, roomEntityIds]);
 
   // Set suction level for a room
   const setSuctionLevel = useCallback(
     (roomId: number, value: string) => {
       const entityId = `select.${baseEntityId}_room_${roomId}_suction_level`;
-      console.debug('[RoomSettings] Setting suction level:', { roomId, value, entityId });
+      logger.debug('RoomSettings', 'Setting suction level:', { roomId, value, entityId });
       hass.callService('select', 'select_option', {
         entity_id: entityId,
         option: value,
@@ -93,7 +102,7 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
   const setWetnessLevel = useCallback(
     (roomId: number, value: number) => {
       const entityId = `number.${baseEntityId}_room_${roomId}_wetness_level`;
-      console.debug('[RoomSettings] Setting wetness level:', { roomId, value, entityId });
+      logger.debug('RoomSettings', 'Setting wetness level:', { roomId, value, entityId });
       hass.callService('number', 'set_value', {
         entity_id: entityId,
         value: value,
@@ -106,7 +115,7 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
   const setCleaningTimes = useCallback(
     (roomId: number, value: string) => {
       const entityId = `select.${baseEntityId}_room_${roomId}_cleaning_times`;
-      console.debug('[RoomSettings] Setting cleaning times:', { roomId, value, entityId });
+      logger.debug('RoomSettings', 'Setting cleaning times:', { roomId, value, entityId });
       hass.callService('select', 'select_option', {
         entity_id: entityId,
         option: value,

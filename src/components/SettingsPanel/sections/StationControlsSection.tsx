@@ -1,7 +1,7 @@
 import { Droplets, Wind, Pipette, Sparkles, Waves } from 'lucide-react';
-import { useTranslation } from '../../../hooks';
-import { useEntity, useHass } from '../../../contexts';
-import { STATION_BUTTON_SUFFIX } from '../../../constants';
+import { useTranslation } from '@/hooks';
+import { useEntity, useHass } from '@/contexts';
+import { STATION_BUTTON_SUFFIX } from '@/constants';
 import './StationControlsSection.scss';
 
 interface StationAction {

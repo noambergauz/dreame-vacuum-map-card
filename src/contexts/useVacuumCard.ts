@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { VacuumCardContext, type VacuumCardContextValue } from './VacuumCardContext';
-import type { Hass, HassEntity, HassConfig } from '../types/homeassistant';
-import type { SupportedLanguage } from '../i18n/locales';
+import type { Hass, HassEntity, HassConfig } from '@/types/homeassistant';
+import type { SupportedLanguage } from '@/i18n/locales';
 
 function useVacuumCardContext(): VacuumCardContextValue {
   const context = useContext(VacuumCardContext);

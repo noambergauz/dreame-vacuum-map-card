@@ -1,4 +1,5 @@
 import { locales, type SupportedLanguage } from './locales';
+import { logger } from '@/utils/logger';
 
 // Type for nested translation objects
 type TranslationValue = string | { [key: string]: TranslationValue };
@@ -42,7 +43,7 @@ export function createTranslator(language: SupportedLanguage = 'en') {
     const value = getNestedValue(translations, key);
 
     if (typeof value !== 'string') {
-      console.warn(`Translation key not found: ${key}`);
+      logger.warn(`Translation key not found: ${key}`);
       return key;
     }
 

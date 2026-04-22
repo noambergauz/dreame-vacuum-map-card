@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { DreameVacuumCard } from './components/DreameVacuumCard';
+import { ErrorBoundary } from './components/common';
 import type { Hass, HassConfig } from './types/homeassistant';
 import { createMockHass } from './utils/mock';
 import { isDevelopment, devConfig } from './config/env';
 import { attachDevUtils } from './utils/devUtils';
+import { validateConfig } from './utils/typeGuards';
+import { attachLoggerToWindow, logger } from './utils/logger';
 import styles from './styles.scss?inline';
+
+// Attach logger controls to window for dev tools access
+attachLoggerToWindow();
 
 class DreameVacuumMapCard extends HTMLElement {
   private _root: ReactDOM.Root | null = null;
@@ -22,9 +28,18 @@ class DreameVacuumMapCard extends HTMLElement {
   }
 
   setConfig(config: HassConfig) {
-    if (!config.entity) {
-      throw new Error('You need to define an entity');
+    // Validate configuration
+    const validation = validateConfig(config);
+
+    if (!validation.valid) {
+      throw new Error(`Invalid configuration: ${validation.errors.join('; ')}`);
     }
+
+    // Log warnings in development
+    if (validation.warnings.length > 0) {
+      logger.warn('Configuration warnings:', validation.warnings);
+    }
+
     this._config = config;
     this.render();
   }
@@ -77,7 +92,9 @@ class DreameVacuumMapCard extends HTMLElement {
 
     this._root.render(
       <React.StrictMode>
-        <DreameVacuumCard hass={this._hass} config={this._config} />
+        <ErrorBoundary>
+          <DreameVacuumCard hass={this._hass} config={this._config} />
+        </ErrorBoundary>
       </React.StrictMode>
     );
   }
@@ -107,15 +124,14 @@ declare global {
   }
 }
 
-if (window.customCards) {
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: 'dreame-vacuum-map-card',
-    name: 'Dreame Vacuum Map Card',
-    description: 'Custom vacuum map card for Dreame vacuum cleaners',
-  });
-}
+// Register card with Home Assistant custom cards list
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'dreame-vacuum-map-card',
+  name: 'Dreame Vacuum Map Card',
+  description: 'Custom vacuum map card for Dreame vacuum cleaners',
+});
 
-console.info('Dreame Vacuum Map Card (React) loaded');
+logger.info('Dreame Vacuum Map Card (React) loaded');
 
 export default DreameVacuumMapCard;

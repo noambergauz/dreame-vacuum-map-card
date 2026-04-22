@@ -186,7 +186,9 @@ export const nl: Translation = {
   // Fouten
   errors: {
     entity_not_found: 'Entiteit niet gevonden: {{entity}}',
-    failed_to_load: 'Laden van entiteitsgegevens mislukt',
+    failed_to_load: 'Kan entiteitsgegevens niet laden',
+    service_call_failed: 'Kan opdracht niet naar stofzuiger sturen',
+    entity_unavailable: 'Stofzuiger niet beschikbaar',
   },
 
   // Instellingenpaneel

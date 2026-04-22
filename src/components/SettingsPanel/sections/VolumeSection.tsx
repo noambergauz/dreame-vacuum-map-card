@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { Volume2, VolumeX, MapPin } from 'lucide-react';
-import { useTranslation } from '../../../hooks';
-import { useEntity, useHass, useIsRtl } from '../../../contexts';
-import { getAttr } from '../../../utils';
+import { useTranslation } from '@/hooks';
+import { useEntity, useHass, useIsRtl } from '@/contexts';
+import { getAttr } from '@/utils';
 import './VolumeSection.scss';
 
 const VOLUME_MIN = 0;

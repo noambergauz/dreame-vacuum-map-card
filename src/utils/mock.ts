@@ -1,6 +1,6 @@
-import type { Hass, HassEntity } from '../types/homeassistant';
+import type { Hass, HassEntity } from '@/types/homeassistant';
 import mockData from '../../mock-data.json';
-import { devConfig } from '../config/env';
+import { devConfig } from '@/config/env';
 
 interface MockData {
   entity_id: string;

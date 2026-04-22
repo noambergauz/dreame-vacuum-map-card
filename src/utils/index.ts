@@ -11,3 +11,4 @@ export * from './entityHelpers';
 export * from './zoneConverter';
 export * from './roomParser';
 export * from './typeGuards';
+export * from './logger';

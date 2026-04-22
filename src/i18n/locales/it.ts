@@ -187,7 +187,9 @@ export const it: Translation = {
   // Errors
   errors: {
     entity_not_found: 'Entità non trovata: {{entity}}',
-    failed_to_load: "Impossibile caricare i dati dell'entità",
+    failed_to_load: 'Impossibile caricare i dati entità',
+    service_call_failed: "Impossibile inviare il comando all'aspirapolvere",
+    entity_unavailable: 'Aspirapolvere non disponibile',
   },
 
   // Settings Panel

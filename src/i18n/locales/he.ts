@@ -186,7 +186,9 @@ export const he: Translation = {
   // שגיאות
   errors: {
     entity_not_found: 'ישות לא נמצאה: {{entity}}',
-    failed_to_load: 'טעינת נתוני ישות נכשלה',
+    failed_to_load: 'שגיאה בטעינת נתוני הישות',
+    service_call_failed: 'שגיאה בשליחת פקודה לשואב',
+    entity_unavailable: 'השואב אינו זמין',
   },
 
   // פאנל הגדרות

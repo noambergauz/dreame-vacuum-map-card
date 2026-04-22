@@ -26,10 +26,16 @@ import {
   MOP_WASHING_FREQUENCY_BY_TIME_ICON_SVG,
   MOP_WASHING_FREQUENCY_BY_ROOM_ICON_SVG,
   CUSTOMIZE_ICON_SVG,
-} from '../constants';
-import type { CleaningMode, CleanGeniusMode, SuctionLevel, CleaningRoute, SelfCleanFrequency } from '../types/vacuum';
+} from '@/constants';
+import type {
+  VacuumCleaningMode,
+  CleanGeniusMode,
+  SuctionLevel,
+  CleaningRoute,
+  SelfCleanFrequency,
+} from '@/types/vacuum';
 
-export function getCleaningModeIcon(mode: CleaningMode): ReactElement | string {
+export function getCleaningModeIcon(mode: VacuumCleaningMode): ReactElement | string {
   switch (mode) {
     case CLEANING_MODE.SWEEPING:
       return VACUUM_ICON_SVG;

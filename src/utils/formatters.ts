@@ -1,13 +1,9 @@
-/**
- * Utility functions for getting friendly display names
- */
-
-import { CLEANGENIUS_MODE, CLEANING_MODE, SUCTION_LEVEL } from '../constants';
-import type { CleaningMode, CleanGeniusMode, SuctionLevel } from '../types/vacuum';
+import { CLEANGENIUS_MODE, CLEANING_MODE, SUCTION_LEVEL } from '@/constants';
+import type { VacuumCleaningMode, CleanGeniusMode, SuctionLevel } from '@/types/vacuum';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
-export function getCleaningModeFriendlyName(mode: CleaningMode, t?: TranslateFunction): string {
+export function getCleaningModeFriendlyName(mode: VacuumCleaningMode, t?: TranslateFunction): string {
   if (t) {
     switch (mode) {
       case CLEANING_MODE.SWEEPING_AND_MOPPING:

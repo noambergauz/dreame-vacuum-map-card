@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { Toggle } from '../../common';
-import { useTranslation } from '../../../hooks';
-import { useEntity, useHass } from '../../../contexts';
-import { isBoolean, isNumber, isObject } from '../../../utils';
+import { Toggle } from '@/components/common';
+import { useTranslation } from '@/hooks';
+import { useEntity, useHass } from '@/contexts';
+import { isBoolean, isNumber, isObject } from '@/utils';
 import './QuickSettingsSection.scss';
 
 interface QuickSetting {

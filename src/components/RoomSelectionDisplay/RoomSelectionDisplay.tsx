@@ -1,5 +1,5 @@
 import './RoomSelectionDisplay.scss';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface RoomSelectionDisplayProps {
   selectedRooms: Map<number, string>;

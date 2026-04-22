@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react';
-import type { Room } from '../../types/homeassistant';
-import { useTranslation } from '../../hooks';
+import type { Room } from '@/types/homeassistant';
+import { useTranslation } from '@/hooks';
 import './RoomListView.scss';
 
 interface RoomListViewProps {

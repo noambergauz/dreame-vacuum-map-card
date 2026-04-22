@@ -1,5 +1,6 @@
-import type { HassEntity } from '../types/homeassistant';
+import type { HassEntity } from '@/types/homeassistant';
 import { isNumber } from './typeGuards';
+import { logger } from './logger';
 
 /**
  * Calibration point structure from map entity attributes
@@ -88,16 +89,16 @@ export function convertUIZoneToVacuumZone(
   // Try to get dimensions from map entity
   const dimensions = getMapDimensions(mapEntity);
 
-  console.debug('[ZoneConverter] Input:', { uiZone, imageWidth, imageHeight, hasDimensions: !!dimensions });
+  logger.debug('ZoneConverter', 'Input:', { uiZone, imageWidth, imageHeight, hasDimensions: !!dimensions });
 
   // If no dimensions available, fall back to calibration-based method
   if (!dimensions) {
     const calibrationPoints = getCalibrationPoints(mapEntity);
-    console.debug('[ZoneConverter] Using calibration fallback, points:', calibrationPoints?.length ?? 0);
+    logger.debug('ZoneConverter', 'Using calibration fallback, points:', calibrationPoints?.length ?? 0);
     return convertUsingCalibration(uiZone, calibrationPoints, imageWidth, imageHeight);
   }
 
-  console.debug('[ZoneConverter] Map dimensions:', dimensions);
+  logger.debug('ZoneConverter', 'Map dimensions:', dimensions);
 
   // Convert UI percentages to image pixel coordinates
   const px1 = (uiZone.x1 / 100) * imageWidth;
@@ -105,7 +106,7 @@ export function convertUIZoneToVacuumZone(
   const px2 = (uiZone.x2 / 100) * imageWidth;
   const py2 = (uiZone.y2 / 100) * imageHeight;
 
-  console.debug('[ZoneConverter] Pixel coords:', { px1, py1, px2, py2 });
+  logger.debug('ZoneConverter', 'Pixel coords:', { px1, py1, px2, py2 });
 
   // Convert to vacuum coordinates
   const v1 = imageToVacuum(px1, py1, dimensions);
@@ -118,7 +119,7 @@ export function convertUIZoneToVacuumZone(
     y2: v2.y,
   };
 
-  console.debug('[ZoneConverter] Output vacuum coords:', result);
+  logger.debug('ZoneConverter', 'Output vacuum coords:', result);
 
   return result;
 }

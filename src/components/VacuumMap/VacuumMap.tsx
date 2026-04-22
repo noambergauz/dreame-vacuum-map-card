@@ -1,10 +1,10 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
-import type { CleaningMode, Zone, CalibrationPoint, RoomViewMode } from '../../types/homeassistant';
-import { useTranslation } from '../../hooks';
-import { useHass } from '../../contexts';
-import { parseRoomsFromCamera } from '../../utils/roomParser';
-import { STORAGE_KEY } from '../../constants';
+import type { CleaningSelectionMode, Zone, CalibrationPoint, RoomViewMode } from '@/types/homeassistant';
+import { useTranslation } from '@/hooks';
+import { useHass } from '@/contexts';
+import { parseRoomsFromCamera } from '@/utils/roomParser';
+import { STORAGE_KEY } from '@/constants';
 import { RoomSegments } from './RoomSegments';
 import { MapControls } from './MapControls';
 import { RoomListView } from './RoomListView';
@@ -13,7 +13,7 @@ import './VacuumMap.scss';
 
 interface VacuumMapProps {
   mapEntityId: string;
-  selectedMode: CleaningMode;
+  selectedMode: CleaningSelectionMode;
   selectedRooms: Map<number, string>;
   onRoomToggle: (roomId: number, roomName: string) => void;
   zone: Zone | null;
@@ -88,8 +88,13 @@ export function VacuumMap({
 
   // Map lock state - persisted to localStorage, default: locked
   const [isMapLocked, setIsMapLocked] = useState(() => {
-    const stored = localStorage.getItem(STORAGE_KEY.MAP_LOCKED);
-    return stored === null ? true : stored === 'true';
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY.MAP_LOCKED);
+      return stored === null ? true : stored === 'true';
+    } catch {
+      // localStorage not available
+      return true;
+    }
   });
 
   // Callback to receive resetTransform from child component
@@ -104,13 +109,22 @@ export function VacuumMap({
       resetTransformRef.current();
     }
     setIsMapLocked(newLocked);
-    localStorage.setItem(STORAGE_KEY.MAP_LOCKED, String(newLocked));
+    try {
+      localStorage.setItem(STORAGE_KEY.MAP_LOCKED, String(newLocked));
+    } catch {
+      // localStorage not available
+    }
   }, [isMapLocked]);
 
   // Effective view mode: use user selection only in room mode, otherwise default
   const effectiveRoomViewMode = selectedMode === 'room' ? roomViewMode : defaultRoomView;
 
-  const parsedRooms = parseRoomsFromCamera(hass, mapEntityId);
+  // Memoize parsed rooms to avoid recalculation on every render
+  const parsedRooms = useMemo(
+    () => parseRoomsFromCamera(hass, mapEntityId),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [hass.states[mapEntityId]?.attributes?.rooms, mapEntityId]
+  );
   const calibrationPoints = (mapEntity?.attributes?.calibration_points as CalibrationPoint[] | undefined) ?? [];
 
   const handleImageLoad = useCallback(
@@ -192,7 +206,6 @@ export function VacuumMap({
                 imageDimensions.width > 0 &&
                 imageDimensions.height > 0 && (
                   <RoomSegments
-                    key={`rooms-${selectedRooms.size}-${Array.from(selectedRooms.keys()).join(',')}`}
                     rooms={parsedRooms}
                     selectedRooms={selectedRooms}
                     onRoomToggle={onRoomToggle}

@@ -1,5 +1,5 @@
 import './CleaningModeButton.scss';
-import { useTranslation } from '../../hooks/useTranslation';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   SHORTCUTS_ICON_SVG,
   VACUUM_MOP_ICON_SVG,
@@ -7,10 +7,10 @@ import {
   MOP_ICON_SVG,
   MOP_AFTER_VACUUM_ICON_SVG,
   CUSTOMIZE_ICON_SVG,
-} from '../../constants/icons';
+} from '@/constants/icons';
 import type { ReactElement } from 'react';
-import type { RepeatCount } from '../../hooks/useVacuumCardState';
-import { CLEANGENIUS_MODE, CLEANING_MODE } from '../../constants';
+import type { RepeatCount } from '@/hooks/useVacuumCardState';
+import { CLEANGENIUS_MODE, CLEANING_MODE } from '@/constants';
 
 interface CleaningModeButtonProps {
   cleaningMode: string;

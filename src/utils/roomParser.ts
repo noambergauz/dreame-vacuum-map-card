@@ -1,4 +1,5 @@
-import type { Hass, Room } from '../types/homeassistant';
+import type { Hass, Room } from '@/types/homeassistant';
+import { logger } from './logger';
 
 interface CameraRoomData {
   x0: number;
@@ -25,7 +26,7 @@ interface CalibrationPoint {
 export function parseRoomsFromCamera(hass: Hass, cameraEntityId: string): Room[] {
   const cameraEntity = hass.states[cameraEntityId];
   if (!cameraEntity?.attributes?.rooms) {
-    console.debug('[RoomParser] No rooms found in camera entity:', cameraEntityId);
+    logger.debug('RoomParser', 'No rooms found in camera entity:', cameraEntityId);
     return [];
   }
 
@@ -95,7 +96,7 @@ export function createRoomPath(
   imageHeight: number
 ): string {
   if (room.x0 === undefined || room.y0 === undefined || room.x1 === undefined || room.y1 === undefined) {
-    console.warn('Room missing coordinates:', room);
+    logger.warn('Room missing coordinates:', room);
     return '';
   }
 

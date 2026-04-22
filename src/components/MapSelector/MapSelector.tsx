@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, Check, Map } from 'lucide-react';
-import { useTranslation } from '../../hooks';
-import { useEntity, useHass, useConfig } from '../../contexts';
+import { useTranslation } from '@/hooks';
+import { useEntity, useHass, useConfig } from '@/contexts';
 import './MapSelector.scss';
 
 interface MapInfo {

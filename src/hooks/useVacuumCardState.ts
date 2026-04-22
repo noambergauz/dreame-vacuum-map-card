@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
-import type { CleaningMode, Zone } from '../types/homeassistant';
-import { DEFAULTS } from '../constants';
+import type { CleaningSelectionMode, Zone } from '@/types/homeassistant';
+import { DEFAULTS } from '@/constants';
+import { logger } from '@/utils/logger';
 
 export type RepeatCount = 1 | 2 | 3;
 
@@ -38,15 +39,11 @@ function clearRepeatCount(): void {
 }
 
 interface UseVacuumCardStateOptions {
-  defaultMode?: CleaningMode;
+  defaultMode?: CleaningSelectionMode;
 }
 
-/**
- * Hook to manage vacuum card UI state
- * @param options.defaultMode - Initial tab to display (defaults to 'all')
- */
 export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCardStateOptions = {}) {
-  const [selectedMode, setSelectedMode] = useState<CleaningMode>(defaultMode);
+  const [selectedMode, setSelectedMode] = useState<CleaningSelectionMode>(defaultMode);
   const [selectedRooms, setSelectedRooms] = useState<Map<number, string>>(new Map());
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
   const [modalOpened, setModalOpened] = useState(false);
@@ -54,47 +51,44 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
   const [settingsPanelOpened, setSettingsPanelOpened] = useState(false);
   const [repeatCount, setRepeatCount] = useState<RepeatCount>(loadRepeatCount);
 
-  const handleModeChange = useCallback((mode: CleaningMode) => {
-    console.debug('[UI] Mode changed:', mode);
+  const handleModeChange = useCallback((mode: CleaningSelectionMode) => {
+    logger.debug('UI', 'Mode changed:', mode);
     setSelectedMode(mode);
     setSelectedRooms(new Map());
     setSelectedZone(null);
   }, []);
 
-  const handleRoomToggle = useCallback((roomId: number, roomName: string): boolean => {
-    let wasSelected = false;
+  const handleRoomToggle = useCallback((roomId: number, roomName: string): void => {
     setSelectedRooms((prevSelected) => {
-      wasSelected = prevSelected.has(roomId);
       const newSelected = new Map(prevSelected);
-      if (wasSelected) {
-        console.debug('[UI] Room deselected:', { roomId, roomName });
+      if (prevSelected.has(roomId)) {
+        logger.debug('UI', 'Room deselected:', { roomId, roomName });
         newSelected.delete(roomId);
       } else {
-        console.debug('[UI] Room selected:', { roomId, roomName });
+        logger.debug('UI', 'Room selected:', { roomId, roomName });
         newSelected.set(roomId, roomName);
       }
       return newSelected;
     });
-    return wasSelected;
   }, []);
 
   const handleModalOpen = useCallback((opened: boolean) => {
-    console.debug('[UI] Cleaning mode modal:', opened ? 'opened' : 'closed');
+    logger.debug('UI', 'Cleaning mode modal:', opened ? 'opened' : 'closed');
     setModalOpened(opened);
   }, []);
 
   const handleShortcutsModalOpen = useCallback((opened: boolean) => {
-    console.debug('[UI] Shortcuts modal:', opened ? 'opened' : 'closed');
+    logger.debug('UI', 'Shortcuts modal:', opened ? 'opened' : 'closed');
     setShortcutsModalOpened(opened);
   }, []);
 
   const handleSettingsPanelOpen = useCallback((opened: boolean) => {
-    console.debug('[UI] Settings panel:', opened ? 'opened' : 'closed');
+    logger.debug('UI', 'Settings panel:', opened ? 'opened' : 'closed');
     setSettingsPanelOpened(opened);
   }, []);
 
   const handleZoneChange = useCallback((zone: Zone | null) => {
-    console.debug('[UI] Zone changed:', zone);
+    logger.debug('UI', 'Zone changed:', zone);
     setSelectedZone(zone);
   }, []);
 
@@ -102,7 +96,7 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
     setRepeatCount((prev) => {
       const next = ((prev % 3) + 1) as RepeatCount;
       saveRepeatCount(next);
-      console.debug('[UI] Repeat count cycled to', next);
+      logger.debug('UI', 'Repeat count cycled to', next);
       return next;
     });
   }, []);
@@ -110,7 +104,7 @@ export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCar
   const resetRepeatCount = useCallback(() => {
     setRepeatCount(1);
     clearRepeatCount();
-    console.debug('[UI] Repeat count reset to 1');
+    logger.debug('UI', 'Repeat count reset to 1');
   }, []);
 
   return {

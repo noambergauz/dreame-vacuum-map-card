@@ -1,7 +1,7 @@
-import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
-import { useTranslation } from '../../hooks/useTranslation';
-import { useHass } from '../../contexts';
-import { CLEANING_MODE } from '../../constants';
+import { useHomeAssistantServices, useVacuumEntityIds } from '@/hooks';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useHass } from '@/contexts';
+import { CLEANING_MODE } from '@/constants';
 import {
   CleaningModeSelector,
   SuctionPowerSelector,

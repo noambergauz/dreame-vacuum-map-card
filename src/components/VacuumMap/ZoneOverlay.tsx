@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useTransformContext } from 'react-zoom-pan-pinch';
-import type { Zone } from '../../types/homeassistant';
+import type { Zone } from '@/types/homeassistant';
+import { logger } from '@/utils/logger';
 
 interface ZoneOverlayProps {
   zone: Zone | null;
@@ -62,7 +63,7 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, isStarted = fa
         y2: Math.min(100, coords.y + size / 2),
       };
 
-      console.debug('[Zone] Created at click:', coords, newZone);
+      logger.debug('Zone', 'Created at click:', coords, newZone);
       onZoneChange(newZone);
     },
     [getContentCoordinates, onZoneChange, resizingHandle]

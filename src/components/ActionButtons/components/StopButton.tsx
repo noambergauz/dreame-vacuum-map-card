@@ -1,7 +1,7 @@
-import { useTranslation } from '../../../hooks';
-import type { StopAction } from '../../../types/homeassistant';
+import { useTranslation } from '@/hooks';
+import type { StopAction } from '@/types/homeassistant';
 import '../ActionButtons.scss';
-import { STOP_CLEANING_ICON_SVG } from '../../../constants/icons';
+import { STOP_CLEANING_ICON_SVG } from '@/constants/icons';
 
 interface StopButtonProps {
   onClick: () => void;

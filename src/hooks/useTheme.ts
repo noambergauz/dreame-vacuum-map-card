@@ -1,6 +1,6 @@
 import { useMemo, useEffect, type RefObject } from 'react';
-import type { Theme, ThemeType, CustomThemeConfig } from '../themes';
-import { getTheme, applyCSSVariables } from '../themes';
+import type { Theme, ThemeType, CustomThemeConfig } from '@/themes';
+import { getTheme, applyCSSVariables } from '@/themes';
 
 interface UseThemeOptions {
   themeType?: ThemeType;

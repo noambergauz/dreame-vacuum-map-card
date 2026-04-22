@@ -1,8 +1,8 @@
-import { Modal } from '../common';
-import { useTranslation } from '../../hooks/useTranslation';
-import { useEntity, useHass } from '../../contexts';
+import { Modal } from '@/components/common';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useEntity, useHass } from '@/contexts';
 import './ShortcutsModal.scss';
-import { SHORTCUT_START_CLEANING_ICON_SVG } from '../../constants/icons';
+import { SHORTCUT_START_CLEANING_ICON_SVG } from '@/constants/icons';
 
 interface ShortcutData {
   name: string;

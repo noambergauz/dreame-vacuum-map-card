@@ -1,6 +1,7 @@
-import type { Hass, HassEntity, HassConfig } from '../types/homeassistant';
-import type { SupportedLanguage } from '../i18n/locales';
-import { isRtlLanguage } from '../i18n';
+import { useMemo } from 'react';
+import type { Hass, HassEntity, HassConfig } from '@/types/homeassistant';
+import type { SupportedLanguage } from '@/i18n/locales';
+import { isRtlLanguage } from '@/i18n';
 import { VacuumCardContext } from './VacuumCardContext';
 
 interface VacuumCardProviderProps {
@@ -12,10 +13,14 @@ interface VacuumCardProviderProps {
 }
 
 export function VacuumCardProvider({ hass, entity, config, language, children }: VacuumCardProviderProps) {
-  const isRtl = isRtlLanguage(language);
-  return (
-    <VacuumCardContext.Provider value={{ hass, entity, config, language, isRtl }}>
-      {children}
-    </VacuumCardContext.Provider>
+  const isRtl = useMemo(() => isRtlLanguage(language), [language]);
+
+  // Memoize context value to prevent unnecessary re-renders
+  // Note: hass and entity are passed from Home Assistant and change when state updates
+  const contextValue = useMemo(
+    () => ({ hass, entity, config, language, isRtl }),
+    [hass, entity, config, language, isRtl]
   );
+
+  return <VacuumCardContext.Provider value={contextValue}>{children}</VacuumCardContext.Provider>;
 }

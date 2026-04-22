@@ -1,12 +1,7 @@
-/**
- * Utility functions for converting between display values and service values
- * Handles snake_case conversion for Home Assistant service calls
- */
+import { SERVICE_VALUE, CLEANING_MODE, CLEANGENIUS_MODE, CLEANGENIUS_STATE, SELF_CLEAN_FREQUENCY } from '@/constants';
+import type { VacuumCleaningMode, CleanGeniusMode, CleanGeniusState, SelfCleanFrequency } from '@/types/vacuum';
 
-import { SERVICE_VALUE, CLEANING_MODE, CLEANGENIUS_MODE, CLEANGENIUS_STATE, SELF_CLEAN_FREQUENCY } from '../constants';
-import type { CleaningMode, CleanGeniusMode, CleanGeniusState, SelfCleanFrequency } from '../types/vacuum';
-
-export function convertCleaningModeToService(mode: CleaningMode): string {
+export function convertCleaningModeToService(mode: VacuumCleaningMode): string {
   switch (mode) {
     case CLEANING_MODE.SWEEPING:
       return SERVICE_VALUE.CLEANING_MODE.SWEEPING;

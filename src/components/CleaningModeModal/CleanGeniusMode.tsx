@@ -1,16 +1,16 @@
-import { Toggle } from '../common';
-import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '../../types/vacuum';
-import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
-import { useTranslation } from '../../hooks/useTranslation';
-import { useHass } from '../../contexts';
+import { Toggle } from '@/components/common';
+import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '@/types/vacuum';
+import { useHomeAssistantServices, useVacuumEntityIds } from '@/hooks';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useHass } from '@/contexts';
 import {
   getCleanGeniusModeIcon,
   getCleanGeniusModeFriendlyName,
   convertCleanGeniusModeToService,
   convertCleanGeniusStateToService,
   convertToLowerCase,
-} from '../../utils';
-import { CLEANGENIUS_STATE, CLEANING_ROUTE } from '../../constants';
+} from '@/utils';
+import { CLEANGENIUS_STATE, CLEANING_ROUTE } from '@/constants';
 
 interface CleanGeniusModeProps {
   cleangeniusMode: string;

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { useConfig } from '../contexts';
-import type { StopAction } from '../types/homeassistant';
+import { useConfig } from '@/contexts';
+import type { StopAction } from '@/types/homeassistant';
 
 /**
  * Hook for getting button action configuration

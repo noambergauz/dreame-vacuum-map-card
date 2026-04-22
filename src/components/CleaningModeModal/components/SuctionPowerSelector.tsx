@@ -1,6 +1,6 @@
-import { CircularButton, Toggle } from '../../common';
-import type { SuctionLevel } from '../../../types/vacuum';
-import { getSuctionLevelIcon, convertToLowerCase, getSuctionLevelFriendlyName } from '../../../utils';
+import { CircularButton, Toggle } from '@/components/common';
+import type { SuctionLevel } from '@/types/vacuum';
+import { getSuctionLevelIcon, convertToLowerCase, getSuctionLevelFriendlyName } from '@/utils';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 

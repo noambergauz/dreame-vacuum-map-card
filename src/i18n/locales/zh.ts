@@ -186,7 +186,9 @@ export const zh: Translation = {
   // Errors (错误提示)
   errors: {
     entity_not_found: '未找到实体：{{entity}}',
-    failed_to_load: '实体数据加载失败',
+    failed_to_load: '加载实体数据失败',
+    service_call_failed: '发送指令到扫地机失败',
+    entity_unavailable: '扫地机不可用',
   },
 
   // Settings Panel (设置面板)

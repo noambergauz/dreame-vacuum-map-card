@@ -1,13 +1,14 @@
-import { Modal, SegmentedControl } from '../common';
+import { Modal, SegmentedControl } from '@/components/common';
 import { CleanGeniusMode } from './CleanGeniusMode';
 import { CustomMode } from './CustomMode';
 import { CustomizeMode } from './CustomizeMode';
-import type { CleanGeniusState } from '../../types/vacuum';
-import { useHomeAssistantServices, useVacuumEntityIds } from '../../hooks';
-import { useTranslation } from '../../hooks/useTranslation';
-import { useEntity, useHass } from '../../contexts';
-import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '../../utils';
-import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE } from '../../constants';
+import type { CleanGeniusState } from '@/types/vacuum';
+import { useHomeAssistantServices, useVacuumEntityIds } from '@/hooks';
+import { useTranslation } from '@/hooks/useTranslation';
+import { useEntity, useHass } from '@/contexts';
+import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '@/utils';
+import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE } from '@/constants';
+import { logger } from '@/utils/logger';
 import './CleaningModeModal.scss';
 
 interface CleaningModeModalProps {
@@ -104,12 +105,12 @@ export function CleaningModeModal({ opened, onClose, isRunning = false }: Cleani
   const handleCleaningModeSelect = (entityId: string, value: string) => {
     if (value === CLEANING_MODE.CUSTOMIZE) {
       // Turn on customized_cleaning switch
-      console.debug('[CleaningModeModal] Enabling customized cleaning');
+      logger.debug('CleaningModeModal', 'Enabling customized cleaning');
       hass.callService('switch', 'turn_on', { entity_id: customizedCleaningSwitch });
     } else {
       // Turn off customized_cleaning if it was on
       if (isCustomizedCleaning) {
-        console.debug('[CleaningModeModal] Disabling customized cleaning');
+        logger.debug('CleaningModeModal', 'Disabling customized cleaning');
         hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
         // Delay setting the new mode to allow the switch turn-off to complete first
         // (turning off customize reverts to previous mode, then we set the new one)

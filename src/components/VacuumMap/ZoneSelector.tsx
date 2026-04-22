@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Zone } from '../../types/homeassistant';
+import type { Zone } from '@/types/homeassistant';
 
 interface ZoneSelectorProps {
   zone: Zone | null;

@@ -1,7 +1,7 @@
 import { useMemo, useContext } from 'react';
-import { createTranslator, getRoomCountTranslation } from '../i18n';
-import type { SupportedLanguage } from '../i18n/locales';
-import { VacuumCardContext } from '../contexts/VacuumCardContext';
+import { createTranslator, getRoomCountTranslation } from '@/i18n';
+import type { SupportedLanguage } from '@/i18n/locales';
+import { VacuumCardContext } from '@/contexts/VacuumCardContext';
 
 /**
  * Hook for using translations in components

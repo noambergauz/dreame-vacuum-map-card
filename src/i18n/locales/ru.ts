@@ -187,7 +187,9 @@ export const ru: Translation = {
   // Errors
   errors: {
     entity_not_found: 'Сущность не найдена: {{entity}}',
-    failed_to_load: 'Не удалось получить данные сущности',
+    failed_to_load: 'Не удалось загрузить данные сущности',
+    service_call_failed: 'Не удалось отправить команду пылесосу',
+    entity_unavailable: 'Пылесос недоступен',
   },
 
   // Settings Panel

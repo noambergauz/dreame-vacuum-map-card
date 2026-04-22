@@ -186,7 +186,9 @@ export const fr_FR: Translation = {
   // Errors
   errors: {
     entity_not_found: 'Entité introuvable : {{entity}}',
-    failed_to_load: 'Échec du chargement des données',
+    failed_to_load: "Échec du chargement des données de l'entité",
+    service_call_failed: "Échec de l'envoi de la commande à l'aspirateur",
+    entity_unavailable: 'Aspirateur non disponible',
   },
 
   // Settings panel

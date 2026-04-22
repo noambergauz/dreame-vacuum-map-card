@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { CircularButton, Accordion } from '../common';
-import { useTranslation, useRoomSettings } from '../../hooks';
-import { useHass, useIsRtl } from '../../contexts';
-import { parseRoomsFromCamera } from '../../utils/roomParser';
+import { CircularButton, Accordion } from '@/components/common';
+import { useTranslation, useRoomSettings } from '@/hooks';
+import { useHass, useIsRtl } from '@/contexts';
+import { parseRoomsFromCamera } from '@/utils/roomParser';
 import {
   SUCTION_QUIET_ICON_SVG,
   SUCTION_STANDARD_ICON_SVG,
   SUCTION_STRONG_ICON_SVG,
   SUCTION_TURBO_ICON_SVG,
-} from '../../constants';
+} from '@/constants';
 import type { ReactNode } from 'react';
-import type { RoomSetting } from '../../hooks';
+import type { RoomSetting } from '@/hooks';
 import './CustomizeMode.scss';
 
 interface CustomizeModeProps {
