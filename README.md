@@ -29,6 +29,11 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 </div>
 
 <div style="display: flex; gap: 10px;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/blob/master/screenshots/customize-cleaning.png" alt="Customzied Cleaning Light" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-customize-cleaning.png" alt="Customzied Cleaning Dark" style="width: 33%;">
+</div>
+
+<div style="display: flex; gap: 10px;">
     <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/room-cleaning.png" alt="Room Cleaning Light" style="width: 33%;">
     <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-room-cleaning.png" alt="Room Cleaning Dark" style="width: 33%;">
 </div>
