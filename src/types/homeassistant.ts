@@ -54,7 +54,7 @@ export interface HassConfig {
   type: string;
   theme?: 'light' | 'dark' | 'custom';
   custom_theme?: CustomThemeConfig;
-  language?: 'en' | 'de' | 'ru' | 'pl' | 'it' | 'nl' | 'es' | 'zh' | 'he';
+  language?: 'en' | 'de' | 'ru' | 'pl' | 'it' | 'nl' | 'es' | 'zh' | 'he' | 'fr_FR';
   default_mode?: CleaningMode;
   default_room_view?: RoomViewMode;
   buttons?: ButtonConfig[];
