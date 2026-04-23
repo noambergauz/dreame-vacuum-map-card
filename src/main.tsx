@@ -95,7 +95,9 @@ class DreameVacuumMapCard extends HTMLElement {
   }
 }
 
-customElements.define('dreame-vacuum-map-card', DreameVacuumMapCard);
+if (!customElements.get('dreame-vacuum-map-card')) {
+  customElements.define('dreame-vacuum-map-card', DreameVacuumMapCard);
+}
 
 declare global {
   interface Window {
@@ -108,12 +110,14 @@ declare global {
 }
 
 if (window.customCards) {
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: 'dreame-vacuum-map-card',
-    name: 'Dreame Vacuum Map Card',
-    description: 'Custom vacuum map card for Dreame vacuum cleaners',
-  });
+  const isAlreadyRegistered = window.customCards.some(card => card.type === 'dreame-vacuum-map-card');
+  if (!isAlreadyRegistered) {
+    window.customCards.push({
+      type: 'dreame-vacuum-map-card',
+      name: 'Dreame Vacuum Map Card',
+      description: 'Custom vacuum map card for Dreame vacuum cleaners',
+    });
+  }
 }
 
 console.info('Dreame Vacuum Map Card (React) loaded');

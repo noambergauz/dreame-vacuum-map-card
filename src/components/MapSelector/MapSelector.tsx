@@ -35,13 +35,43 @@ export function MapSelector() {
   // Handle map selection
   const handleMapSelect = useCallback(
     (map: MapInfo) => {
-      hass.callService('select', 'select_option', {
-        entity_id: selectEntityId,
-        option: map.name,
-      });
+      const selectState = hass.states[selectEntityId];
+      if (selectState && selectState.attributes.options) {
+        const options = selectState.attributes.options as string[];
+        let optionToSelect = map.custom_name || map.name;
+
+        // Ensure we send an option that exists in the select entity
+        if (!options.includes(optionToSelect)) {
+          if (options.includes(map.name)) {
+            optionToSelect = map.name;
+          } else if (options.includes(String(map.id))) {
+            optionToSelect = String(map.id);
+          } else {
+            // Fallback to partial match if possible
+            const partialMatch = options.find((o) =>
+              o.includes(map.name) || (map.custom_name && o.includes(map.custom_name))
+            );
+            if (partialMatch) {
+              optionToSelect = partialMatch;
+            }
+          }
+        }
+
+        hass.callService('select', 'select_option', {
+          entity_id: selectEntityId,
+          option: optionToSelect,
+        });
+      } else {
+        // Fallback to dreame_vacuum native map selection service
+        hass.callService('dreame_vacuum', 'vacuum_select_map', {
+          entity_id: config.entity || entity.entity_id,
+          map_id: map.id,
+        });
+      }
+
       setIsOpen(false);
     },
-    [hass, selectEntityId]
+    [hass, selectEntityId, config.entity, entity.entity_id]
   );
 
   // Close dropdown when clicking outside
@@ -76,7 +106,10 @@ export function MapSelector() {
     <div className="map-selector" ref={containerRef}>
       <button
         className={`map-selector__button ${isOpen ? 'map-selector__button--open' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsOpen(!isOpen);
+        }}
         type="button"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
