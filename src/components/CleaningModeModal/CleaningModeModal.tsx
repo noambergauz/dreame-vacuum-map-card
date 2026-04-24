@@ -3,7 +3,7 @@ import { CleanGeniusMode } from './CleanGeniusMode';
 import { CustomMode } from './CustomMode';
 import { CustomizeMode } from './CustomizeMode';
 import type { CleanGeniusState } from '@/types/vacuum';
-import { useHomeAssistantServices, useVacuumEntityIds } from '@/hooks';
+import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntity, useHass } from '@/contexts';
 import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '@/utils';
@@ -26,8 +26,13 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
 
-  // Read customized_cleaning from entity attributes
-  const isCustomizedCleaning = getAttr(entity.attributes.customized_cleaning, false);
+  // Get entity availability states
+  const customizedCleaningSwitch = `switch.${baseEntityId}_customized_cleaning`;
+  const customizedCleaningState = getEntityState(hass, customizedCleaningSwitch);
+  const cleangeniusState = getEntityState(hass, entityIds.cleangenius);
+
+  // Read customized_cleaning from switch entity state
+  const isCustomizedCleaning = customizedCleaningState.isOn;
 
   // Helper function for type-safe array attribute access
   const getStringArrayAttr = (key: string, defaultValue: string[]): string[] => {
@@ -35,8 +40,16 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
     return Array.isArray(value) ? (value as string[]) : defaultValue;
   };
 
-  const cleangenius = getAttr(entity.attributes.cleangenius, CLEANGENIUS_STATE.OFF);
-  const isCleanGenius = cleangenius !== CLEANGENIUS_STATE.OFF;
+  // Read cleangenius state - entity state is lowercase, attributes are capitalized
+  // We need to check if it's "off" (entity) or "Off" (attribute) to determine if CleanGenius is active
+  const cleangeniusEntityState = cleangeniusState.state?.toLowerCase();
+  const cleangeniusAttrState = getAttr(entity.attributes.cleangenius, CLEANGENIUS_STATE.OFF);
+  const isCleanGenius = cleangeniusEntityState
+    ? cleangeniusEntityState !== 'off'
+    : cleangeniusAttrState !== CLEANGENIUS_STATE.OFF;
+
+  // For display purposes, use the attribute value which has proper casing
+  const cleangenius = cleangeniusAttrState;
 
   const cleaningMode = getAttr(entity.attributes.cleaning_mode, DEFAULTS.CLEANING_MODE);
   const cleangeniusMode = getAttr(entity.attributes.cleangenius_mode, DEFAULTS.CLEANGENIUS_MODE);
@@ -75,8 +88,9 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   const suctionLevelList = getStringArrayAttr('suction_level_list', ['Quiet', 'Standard', 'Strong', 'Turbo']);
   const cleaningRouteList = getStringArrayAttr('cleaning_route_list', ['Quick', 'Standard', 'Intensive', 'Deep']);
 
-  // Entity ID for customized_cleaning switch
-  const customizedCleaningSwitch = `switch.${baseEntityId}_customized_cleaning`;
+  // Combined disabled state: isCleaning OR cleangenius entity is unavailable (exists but not available)
+  // We only disable if the entity explicitly exists but is unavailable, not if it doesn't exist
+  const isModeSwitchDisabled = isCleaning || cleangeniusState.unavailable;
 
   const handleModeSwitch = (value: string) => {
     const isCleanGeniusMode = value === UI_MODE_TYPE.CLEANGENIUS;
@@ -138,7 +152,7 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
             value={isCleanGenius ? UI_MODE_TYPE.CLEANGENIUS : UI_MODE_TYPE.CUSTOM}
             onChange={handleModeSwitch}
             options={modeOptions}
-            disabled={isCleaning}
+            disabled={isModeSwitchDisabled}
           />
         </div>
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CircularButton, Accordion } from '@/components/common';
-import { useTranslation, useRoomSettings } from '@/hooks';
+import { useTranslation, useRoomSettings, getEntityState } from '@/hooks';
 import { useHass, useIsRtl } from '@/contexts';
 import { parseRoomsFromCamera } from '@/utils/roomParser';
 import {
@@ -59,6 +59,7 @@ interface RoomWetnessSliderProps {
   slightlyDryLabel: string;
   moistLabel: string;
   wetLabel: string;
+  disabled?: boolean;
 }
 
 function RoomWetnessSlider({
@@ -69,6 +70,7 @@ function RoomWetnessSlider({
   slightlyDryLabel,
   moistLabel,
   wetLabel,
+  disabled = false,
 }: RoomWetnessSliderProps) {
   const [localValue, setLocalValue] = useState(value);
   const isRtl = useIsRtl();
@@ -79,11 +81,13 @@ function RoomWetnessSlider({
   const tooltipPosition = `calc(${percent}% + ${thumbWidth / 2 - (percent * thumbWidth) / 100}px)`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalValue(parseInt(e.target.value));
+    if (!disabled) {
+      setLocalValue(parseInt(e.target.value));
+    }
   };
 
   const handleCommit = () => {
-    if (localValue !== value) {
+    if (!disabled && localValue !== value) {
       onChange(localValue);
     }
   };
@@ -96,7 +100,7 @@ function RoomWetnessSlider({
   const activeLabel = localValue <= min + third ? 'dry' : localValue <= min + third * 2 ? 'moist' : 'wet';
 
   return (
-    <div className="customize-mode__wetness-slider">
+    <div className={`customize-mode__wetness-slider ${disabled ? 'customize-mode__wetness-slider--disabled' : ''}`}>
       <div className="cleaning-mode-modal__slider-container">
         <div className="cleaning-mode-modal__slider-wrapper">
           <input
@@ -107,6 +111,7 @@ function RoomWetnessSlider({
             onChange={handleChange}
             onMouseUp={handleCommit}
             onTouchEnd={handleCommit}
+            disabled={disabled}
             className="cleaning-mode-modal__slider"
             style={{
               background: `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${percent}%, var(--accent-bg-secondary-hover) ${percent}%, var(--accent-bg-secondary-hover) 100%)`,
@@ -159,6 +164,9 @@ interface RoomSettingsContentProps {
   setWetnessLevel: (roomId: number, value: number) => void;
   setCleaningTimes: (roomId: number, value: string) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
+  suctionDisabled?: boolean;
+  wetnessDisabled?: boolean;
+  cleaningTimesDisabled?: boolean;
 }
 
 function RoomSettingsContent({
@@ -167,6 +175,9 @@ function RoomSettingsContent({
   setWetnessLevel,
   setCleaningTimes,
   t,
+  suctionDisabled = false,
+  wetnessDisabled = false,
+  cleaningTimesDisabled = false,
 }: RoomSettingsContentProps) {
   return (
     <div className="customize-mode__room-settings-content">
@@ -174,14 +185,15 @@ function RoomSettingsContent({
       {setting.suctionLevelOptions.length > 0 && (
         <div className="customize-mode__setting-group">
           <span className="customize-mode__setting-label">{t('custom_mode.suction_power_title')}</span>
-          <div className="customize-mode__options">
+          <div className={`customize-mode__options ${suctionDisabled ? 'customize-mode__options--disabled' : ''}`}>
             {setting.suctionLevelOptions.map((level: string) => (
               <div key={level} className="customize-mode__option">
                 <CircularButton
                   size="small"
                   selected={setting.suctionLevel === level}
-                  onClick={() => setSuctionLevel(setting.roomId, level)}
+                  onClick={() => !suctionDisabled && setSuctionLevel(setting.roomId, level)}
                   icon={SUCTION_ICONS[level] || SUCTION_STANDARD_ICON_SVG}
+                  disabled={suctionDisabled}
                 />
                 <span className="customize-mode__option-label">{t(`suction_levels.${level.toLowerCase()}`)}</span>
               </div>
@@ -202,6 +214,7 @@ function RoomSettingsContent({
             slightlyDryLabel={t('custom_mode.slightly_dry')}
             moistLabel={t('custom_mode.moist')}
             wetLabel={t('custom_mode.wet')}
+            disabled={wetnessDisabled}
           />
         </div>
       )}
@@ -210,14 +223,17 @@ function RoomSettingsContent({
       {setting.cleaningTimesOptions.length > 0 && (
         <div className="customize-mode__setting-group">
           <span className="customize-mode__setting-label">{t('customize.cycles')}</span>
-          <div className="customize-mode__options customize-mode__options--pills">
+          <div
+            className={`customize-mode__options customize-mode__options--pills ${cleaningTimesDisabled ? 'customize-mode__options--disabled' : ''}`}
+          >
             {setting.cleaningTimesOptions.map((times: string) => (
               <button
                 key={times}
                 className={`customize-mode__pill customize-mode__pill--cycle ${
                   setting.cleaningTimes === times ? 'customize-mode__pill--selected' : ''
                 }`}
-                onClick={() => setCleaningTimes(setting.roomId, times)}
+                onClick={() => !cleaningTimesDisabled && setCleaningTimes(setting.roomId, times)}
+                disabled={cleaningTimesDisabled}
               >
                 {times}
               </button>
@@ -282,6 +298,15 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
           const setting = roomSettings.get(room.id);
           if (!setting) return null;
 
+          // Check entity availability for each room setting
+          const suctionEntityId = `select.${baseEntityId}_room_${room.id}_suction_level`;
+          const wetnessEntityId = `number.${baseEntityId}_room_${room.id}_wetness_level`;
+          const cleaningTimesEntityId = `select.${baseEntityId}_room_${room.id}_cleaning_times`;
+
+          const suctionState = getEntityState(hass, suctionEntityId);
+          const wetnessState = getEntityState(hass, wetnessEntityId);
+          const cleaningTimesState = getEntityState(hass, cleaningTimesEntityId);
+
           // Build summary badges for accordion title
           const badges: string[] = [];
           if (setting.suctionLevel) badges.push(getSuctionShort(setting.suctionLevel));
@@ -310,6 +335,9 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
                 setWetnessLevel={setWetnessLevel}
                 setCleaningTimes={setCleaningTimes}
                 t={t}
+                suctionDisabled={suctionState.unavailable}
+                wetnessDisabled={wetnessState.unavailable}
+                cleaningTimesDisabled={cleaningTimesState.unavailable}
               />
             </Accordion>
           );

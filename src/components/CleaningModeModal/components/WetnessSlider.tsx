@@ -10,6 +10,8 @@ interface WetnessSliderProps {
   slightlyDryLabel: string;
   moistLabel: string;
   wetLabel: string;
+  /** Disable the slider */
+  disabled?: boolean;
 }
 
 export function WetnessSlider({
@@ -20,6 +22,7 @@ export function WetnessSlider({
   slightlyDryLabel,
   moistLabel,
   wetLabel,
+  disabled = false,
 }: WetnessSliderProps) {
   const [localValue, setLocalValue] = useState(wetnessLevel);
   const isRtl = useIsRtl();
@@ -31,11 +34,13 @@ export function WetnessSlider({
   const tooltipPosition = `calc(${wetnessPercent}% + ${thumbWidth / 2 - (wetnessPercent * thumbWidth) / 100}px)`;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalValue(parseInt(e.target.value));
+    if (!disabled) {
+      setLocalValue(parseInt(e.target.value));
+    }
   };
 
   const handleCommit = () => {
-    if (localValue !== wetnessLevel) {
+    if (!disabled && localValue !== wetnessLevel) {
       onChangeWetness(entityId, localValue);
     }
   };
@@ -46,7 +51,9 @@ export function WetnessSlider({
   return (
     <>
       {/* Slider */}
-      <div className="cleaning-mode-modal__slider-container">
+      <div
+        className={`cleaning-mode-modal__slider-container ${disabled ? 'cleaning-mode-modal__slider-container--disabled' : ''}`}
+      >
         <div className="cleaning-mode-modal__slider-wrapper">
           <input
             type="range"
@@ -56,6 +63,7 @@ export function WetnessSlider({
             onChange={handleChange}
             onMouseUp={handleCommit}
             onTouchEnd={handleCommit}
+            disabled={disabled}
             className="cleaning-mode-modal__slider"
             style={{
               background: `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${wetnessPercent}%, var(--accent-bg-secondary-hover) ${wetnessPercent}%, var(--accent-bg-secondary-hover) 100%)`,

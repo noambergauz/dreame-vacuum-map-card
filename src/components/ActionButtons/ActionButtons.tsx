@@ -14,6 +14,8 @@ interface ActionButtonsProps {
   onResume: () => void;
   onStop: (action: StopAction) => void;
   onDock: () => void;
+  /** Disable all action buttons (e.g., when vacuum entity is unavailable) */
+  disabled?: boolean;
 }
 
 export function ActionButtons({
@@ -27,6 +29,7 @@ export function ActionButtons({
   onResume,
   onStop,
   onDock,
+  disabled = false,
 }: ActionButtonsProps) {
   const { t, getRoomCountTranslation } = useTranslation();
   const { getStopAction } = useButtonConfig();
@@ -53,8 +56,8 @@ export function ActionButtons({
   if (isCleaning && !isPaused && !isDocked) {
     return (
       <div className="action-buttons">
-        <PauseButton onClick={onPause} />
-        <StopButton onClick={handleStop} action={stopAction} />
+        <PauseButton onClick={onPause} disabled={disabled} />
+        <StopButton onClick={handleStop} action={stopAction} disabled={disabled} />
       </div>
     );
   }
@@ -63,8 +66,8 @@ export function ActionButtons({
   if (isPaused) {
     return (
       <div className="action-buttons">
-        <ResumeButton onClick={onResume} />
-        <StopButton onClick={handleStop} action={stopAction} />
+        <ResumeButton onClick={onResume} disabled={disabled} />
+        <StopButton onClick={handleStop} action={stopAction} disabled={disabled} />
       </div>
     );
   }
@@ -72,8 +75,8 @@ export function ActionButtons({
   // Idle/docked state - show clean and dock
   return (
     <div className="action-buttons">
-      <CleanButton onClick={onClean} text={cleanButtonText} />
-      <DockButton onClick={onDock} />
+      <CleanButton onClick={onClean} text={cleanButtonText} disabled={disabled} />
+      <DockButton onClick={onDock} disabled={disabled} />
     </div>
   );
 }

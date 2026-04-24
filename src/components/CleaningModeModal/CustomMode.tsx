@@ -1,4 +1,4 @@
-import { useHomeAssistantServices, useVacuumEntityIds } from '@/hooks';
+import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useHass } from '@/contexts';
 import { CLEANING_MODE } from '@/constants';
@@ -65,8 +65,25 @@ export function CustomMode({
   const entityIds = useVacuumEntityIds(baseEntityId);
   const { t } = useTranslation();
 
+  // Get entity availability states
+  const cleaningModeState = getEntityState(hass, entityIds.cleaningMode);
+  const suctionLevelState = getEntityState(hass, entityIds.suctionLevel);
+  const maxSuctionPowerState = getEntityState(hass, entityIds.maxSuctionPower);
+  const wetnessLevelState = getEntityState(hass, entityIds.wetnessLevel);
+  const selfCleanFrequencyState = getEntityState(hass, entityIds.selfCleanFrequency);
+  const selfCleanAreaState = getEntityState(hass, entityIds.selfCleanArea);
+  const selfCleanTimeState = getEntityState(hass, entityIds.selfCleanTime);
+  const cleaningRouteState = getEntityState(hass, entityIds.cleaningRoute);
+
   // Use custom handler if provided, otherwise use default setSelectOption
   const handleCleaningModeSelect = onCleaningModeSelect || setSelectOption;
+
+  // When in Customize mode (showOnlyCleaningModeSelector=true), don't disable the mode selector
+  // based on cleaning_mode entity availability, because:
+  // 1. The cleaning_mode entity becomes unavailable when customized_cleaning is on
+  // 2. User needs to be able to click other modes to exit Customize mode
+  // 3. Clicking another mode will first turn off customized_cleaning, making the entity available again
+  const isCleaningModeSelectorDisabled = isCleaning || (!showOnlyCleaningModeSelector && cleaningModeState.unavailable);
 
   return (
     <div className="cleaning-mode-modal__content">
@@ -80,6 +97,7 @@ export function CustomMode({
           t={t}
           customizeSelected={showOnlyCleaningModeSelector}
           hideCustomize={isCleaning}
+          disabled={isCleaningModeSelectorDisabled}
         />
       </section>
 
@@ -98,6 +116,8 @@ export function CustomMode({
               maxSuctionPowerEntityId={entityIds.maxSuctionPower}
               maxPlusDescription={t('custom_mode.max_plus_description')}
               t={t}
+              suctionLevelDisabled={isCleaning || suctionLevelState.unavailable}
+              maxPowerDisabled={isCleaning || maxSuctionPowerState.unavailable}
             />
           </section>
 
@@ -112,6 +132,7 @@ export function CustomMode({
                 slightlyDryLabel={t('custom_mode.slightly_dry')}
                 moistLabel={t('custom_mode.moist')}
                 wetLabel={t('custom_mode.wet')}
+                disabled={isCleaning || wetnessLevelState.unavailable}
               />
             </section>
           )}
@@ -134,6 +155,9 @@ export function CustomMode({
               areaEntityId={entityIds.selfCleanArea}
               timeEntityId={entityIds.selfCleanTime}
               t={t}
+              frequencyDisabled={isCleaning || selfCleanFrequencyState.unavailable}
+              areaDisabled={isCleaning || selfCleanAreaState.unavailable}
+              timeDisabled={isCleaning || selfCleanTimeState.unavailable}
             />
           </section>
 
@@ -147,7 +171,7 @@ export function CustomMode({
                 cleaningRouteList={cleaningRouteList}
                 onSelect={setSelectOption}
                 entityId={entityIds.cleaningRoute}
-                disabled={isCleaning}
+                disabled={isCleaning || cleaningRouteState.unavailable}
               />
             </section>
           )}

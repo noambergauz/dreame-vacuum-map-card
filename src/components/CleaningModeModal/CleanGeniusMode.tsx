@@ -1,6 +1,6 @@
 import { Toggle } from '@/components/common';
 import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '@/types/vacuum';
-import { useHomeAssistantServices, useVacuumEntityIds } from '@/hooks';
+import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useHass } from '@/contexts';
 import {
@@ -34,19 +34,36 @@ export function CleanGeniusMode({
 
   const entityIds = useVacuumEntityIds(baseEntityId);
 
+  // Get entity availability states
+  const cleangeniusState = getEntityState(hass, entityIds.cleangenius);
+  const cleaningRouteState = getEntityState(hass, entityIds.cleaningRoute);
+  const cleangeniusModeState = getEntityState(hass, entityIds.cleangeniusMode);
+
+  // Combined disabled state - only disable if entity exists but is unavailable
+  const isModeDisabled = isCleaning || cleangeniusModeState.unavailable;
+  // Only check cleangenius entity for Deep Cleaning - cleaningRoute may be unavailable
+  // when CleanGenius is active (route is auto-managed), but we can still toggle deep cleaning
+  const isDeepCleaningDisabled = isCleaning || cleangeniusState.unavailable;
+
   const handleDeepCleaningToggle = (enabled: boolean) => {
     if (enabled) {
       setSelectOption(
         entityIds.cleangenius,
         convertCleanGeniusStateToService(CLEANGENIUS_STATE.DEEP_CLEANING as CleanGeniusState)
       );
-      setSelectOption(entityIds.cleaningRoute, convertToLowerCase(CLEANING_ROUTE.DEEP));
+      // Only set cleaning route if entity is available
+      if (cleaningRouteState.available) {
+        setSelectOption(entityIds.cleaningRoute, convertToLowerCase(CLEANING_ROUTE.DEEP));
+      }
     } else {
       setSelectOption(
         entityIds.cleangenius,
         convertCleanGeniusStateToService(CLEANGENIUS_STATE.ROUTINE_CLEANING as CleanGeniusState)
       );
-      setSelectOption(entityIds.cleaningRoute, convertToLowerCase(CLEANING_ROUTE.STANDARD));
+      // Only set cleaning route if entity is available
+      if (cleaningRouteState.available) {
+        setSelectOption(entityIds.cleaningRoute, convertToLowerCase(CLEANING_ROUTE.STANDARD));
+      }
     }
   };
 
@@ -55,7 +72,7 @@ export function CleanGeniusMode({
       <section className="cleaning-mode-modal__section">
         <h3 className="cleaning-mode-modal__section-title">{t('cleangenius_mode.cleaning_mode_title')}</h3>
         <div
-          className={`cleaning-mode-modal__mode-grid ${isCleaning ? 'cleaning-mode-modal__mode-grid--disabled' : ''}`}
+          className={`cleaning-mode-modal__mode-grid ${isModeDisabled ? 'cleaning-mode-modal__mode-grid--disabled' : ''}`}
         >
           {cleangeniusModeList.map((mode, idx) => {
             const typedMode = mode as CleanGeniusModeType;
@@ -65,11 +82,12 @@ export function CleanGeniusMode({
                 key={idx}
                 className={`cleaning-mode-modal__mode-card ${
                   mode === cleangeniusMode ? 'cleaning-mode-modal__mode-card--selected' : ''
-                } ${isCleaning ? 'cleaning-mode-modal__mode-card--disabled' : ''}`}
+                } ${isModeDisabled ? 'cleaning-mode-modal__mode-card--disabled' : ''}`}
                 onClick={() =>
-                  !isCleaning && setSelectOption(entityIds.cleangeniusMode, convertCleanGeniusModeToService(typedMode))
+                  !isModeDisabled &&
+                  setSelectOption(entityIds.cleangeniusMode, convertCleanGeniusModeToService(typedMode))
                 }
-                style={{ cursor: isCleaning ? 'not-allowed' : 'pointer' }}
+                style={{ cursor: isModeDisabled ? 'not-allowed' : 'pointer' }}
               >
                 <div
                   className={`cleaning-mode-modal__mode-icon cleaning-mode-modal__mode-icon--${isVacMop ? 'vac-mop' : 'mop-after'}`}
@@ -88,12 +106,14 @@ export function CleanGeniusMode({
         </div>
       </section>
 
-      <div className={`cleaning-mode-modal__setting ${isCleaning ? 'cleaning-mode-modal__setting--disabled' : ''}`}>
+      <div
+        className={`cleaning-mode-modal__setting ${isDeepCleaningDisabled ? 'cleaning-mode-modal__setting--disabled' : ''}`}
+      >
         <span className="cleaning-mode-modal__setting-label">{t('cleangenius_mode.deep_cleaning')}</span>
         <Toggle
           checked={cleangenius === CLEANGENIUS_STATE.DEEP_CLEANING}
           onChange={handleDeepCleaningToggle}
-          disabled={isCleaning}
+          disabled={isDeepCleaningDisabled}
         />
       </div>
     </div>

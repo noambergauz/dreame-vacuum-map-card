@@ -22,6 +22,12 @@ interface MopWashingFrequencyProps {
   areaEntityId: string;
   timeEntityId: string;
   t?: TranslateFunction;
+  /** Disable frequency buttons */
+  frequencyDisabled?: boolean;
+  /** Disable area slider */
+  areaDisabled?: boolean;
+  /** Disable time slider */
+  timeDisabled?: boolean;
 }
 
 /**
@@ -57,6 +63,9 @@ export function MopWashingFrequency({
   areaEntityId,
   timeEntityId,
   t,
+  frequencyDisabled = false,
+  areaDisabled = false,
+  timeDisabled = false,
 }: MopWashingFrequencyProps) {
   const [localArea, setLocalArea] = useState(selfCleanArea);
   const [localTime, setLocalTime] = useState(selfCleanTime);
@@ -77,19 +86,23 @@ export function MopWashingFrequency({
   // For RTL, flip the gradient direction
   const gradientDirection = isRtl ? 'to left' : 'to right';
 
+  // Determine if the current slider should be disabled
+  const isAreaSliderDisabled = areaDisabled || frequencyDisabled;
+  const isTimeSliderDisabled = timeDisabled || frequencyDisabled;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (selfCleanFrequency === 'By area') {
+    if (selfCleanFrequency === 'By area' && !isAreaSliderDisabled) {
       setLocalArea(value);
-    } else {
+    } else if (!isTimeSliderDisabled) {
       setLocalTime(value);
     }
   };
 
   const handleCommit = () => {
-    if (selfCleanFrequency === 'By area' && localArea !== selfCleanArea) {
+    if (selfCleanFrequency === 'By area' && localArea !== selfCleanArea && !isAreaSliderDisabled) {
       onChangeArea(areaEntityId, localArea);
-    } else if (selfCleanFrequency === 'By time' && localTime !== selfCleanTime) {
+    } else if (selfCleanFrequency === 'By time' && localTime !== selfCleanTime && !isTimeSliderDisabled) {
       onChangeTime(timeEntityId, localTime);
     }
   };
@@ -97,16 +110,20 @@ export function MopWashingFrequency({
   return (
     <>
       {/* Frequency type selector */}
-      <div className="cleaning-mode-modal__horizontal-scroll">
+      <div
+        className={`cleaning-mode-modal__horizontal-scroll ${frequencyDisabled ? 'cleaning-mode-modal__horizontal-scroll--disabled' : ''}`}
+      >
         {selfCleanFrequencyList.map((freq, idx) => (
           <div key={idx} className="cleaning-mode-modal__mode-option">
             <CircularButton
               size="small"
               selected={freq === selfCleanFrequency}
               onClick={() =>
+                !frequencyDisabled &&
                 onSelectFrequency(frequencyEntityId, convertSelfCleanFrequencyToService(freq as SelfCleanFrequency))
               }
               icon={getSelfCleanFrequencyIcon(freq as SelfCleanFrequency)}
+              disabled={frequencyDisabled}
             />
             <span className="cleaning-mode-modal__mode-option-label">{getFrequencyLabel(freq, t)}</span>
           </div>
@@ -115,7 +132,10 @@ export function MopWashingFrequency({
 
       {/* Slider for By area or By time */}
       {(selfCleanFrequency === 'By area' || selfCleanFrequency === 'By time') && (
-        <div className="cleaning-mode-modal__slider-container" style={{ marginTop: '1rem' }}>
+        <div
+          className={`cleaning-mode-modal__slider-container ${(selfCleanFrequency === 'By area' ? isAreaSliderDisabled : isTimeSliderDisabled) ? 'cleaning-mode-modal__slider-container--disabled' : ''}`}
+          style={{ marginTop: '1rem' }}
+        >
           <div className="cleaning-mode-modal__slider-wrapper">
             <input
               type="range"
@@ -125,6 +145,7 @@ export function MopWashingFrequency({
               onChange={handleChange}
               onMouseUp={handleCommit}
               onTouchEnd={handleCommit}
+              disabled={selfCleanFrequency === 'By area' ? isAreaSliderDisabled : isTimeSliderDisabled}
               className="cleaning-mode-modal__slider"
               style={{
                 background:

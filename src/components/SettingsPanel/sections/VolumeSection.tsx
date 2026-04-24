@@ -1,8 +1,7 @@
 import { useState, useCallback } from 'react';
 import { Volume2, VolumeX, MapPin } from 'lucide-react';
-import { useTranslation } from '@/hooks';
+import { useTranslation, getNumberState } from '@/hooks';
 import { useEntity, useHass, useIsRtl } from '@/contexts';
-import { getAttr } from '@/utils';
 import './VolumeSection.scss';
 
 const VOLUME_MIN = 0;
@@ -14,7 +13,10 @@ export function VolumeSection() {
   const hass = useHass();
   const isRtl = useIsRtl();
   const entityName = entity.entity_id.split('.')[1] ?? '';
-  const currentVolume = getAttr(entity.attributes.volume, 50);
+
+  // Get volume entity state
+  const volumeState = getNumberState(hass, entityName, 'volume');
+  const currentVolume = volumeState.exists ? volumeState.numericValue : 50;
 
   const [localValue, setLocalValue] = useState(currentVolume);
   const volumePercent = ((localValue - VOLUME_MIN) / (VOLUME_MAX - VOLUME_MIN)) * 100;
@@ -49,6 +51,8 @@ export function VolumeSection() {
   }, [hass, entity.entity_id]);
 
   const isMuted = localValue === 0;
+  // Only disable if entity exists but is unavailable
+  const isDisabled = volumeState.unavailable;
 
   return (
     <div className="volume-section">
@@ -64,6 +68,7 @@ export function VolumeSection() {
               onChange={handleChange}
               onMouseUp={handleCommit}
               onTouchEnd={handleCommit}
+              disabled={isDisabled}
               className="volume-section__slider"
               style={{
                 background: `linear-gradient(${gradientDirection}, var(--accent-color, #007aff) 0%, var(--accent-color, #007aff) ${volumePercent}%, var(--surface-secondary, #e5e5e5) ${volumePercent}%, var(--surface-secondary, #e5e5e5) 100%)`,
@@ -79,7 +84,7 @@ export function VolumeSection() {
         </div>
       </div>
 
-      <button className="volume-section__test-button" onClick={handleTestSound} type="button">
+      <button className="volume-section__test-button" onClick={handleTestSound} disabled={isDisabled} type="button">
         <MapPin size={16} />
         <span>{t('settings.volume.test_sound')}</span>
       </button>

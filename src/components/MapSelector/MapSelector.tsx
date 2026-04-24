@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, Check, Map } from 'lucide-react';
-import { useTranslation } from '@/hooks';
+import { useTranslation, getSelectState } from '@/hooks';
 import { useEntity, useHass, useConfig } from '@/contexts';
 import './MapSelector.scss';
 
@@ -30,6 +30,13 @@ export function MapSelector() {
   // Derive the select entity ID for map selection
   const entityName = config.entity?.split('.')[1] ?? '';
   const selectEntityId = `select.${entityName}_selected_map`;
+
+  // Check select entity availability
+  const selectState = getSelectState(hass, entityName, 'selected_map');
+
+  // Combine vacuum active check with entity availability
+  // Only disable if entity exists but is unavailable, not if it doesn't exist
+  const isDisabled = isVacuumActive || selectState.unavailable;
 
   // Get the currently selected map
   const selectedMap = useMemo(() => maps.find((m) => m.id === selectedMapId), [maps, selectedMapId]);
@@ -79,10 +86,10 @@ export function MapSelector() {
   return (
     <div className="map-selector" ref={containerRef}>
       <button
-        className={`map-selector__button ${isOpen ? 'map-selector__button--open' : ''} ${isVacuumActive ? 'map-selector__button--disabled' : ''}`}
-        onClick={() => !isVacuumActive && setIsOpen(!isOpen)}
+        className={`map-selector__button ${isOpen ? 'map-selector__button--open' : ''} ${isDisabled ? 'map-selector__button--disabled' : ''}`}
+        onClick={() => !isDisabled && setIsOpen(!isOpen)}
         type="button"
-        disabled={isVacuumActive}
+        disabled={isDisabled}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
