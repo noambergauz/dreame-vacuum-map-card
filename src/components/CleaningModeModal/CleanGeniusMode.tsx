@@ -46,24 +46,14 @@ export function CleanGeniusMode({
   const isDeepCleaningDisabled = isCleaning || cleangeniusState.unavailable;
 
   const handleDeepCleaningToggle = (enabled: boolean) => {
-    if (enabled) {
-      setSelectOption(
-        entityIds.cleangenius,
-        convertCleanGeniusStateToService(CLEANGENIUS_STATE.DEEP_CLEANING as CleanGeniusState)
-      );
-      // Only set cleaning route if entity is available
-      if (cleaningRouteState.available) {
-        setSelectOption(entityIds.cleaningRoute, convertToLowerCase(CLEANING_ROUTE.DEEP));
-      }
-    } else {
-      setSelectOption(
-        entityIds.cleangenius,
-        convertCleanGeniusStateToService(CLEANGENIUS_STATE.ROUTINE_CLEANING as CleanGeniusState)
-      );
-      // Only set cleaning route if entity is available
-      if (cleaningRouteState.available) {
-        setSelectOption(entityIds.cleaningRoute, convertToLowerCase(CLEANING_ROUTE.STANDARD));
-      }
+    const state = enabled ? CLEANGENIUS_STATE.DEEP_CLEANING : CLEANGENIUS_STATE.ROUTINE_CLEANING;
+    const route = enabled ? CLEANING_ROUTE.DEEP : CLEANING_ROUTE.STANDARD;
+
+    setSelectOption(entityIds.cleangenius, convertCleanGeniusStateToService(state as CleanGeniusState));
+
+    // Only set cleaning route if entity is available (it may be auto-managed in CleanGenius mode)
+    if (cleaningRouteState.available) {
+      setSelectOption(entityIds.cleaningRoute, convertToLowerCase(route));
     }
   };
 

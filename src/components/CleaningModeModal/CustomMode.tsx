@@ -78,11 +78,9 @@ export function CustomMode({
   // Use custom handler if provided, otherwise use default setSelectOption
   const handleCleaningModeSelect = onCleaningModeSelect || setSelectOption;
 
-  // When in Customize mode (showOnlyCleaningModeSelector=true), don't disable the mode selector
-  // based on cleaning_mode entity availability, because:
-  // 1. The cleaning_mode entity becomes unavailable when customized_cleaning is on
-  // 2. User needs to be able to click other modes to exit Customize mode
-  // 3. Clicking another mode will first turn off customized_cleaning, making the entity available again
+  // In Customize mode, the cleaning_mode entity becomes unavailable (per-room settings override it).
+  // Allow mode switching so users can exit Customize mode - clicking another mode turns off
+  // customized_cleaning first, which makes the cleaning_mode entity available again.
   const isCleaningModeSelectorDisabled = isCleaning || (!showOnlyCleaningModeSelector && cleaningModeState.unavailable);
 
   return (

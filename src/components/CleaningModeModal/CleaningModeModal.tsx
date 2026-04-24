@@ -102,39 +102,26 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
 
     setSwitch(entityIds.customMoppingMode, !isCleanGeniusMode);
 
-    if (isCleanGeniusMode) {
-      setSelectOption(
-        entityIds.cleangenius,
-        convertCleanGeniusStateToService(CLEANGENIUS_STATE.ROUTINE_CLEANING as CleanGeniusState)
-      );
-    } else {
-      setSelectOption(
-        entityIds.cleangenius,
-        convertCleanGeniusStateToService(CLEANGENIUS_STATE.OFF as CleanGeniusState)
-      );
-    }
+    const state = isCleanGeniusMode ? CLEANGENIUS_STATE.ROUTINE_CLEANING : CLEANGENIUS_STATE.OFF;
+    setSelectOption(entityIds.cleangenius, convertCleanGeniusStateToService(state as CleanGeniusState));
   };
 
   // Handle cleaning mode selection in CustomMode
   const handleCleaningModeSelect = (entityId: string, value: string) => {
     if (value === CLEANING_MODE.CUSTOMIZE) {
-      // Turn on customized_cleaning switch
       logger.debug('CleaningModeModal', 'Enabling customized cleaning');
       hass.callService('switch', 'turn_on', { entity_id: customizedCleaningSwitch });
+      return;
+    }
+
+    if (isCustomizedCleaning) {
+      // Turn off customized_cleaning first, then set the new mode after a delay
+      // (turning off customize reverts to previous mode, then we set the new one)
+      logger.debug('CleaningModeModal', 'Disabling customized cleaning');
+      hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
+      setTimeout(() => setSelectOption(entityId, value), 300);
     } else {
-      // Turn off customized_cleaning if it was on
-      if (isCustomizedCleaning) {
-        logger.debug('CleaningModeModal', 'Disabling customized cleaning');
-        hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
-        // Delay setting the new mode to allow the switch turn-off to complete first
-        // (turning off customize reverts to previous mode, then we set the new one)
-        setTimeout(() => {
-          setSelectOption(entityId, value);
-        }, 300);
-      } else {
-        // Set the cleaning mode immediately if not coming from customize
-        setSelectOption(entityId, value);
-      }
+      setSelectOption(entityId, value);
     }
   };
 

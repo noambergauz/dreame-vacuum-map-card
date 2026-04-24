@@ -1,62 +1,46 @@
-import { CLEANGENIUS_MODE, CLEANING_MODE, SUCTION_LEVEL } from '@/constants';
+import { CLEANGENIUS_MODE, CLEANING_MODE } from '@/constants';
 import type { VacuumCleaningMode, CleanGeniusMode, SuctionLevel } from '@/types/vacuum';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
+const CLEANING_MODE_KEYS: Record<string, string> = {
+  [CLEANING_MODE.SWEEPING_AND_MOPPING]: 'cleaning_mode_button.vac_and_mop',
+  [CLEANING_MODE.MOPPING_AFTER_SWEEPING]: 'cleaning_mode_button.mop_after_vac',
+  [CLEANING_MODE.SWEEPING]: 'cleaning_mode_button.vacuum',
+  [CLEANING_MODE.MOPPING]: 'cleaning_mode_button.mop',
+  [CLEANING_MODE.CUSTOMIZE]: 'customize.title',
+};
+
+const CLEANING_MODE_FALLBACK: Record<string, string> = {
+  [CLEANING_MODE.SWEEPING_AND_MOPPING]: 'Vac & Mop',
+  [CLEANING_MODE.MOPPING_AFTER_SWEEPING]: 'Mop after Vac',
+  [CLEANING_MODE.SWEEPING]: 'Vac',
+  [CLEANING_MODE.MOPPING]: 'Mop',
+  [CLEANING_MODE.CUSTOMIZE]: 'Customize',
+};
+
 export function getCleaningModeFriendlyName(mode: VacuumCleaningMode, t?: TranslateFunction): string {
-  if (t) {
-    switch (mode) {
-      case CLEANING_MODE.SWEEPING_AND_MOPPING:
-        return t('cleaning_mode_button.vac_and_mop');
-      case CLEANING_MODE.MOPPING_AFTER_SWEEPING:
-        return t('cleaning_mode_button.mop_after_vac');
-      case CLEANING_MODE.SWEEPING:
-        return t('cleaning_mode_button.vacuum');
-      case CLEANING_MODE.MOPPING:
-        return t('cleaning_mode_button.mop');
-      case CLEANING_MODE.CUSTOMIZE:
-        return t('customize.title');
-      default:
-        return mode;
-    }
+  if (t && CLEANING_MODE_KEYS[mode]) {
+    return t(CLEANING_MODE_KEYS[mode]);
   }
-  // Fallback to English when no translation function provided
-  switch (mode) {
-    case CLEANING_MODE.SWEEPING_AND_MOPPING:
-      return 'Vac & Mop';
-    case CLEANING_MODE.MOPPING_AFTER_SWEEPING:
-      return 'Mop after Vac';
-    case CLEANING_MODE.SWEEPING:
-      return 'Vac';
-    case CLEANING_MODE.MOPPING:
-      return 'Mop';
-    case CLEANING_MODE.CUSTOMIZE:
-      return 'Customize';
-    default:
-      return mode;
-  }
+  return CLEANING_MODE_FALLBACK[mode] ?? mode;
 }
 
+const CLEANGENIUS_MODE_KEYS: Record<string, string> = {
+  [CLEANGENIUS_MODE.VACUUM_AND_MOP]: 'cleaning_mode_button.vac_and_mop',
+  [CLEANGENIUS_MODE.MOP_AFTER_VACUUM]: 'cleaning_mode_button.mop_after_vac',
+};
+
+const CLEANGENIUS_MODE_FALLBACK: Record<string, string> = {
+  [CLEANGENIUS_MODE.VACUUM_AND_MOP]: 'Vac & Mop',
+  [CLEANGENIUS_MODE.MOP_AFTER_VACUUM]: 'Mop after Vac',
+};
+
 export function getCleanGeniusModeFriendlyName(mode: CleanGeniusMode, t?: TranslateFunction): string {
-  if (t) {
-    switch (mode) {
-      case CLEANGENIUS_MODE.VACUUM_AND_MOP:
-        return t('cleaning_mode_button.vac_and_mop');
-      case CLEANGENIUS_MODE.MOP_AFTER_VACUUM:
-        return t('cleaning_mode_button.mop_after_vac');
-      default:
-        return mode;
-    }
+  if (t && CLEANGENIUS_MODE_KEYS[mode]) {
+    return t(CLEANGENIUS_MODE_KEYS[mode]);
   }
-  // Fallback to English when no translation function provided
-  switch (mode) {
-    case CLEANGENIUS_MODE.VACUUM_AND_MOP:
-      return 'Vac & Mop';
-    case CLEANGENIUS_MODE.MOP_AFTER_VACUUM:
-      return 'Mop after Vac';
-    default:
-      return mode;
-  }
+  return CLEANGENIUS_MODE_FALLBACK[mode] ?? mode;
 }
 
 /**
@@ -64,33 +48,19 @@ export function getCleanGeniusModeFriendlyName(mode: CleanGeniusMode, t?: Transl
  * Maps: Strong -> Turbo, Turbo -> Max
  */
 export function getSuctionLevelFriendlyName(level: SuctionLevel, t?: TranslateFunction): string {
-  if (t) {
-    if (level === SUCTION_LEVEL.QUIET || level.includes('Quiet')) {
-      return t('suction_levels.quiet');
-    }
-    if (level === SUCTION_LEVEL.STANDARD || level.includes('Standard')) {
-      return t('suction_levels.standard');
-    }
-    if (level === SUCTION_LEVEL.STRONG || level.includes('Strong')) {
-      return t('suction_levels.strong');
-    }
-    if (level === SUCTION_LEVEL.TURBO || level.includes('Turbo')) {
-      return t('suction_levels.turbo');
-    }
-    return level;
+  const normalizedLevel = level.toLowerCase();
+
+  if (normalizedLevel.includes('quiet') || normalizedLevel.includes('silent')) {
+    return t ? t('suction_levels.quiet') : 'Quiet';
   }
-  // Fallback to English when no translation function provided
-  if (level === SUCTION_LEVEL.QUIET || level.includes('Quiet')) {
-    return 'Quiet';
+  if (normalizedLevel.includes('standard')) {
+    return t ? t('suction_levels.standard') : 'Standard';
   }
-  if (level === SUCTION_LEVEL.STANDARD || level.includes('Standard')) {
-    return 'Standard';
+  if (normalizedLevel.includes('strong')) {
+    return t ? t('suction_levels.strong') : 'Turbo';
   }
-  if (level === SUCTION_LEVEL.STRONG || level.includes('Strong')) {
-    return 'Turbo';
-  }
-  if (level === SUCTION_LEVEL.TURBO || level.includes('Turbo')) {
-    return 'Max';
+  if (normalizedLevel.includes('turbo')) {
+    return t ? t('suction_levels.turbo') : 'Max';
   }
   return level;
 }

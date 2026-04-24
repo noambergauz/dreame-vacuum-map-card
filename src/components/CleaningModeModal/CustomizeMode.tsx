@@ -27,25 +27,24 @@ const SUCTION_ICONS: Record<string, ReactNode> = {
   max: SUCTION_TURBO_ICON_SVG,
 };
 
-// Get short label for suction level (lowercase to match HA entity options)
+// Short labels for suction levels
+const SUCTION_SHORT: Record<string, string> = {
+  quiet: 'Q',
+  silent: 'Q',
+  standard: 'S',
+  strong: 'T',
+  turbo: 'T',
+  max: 'M',
+};
+
 function getSuctionShort(level: string | null): string {
   if (!level) return '-';
-  const map: Record<string, string> = {
-    quiet: 'Q',
-    silent: 'Q',
-    standard: 'S',
-    strong: 'T',
-    turbo: 'T',
-    max: 'M',
-  };
-  return map[level] ?? level.charAt(0).toUpperCase();
+  return SUCTION_SHORT[level] ?? level.charAt(0).toUpperCase();
 }
 
-// Get short label for wetness level (numeric to display)
 function getWetnessShort(level: number | null, min: number, max: number): string {
   if (level === null) return '-';
-  const range = max - min;
-  const third = range / 3;
+  const third = (max - min) / 3;
   if (level <= min + third) return 'D';
   if (level <= min + third * 2) return 'M';
   return 'W';
@@ -75,8 +74,6 @@ function RoomWetnessSlider({
   const [localValue, setLocalValue] = useState(value);
   const isRtl = useIsRtl();
   const percent = ((localValue - min) / (max - min)) * 100;
-
-  // Calculate tooltip position accounting for thumb width
   const thumbWidth = 20;
   const tooltipPosition = `calc(${percent}% + ${thumbWidth / 2 - (percent * thumbWidth) / 100}px)`;
 
@@ -93,11 +90,14 @@ function RoomWetnessSlider({
   };
 
   const gradientDirection = isRtl ? 'to left' : 'to right';
-
-  // Determine which label is active based on value position
-  const range = max - min;
-  const third = range / 3;
+  const third = (max - min) / 3;
   const activeLabel = localValue <= min + third ? 'dry' : localValue <= min + third * 2 ? 'moist' : 'wet';
+
+  const labels = [
+    { key: 'dry', text: slightlyDryLabel },
+    { key: 'moist', text: moistLabel },
+    { key: 'wet', text: wetLabel },
+  ];
 
   return (
     <div className={`customize-mode__wetness-slider ${disabled ? 'customize-mode__wetness-slider--disabled' : ''}`}>
@@ -126,33 +126,14 @@ function RoomWetnessSlider({
         </div>
       </div>
       <div className="cleaning-mode-modal__slider-labels">
-        <span
-          className={`cleaning-mode-modal__slider-label ${
-            activeLabel === 'dry'
-              ? 'cleaning-mode-modal__slider-label--active'
-              : 'cleaning-mode-modal__slider-label--inactive'
-          }`}
-        >
-          {slightlyDryLabel}
-        </span>
-        <span
-          className={`cleaning-mode-modal__slider-label ${
-            activeLabel === 'moist'
-              ? 'cleaning-mode-modal__slider-label--active'
-              : 'cleaning-mode-modal__slider-label--inactive'
-          }`}
-        >
-          {moistLabel}
-        </span>
-        <span
-          className={`cleaning-mode-modal__slider-label ${
-            activeLabel === 'wet'
-              ? 'cleaning-mode-modal__slider-label--active'
-              : 'cleaning-mode-modal__slider-label--inactive'
-          }`}
-        >
-          {wetLabel}
-        </span>
+        {labels.map(({ key, text }) => (
+          <span
+            key={key}
+            className={`cleaning-mode-modal__slider-label cleaning-mode-modal__slider-label--${activeLabel === key ? 'active' : 'inactive'}`}
+          >
+            {text}
+          </span>
+        ))}
       </div>
     </div>
   );

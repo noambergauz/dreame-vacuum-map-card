@@ -22,29 +22,20 @@ interface MopWashingFrequencyProps {
   areaEntityId: string;
   timeEntityId: string;
   t?: TranslateFunction;
-  /** Disable frequency buttons */
   frequencyDisabled?: boolean;
-  /** Disable area slider */
   areaDisabled?: boolean;
-  /** Disable time slider */
   timeDisabled?: boolean;
 }
 
-/**
- * Get translated frequency label
- */
+const FREQUENCY_KEYS: Record<string, string> = {
+  'By room': 'mop_washing_frequency.by_room',
+  'By area': 'mop_washing_frequency.by_area',
+  'By time': 'mop_washing_frequency.by_time',
+};
+
 function getFrequencyLabel(freq: string, t?: TranslateFunction): string {
   if (!t) return freq;
-  switch (freq) {
-    case 'By room':
-      return t('mop_washing_frequency.by_room');
-    case 'By area':
-      return t('mop_washing_frequency.by_area');
-    case 'By time':
-      return t('mop_washing_frequency.by_time');
-    default:
-      return freq;
-  }
+  return FREQUENCY_KEYS[freq] ? t(FREQUENCY_KEYS[freq]) : freq;
 }
 
 export function MopWashingFrequency({
@@ -72,44 +63,43 @@ export function MopWashingFrequency({
   const areaUnit = useAreaUnit();
   const isRtl = useIsRtl();
 
-  const selfCleanAreaPercent = ((localArea - selfCleanAreaMin) / (selfCleanAreaMax - selfCleanAreaMin)) * 100;
-  const selfCleanTimePercent = ((localTime - selfCleanTimeMin) / (selfCleanTimeMax - selfCleanTimeMin)) * 100;
+  const isByArea = selfCleanFrequency === 'By area';
+  const isByTime = selfCleanFrequency === 'By time';
+  const showSlider = isByArea || isByTime;
 
-  // Calculate tooltip position accounting for thumb width (20px = 1.25rem)
-  const thumbWidth = 20; // in pixels
-  const areaTooltipPosition = `calc(${selfCleanAreaPercent}% + ${thumbWidth / 2 - (selfCleanAreaPercent * thumbWidth) / 100}px)`;
-  const timeTooltipPosition = `calc(${selfCleanTimePercent}% + ${thumbWidth / 2 - (selfCleanTimePercent * thumbWidth) / 100}px)`;
+  const currentValue = isByArea ? localArea : localTime;
+  const currentMin = isByArea ? selfCleanAreaMin : selfCleanTimeMin;
+  const currentMax = isByArea ? selfCleanAreaMax : selfCleanTimeMax;
+  const percent = ((currentValue - currentMin) / (currentMax - currentMin)) * 100;
+  const thumbWidth = 20;
+  const tooltipPosition = `calc(${percent}% + ${thumbWidth / 2 - (percent * thumbWidth) / 100}px)`;
 
-  // Get translated unit strings
   const minutesShortUnit = t ? t('units.minutes_short') : 'm';
-
-  // For RTL, flip the gradient direction
   const gradientDirection = isRtl ? 'to left' : 'to right';
 
-  // Determine if the current slider should be disabled
-  const isAreaSliderDisabled = areaDisabled || frequencyDisabled;
-  const isTimeSliderDisabled = timeDisabled || frequencyDisabled;
+  const isSliderDisabled = isByArea ? areaDisabled || frequencyDisabled : timeDisabled || frequencyDisabled;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isSliderDisabled) return;
     const value = parseInt(e.target.value);
-    if (selfCleanFrequency === 'By area' && !isAreaSliderDisabled) {
+    if (isByArea) {
       setLocalArea(value);
-    } else if (!isTimeSliderDisabled) {
+    } else {
       setLocalTime(value);
     }
   };
 
   const handleCommit = () => {
-    if (selfCleanFrequency === 'By area' && localArea !== selfCleanArea && !isAreaSliderDisabled) {
+    if (isSliderDisabled) return;
+    if (isByArea && localArea !== selfCleanArea) {
       onChangeArea(areaEntityId, localArea);
-    } else if (selfCleanFrequency === 'By time' && localTime !== selfCleanTime && !isTimeSliderDisabled) {
+    } else if (isByTime && localTime !== selfCleanTime) {
       onChangeTime(timeEntityId, localTime);
     }
   };
 
   return (
     <>
-      {/* Frequency type selector */}
       <div
         className={`cleaning-mode-modal__horizontal-scroll ${frequencyDisabled ? 'cleaning-mode-modal__horizontal-scroll--disabled' : ''}`}
       >
@@ -130,39 +120,31 @@ export function MopWashingFrequency({
         ))}
       </div>
 
-      {/* Slider for By area or By time */}
-      {(selfCleanFrequency === 'By area' || selfCleanFrequency === 'By time') && (
+      {showSlider && (
         <div
-          className={`cleaning-mode-modal__slider-container ${(selfCleanFrequency === 'By area' ? isAreaSliderDisabled : isTimeSliderDisabled) ? 'cleaning-mode-modal__slider-container--disabled' : ''}`}
+          className={`cleaning-mode-modal__slider-container ${isSliderDisabled ? 'cleaning-mode-modal__slider-container--disabled' : ''}`}
           style={{ marginTop: '1rem' }}
         >
           <div className="cleaning-mode-modal__slider-wrapper">
             <input
               type="range"
-              min={selfCleanFrequency === 'By area' ? selfCleanAreaMin : selfCleanTimeMin}
-              max={selfCleanFrequency === 'By area' ? selfCleanAreaMax : selfCleanTimeMax}
-              value={selfCleanFrequency === 'By area' ? localArea : localTime}
+              min={currentMin}
+              max={currentMax}
+              value={currentValue}
               onChange={handleChange}
               onMouseUp={handleCommit}
               onTouchEnd={handleCommit}
-              disabled={selfCleanFrequency === 'By area' ? isAreaSliderDisabled : isTimeSliderDisabled}
+              disabled={isSliderDisabled}
               className="cleaning-mode-modal__slider"
               style={{
-                background:
-                  selfCleanFrequency === 'By area'
-                    ? `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) ${selfCleanAreaPercent}%, var(--accent-bg-secondary-hover) 100%)`
-                    : `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) ${selfCleanTimePercent}%, var(--accent-bg-secondary-hover) 100%)`,
+                background: `linear-gradient(${gradientDirection}, var(--accent-bg-secondary) 0%, var(--accent-bg-secondary) ${percent}%, var(--accent-bg-secondary-hover) ${percent}%, var(--accent-bg-secondary-hover) 100%)`,
               }}
             />
             <div
               className="cleaning-mode-modal__slider-tooltip"
-              style={
-                isRtl
-                  ? { right: selfCleanFrequency === 'By area' ? areaTooltipPosition : timeTooltipPosition }
-                  : { left: selfCleanFrequency === 'By area' ? areaTooltipPosition : timeTooltipPosition }
-              }
+              style={isRtl ? { right: tooltipPosition } : { left: tooltipPosition }}
             >
-              {selfCleanFrequency === 'By area' ? `${localArea}${areaUnit}` : `${localTime}${minutesShortUnit}`}
+              {isByArea ? `${localArea}${areaUnit}` : `${localTime}${minutesShortUnit}`}
             </div>
           </div>
         </div>
