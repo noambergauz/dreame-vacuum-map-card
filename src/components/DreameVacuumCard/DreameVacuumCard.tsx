@@ -10,7 +10,7 @@ import { SettingsPanel } from '@/components/SettingsPanel';
 import { RoomSelectionDisplay } from '@/components/RoomSelectionDisplay';
 import { Toast } from '@/components/common';
 import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useTheme } from '@/hooks';
-import { extractEntityData, getEffectiveCleaningMode, getAttr } from '@/utils';
+import { extractEntityData, getEffectiveCleaningMode, getAttr, getActiveSegments } from '@/utils';
 import { isRtlLanguage } from '@/i18n';
 import { VacuumCardProvider } from '@/contexts';
 import type { Hass, HassConfig } from '@/types/homeassistant';
@@ -54,6 +54,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     shortcutsModalOpened,
     settingsPanelOpened,
     repeatCount,
+    setSelectedMode,
+    setSelectedRooms,
     setSelectedZone,
     setModalOpened,
     setShortcutsModalOpened,
@@ -72,6 +74,27 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
 
   // Check if vacuum is actively cleaning (state === 'cleaning' or started attribute)
   const isCleaning = entity ? entity.state === 'cleaning' || getAttr(entity.attributes.started, false) : false;
+  const isSegmentCleaning = entity ? entity.attributes.segment_cleaning === true : false;
+
+  // Sync room selection with active segments when segment cleaning is in progress
+  // This ensures the UI reflects the actual cleaning state after a refresh
+  useEffect(() => {
+    if (!isSegmentCleaning) return;
+
+    const activeSegments = getActiveSegments(hass, config.entity, mapEntityId);
+    if (activeSegments.size > 0) {
+      // Only update if different from current selection
+      const currentIds = Array.from(selectedRooms.keys()).sort();
+      const activeIds = Array.from(activeSegments.keys()).sort();
+      const isDifferent = currentIds.length !== activeIds.length || currentIds.some((id, i) => id !== activeIds[i]);
+
+      if (isDifferent) {
+        logger.debug('DreameVacuumCard', 'Syncing room selection with active segments', activeIds);
+        setSelectedRooms(activeSegments);
+        setSelectedMode('room');
+      }
+    }
+  }, [isSegmentCleaning, hass, config.entity, mapEntityId, selectedRooms, setSelectedRooms, setSelectedMode]);
 
   // Reset repeat count when vacuum stops cleaning
   useEffect(() => {

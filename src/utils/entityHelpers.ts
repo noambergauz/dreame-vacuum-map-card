@@ -1,4 +1,4 @@
-import type { HassEntity, HassConfig, RoomPosition, CleaningSelectionMode } from '@/types/homeassistant';
+import type { HassEntity, HassConfig, RoomPosition, CleaningSelectionMode, Hass } from '@/types/homeassistant';
 import { getAttr } from './typeGuards';
 
 export function extractEntityData(entity: HassEntity | undefined, config: HassConfig) {
@@ -45,4 +45,41 @@ export function getEffectiveCleaningMode(
   }
 
   return selectedMode;
+}
+
+/**
+ * Get active segments from vacuum entity when segment cleaning is in progress.
+ * Returns a Map of roomId -> roomName for the currently cleaning segments.
+ */
+export function getActiveSegments(hass: Hass, vacuumEntityId: string, cameraEntityId: string): Map<number, string> {
+  const vacuumEntity = hass.states[vacuumEntityId];
+  const cameraEntity = hass.states[cameraEntityId];
+  const result = new Map<number, string>();
+
+  if (!vacuumEntity) return result;
+
+  const isSegmentCleaning = vacuumEntity.attributes.segment_cleaning === true;
+  const activeSegments = vacuumEntity.attributes.active_segments as number[] | null;
+
+  if (!isSegmentCleaning || !activeSegments || !Array.isArray(activeSegments)) {
+    return result;
+  }
+
+  // Get room names from camera entity
+  const roomsData = cameraEntity?.attributes?.rooms as Record<string, { room_id: number; name: string }> | undefined;
+  const roomNameById = new Map<number, string>();
+
+  if (roomsData) {
+    Object.values(roomsData).forEach((room) => {
+      roomNameById.set(room.room_id, room.name);
+    });
+  }
+
+  // Build the selected rooms map
+  for (const segmentId of activeSegments) {
+    const roomName = roomNameById.get(segmentId) || `Room ${segmentId}`;
+    result.set(segmentId, roomName);
+  }
+
+  return result;
 }
