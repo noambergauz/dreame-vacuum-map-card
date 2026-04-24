@@ -4,11 +4,12 @@ import { AIDetectionSection } from './sections/AIDetectionSection';
 import { CarpetSettingsSection } from './sections/CarpetSettingsSection';
 import { ConsumablesSection } from './sections/ConsumablesSection';
 import { DeviceInfoSection } from './sections/DeviceInfoSection';
+import { EdgeCornerSection } from './sections/EdgeCornerSection';
 import { FloorSettingsSection } from './sections/FloorSettingsSection';
 import { QuickSettingsSection } from './sections/QuickSettingsSection';
 import { StationControlsSection } from './sections/StationControlsSection';
 import { VolumeSection } from './sections/VolumeSection';
-import { Brain, Gauge, Info, Layers, Settings2, Volume2, Home, Footprints } from 'lucide-react';
+import { Brain, Gauge, Info, Layers, Settings2, Volume2, Home, Footprints, CornerDownRight } from 'lucide-react';
 import './SettingsPanel.scss';
 
 interface SettingsPanelProps {
@@ -26,6 +27,18 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
 
         <div className="settings-panel__scroll-wrapper">
           <div className="settings-panel__sections">
+            <Accordion title={t('settings.carpet.title')} icon={<Layers />}>
+              <CarpetSettingsSection />
+            </Accordion>
+
+            <Accordion title={t('settings.floor.title')} icon={<Footprints />}>
+              <FloorSettingsSection />
+            </Accordion>
+
+            <Accordion title={t('settings.edge_corner.title')} icon={<CornerDownRight />}>
+              <EdgeCornerSection />
+            </Accordion>
+
             <Accordion title={t('settings.consumables.title')} icon={<Gauge />} defaultOpen>
               <ConsumablesSection />
             </Accordion>
@@ -44,14 +57,6 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
 
             <Accordion title={t('settings.station_controls.title')} icon={<Home />}>
               <StationControlsSection />
-            </Accordion>
-
-            <Accordion title={t('settings.carpet.title')} icon={<Layers />}>
-              <CarpetSettingsSection />
-            </Accordion>
-
-            <Accordion title={t('settings.floor.title')} icon={<Footprints />}>
-              <FloorSettingsSection />
             </Accordion>
 
             <Accordion title={t('settings.ai_detection.title')} icon={<Brain />}>
