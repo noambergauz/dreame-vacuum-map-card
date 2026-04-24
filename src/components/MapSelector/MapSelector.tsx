@@ -48,8 +48,8 @@ export function MapSelector() {
             optionToSelect = String(map.id);
           } else {
             // Fallback to partial match if possible
-            const partialMatch = options.find((o) =>
-              o.includes(map.name) || (map.custom_name && o.includes(map.custom_name))
+            const partialMatch = options.find(
+              (o) => o.includes(map.name) || (map.custom_name && o.includes(map.custom_name))
             );
             if (partialMatch) {
               optionToSelect = partialMatch;
@@ -77,7 +77,8 @@ export function MapSelector() {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      const path = event.composedPath();
+      if (containerRef.current && !path.includes(containerRef.current)) {
         setIsOpen(false);
       }
     }
