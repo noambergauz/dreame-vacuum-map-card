@@ -274,6 +274,8 @@ export const nl: Translation = {
       recleaning_off: 'Uit',
       recleaning_in_deep_mode: 'In diepe modus',
       recleaning_in_all_modes: 'In alle modi',
+      stain_avoidance: 'Vlekvermijding',
+      stain_avoidance_desc: 'Gedetecteerde vlekken vermijden',
     },
     edge_corner: {
       title: 'Randen & Hoeken',
@@ -324,8 +326,6 @@ export const nl: Translation = {
     },
     ai_detection: {
       title: 'AI & Detectie',
-      obstacle_avoidance: 'Obstakelvermijding',
-      obstacle_avoidance_desc: 'Sensoren gebruiken om obstakels te vermijden',
       ai_obstacle_detection: 'AI-obstakeldetectie',
       ai_obstacle_detection_desc: 'AI gebruiken om obstakels te herkennen en vermijden',
       ai_obstacle_image_upload: "Obstakelfoto's uploaden",
@@ -338,10 +338,6 @@ export const nl: Translation = {
       ai_furniture_detection_desc: 'Meubels detecteren en eromheen navigeren',
       ai_fluid_detection: 'Vloeistofdetectie',
       ai_fluid_detection_desc: 'Vloeistoffen detecteren en vermijden',
-      stain_avoidance: 'Vlekvermijding',
-      stain_avoidance_desc: 'Gedetecteerde vlekken vermijden',
-      collision_avoidance: 'Botsvermijding',
-      collision_avoidance_desc: 'Botsingen met objecten voorkomen',
       fill_light: 'Bijverlichting',
       fill_light_desc: 'Bijverlichting gebruiken voor betere detectie',
     },

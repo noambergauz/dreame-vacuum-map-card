@@ -274,6 +274,8 @@ export const zh: Translation = {
       recleaning_off: '关闭',
       recleaning_in_deep_mode: '深度模式',
       recleaning_in_all_modes: '所有模式',
+      stain_avoidance: '污渍躲避',
+      stain_avoidance_desc: '自动避开识别到的顽固污渍',
     },
     edge_corner: {
       title: '边角清洁',
@@ -324,8 +326,6 @@ export const zh: Translation = {
     },
     ai_detection: {
       title: 'AI 识别与避障',
-      obstacle_avoidance: '避障功能',
-      obstacle_avoidance_desc: '使用传感器避开障碍物',
       ai_obstacle_detection: 'AI 障碍物识别',
       ai_obstacle_detection_desc: '使用 AI 视觉识别并避开障碍物',
       ai_obstacle_image_upload: '实景障碍物照片上传',
@@ -338,10 +338,6 @@ export const zh: Translation = {
       ai_furniture_detection_desc: '识别家具并沿边清扫',
       ai_fluid_detection: '液体识别',
       ai_fluid_detection_desc: '识别并避开地面液体',
-      stain_avoidance: '污渍躲避',
-      stain_avoidance_desc: '自动避开识别到的顽固污渍',
-      collision_avoidance: '防碰撞',
-      collision_avoidance_desc: '主动减速以防止与物体发生碰撞',
       fill_light: '自动补光灯',
       fill_light_desc: '暗光环境下自动开启以提升识别率',
     },

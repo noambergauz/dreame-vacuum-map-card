@@ -28,6 +28,10 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
 
         <div className="settings-panel__scroll-wrapper">
           <div className="settings-panel__sections">
+            <Accordion title={t('settings.consumables.title')} icon={<Gauge />}>
+              <ConsumablesSection />
+            </Accordion>
+
             <Accordion title={t('settings.carpet.title')} icon={<Layers />}>
               <CarpetSettingsSection />
             </Accordion>
@@ -44,8 +48,8 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
               <DockSettingsSection />
             </Accordion>
 
-            <Accordion title={t('settings.consumables.title')} icon={<Gauge />}>
-              <ConsumablesSection />
+            <Accordion title={t('settings.ai_detection.title')} icon={<Brain />}>
+              <AIDetectionSection />
             </Accordion>
 
             <Accordion title={t('settings.device_info.title')} icon={<Info />}>
@@ -62,10 +66,6 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
 
             <Accordion title={t('settings.station_controls.title')} icon={<Home />}>
               <StationControlsSection />
-            </Accordion>
-
-            <Accordion title={t('settings.ai_detection.title')} icon={<Brain />}>
-              <AIDetectionSection />
             </Accordion>
           </div>
         </div>

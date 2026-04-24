@@ -275,6 +275,8 @@ export const it: Translation = {
       recleaning_off: 'Disattivato',
       recleaning_in_deep_mode: 'In modalità profonda',
       recleaning_in_all_modes: 'In tutte le modalità',
+      stain_avoidance: 'Evitamento macchie',
+      stain_avoidance_desc: 'Evita le macchie rilevate',
     },
     edge_corner: {
       title: 'Bordi e Angoli',
@@ -325,8 +327,6 @@ export const it: Translation = {
     },
     ai_detection: {
       title: 'AI e rilevamento',
-      obstacle_avoidance: 'Evitamento ostacoli',
-      obstacle_avoidance_desc: 'Usa i sensori per evitare ostacoli',
       ai_obstacle_detection: 'Rilevamento ostacoli AI',
       ai_obstacle_detection_desc: "Usa l'AI per identificare ed evitare ostacoli",
       ai_obstacle_image_upload: 'Caricamento immagini ostacoli',
@@ -339,10 +339,6 @@ export const it: Translation = {
       ai_furniture_detection_desc: 'Rileva e aggira i mobili',
       ai_fluid_detection: 'Rilevamento liquidi',
       ai_fluid_detection_desc: 'Rileva ed evita liquidi',
-      stain_avoidance: 'Evitamento macchie',
-      stain_avoidance_desc: 'Evita le macchie rilevate',
-      collision_avoidance: 'Evitamento collisioni',
-      collision_avoidance_desc: 'Previene collisioni con oggetti',
       fill_light: 'Luce di riempimento',
       fill_light_desc: 'Usa la luce di riempimento per un rilevamento migliore',
     },

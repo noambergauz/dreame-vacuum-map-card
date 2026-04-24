@@ -274,6 +274,8 @@ export const pl: Translation = {
       recleaning_off: 'Wył',
       recleaning_in_deep_mode: 'W trybie głębokim',
       recleaning_in_all_modes: 'We wszystkich trybach',
+      stain_avoidance: 'Omijanie plam',
+      stain_avoidance_desc: 'Omijaj wykryte plamy',
     },
     edge_corner: {
       title: 'Krawędzie i Rogi',
@@ -324,8 +326,6 @@ export const pl: Translation = {
     },
     ai_detection: {
       title: 'AI i Wykrywanie',
-      obstacle_avoidance: 'Omijanie przeszkód',
-      obstacle_avoidance_desc: 'Używaj czujników do omijania przeszkód',
       ai_obstacle_detection: 'Rozpoznawanie przeszkód AI',
       ai_obstacle_detection_desc: 'Używaj AI do identyfikacji i omijania przeszkód',
       ai_obstacle_image_upload: 'Przesyłanie zdjęć przeszkód',
@@ -338,10 +338,6 @@ export const pl: Translation = {
       ai_furniture_detection_desc: 'Wykrywaj i nawiguj wokół mebli',
       ai_fluid_detection: 'Wykrywanie cieczy',
       ai_fluid_detection_desc: 'Wykrywaj i omijaj rozlane płyny',
-      stain_avoidance: 'Omijanie plam',
-      stain_avoidance_desc: 'Omijaj wykryte plamy',
-      collision_avoidance: 'Unikanie kolizji',
-      collision_avoidance_desc: 'Zapobiegaj uderzeniom w obiekty',
       fill_light: 'Doświetlenie',
       fill_light_desc: 'Użyj światła pomocniczego dla lepszego wykrywania',
     },

@@ -275,6 +275,8 @@ export const ru: Translation = {
       recleaning_off: 'Выкл',
       recleaning_in_deep_mode: 'В глубоком режиме',
       recleaning_in_all_modes: 'Во всех режимах',
+      stain_avoidance: 'Избегание пятен',
+      stain_avoidance_desc: 'Обходить обнаруженные пятна',
     },
     edge_corner: {
       title: 'Края и углы',
@@ -325,8 +327,6 @@ export const ru: Translation = {
     },
     ai_detection: {
       title: 'ИИ и распознавание',
-      obstacle_avoidance: 'Избегание препятствий',
-      obstacle_avoidance_desc: 'Использовать датчики для обхода препятствий',
       ai_obstacle_detection: 'ИИ-распознавание препятствий',
       ai_obstacle_detection_desc: 'Использовать ИИ для определения и обхода препятствий',
       ai_obstacle_image_upload: 'Загрузка изображений препятствий',
@@ -339,10 +339,6 @@ export const ru: Translation = {
       ai_furniture_detection_desc: 'Обнаружение и обход мебели',
       ai_fluid_detection: 'Распознавание жидкостей',
       ai_fluid_detection_desc: 'Обнаружение и обход жидкостей',
-      stain_avoidance: 'Избегание пятен',
-      stain_avoidance_desc: 'Обходить обнаруженные пятна',
-      collision_avoidance: 'Предотвращение столкновений',
-      collision_avoidance_desc: 'Предотвращать столкновения с объектами',
       fill_light: 'Подсветка',
       fill_light_desc: 'Использовать подсветку для лучшего распознавания',
     },

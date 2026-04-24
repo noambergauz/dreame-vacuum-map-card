@@ -276,6 +276,8 @@ export const de: Translation = {
       recleaning_off: 'Aus',
       recleaning_in_deep_mode: 'Im Tiefenmodus',
       recleaning_in_all_modes: 'In allen Modi',
+      stain_avoidance: 'Fleckenvermeidung',
+      stain_avoidance_desc: 'Erkannte Flecken vermeiden',
     },
     edge_corner: {
       title: 'Kanten & Ecken',
@@ -326,8 +328,6 @@ export const de: Translation = {
     },
     ai_detection: {
       title: 'KI & Erkennung',
-      obstacle_avoidance: 'Hindernisvermeidung',
-      obstacle_avoidance_desc: 'Sensoren zur Hindernisvermeidung nutzen',
       ai_obstacle_detection: 'KI-Hinderniserkennung',
       ai_obstacle_detection_desc: 'KI zur Erkennung und Vermeidung von Hindernissen nutzen',
       ai_obstacle_image_upload: 'Hindernis-Bilder hochladen',
@@ -340,10 +340,6 @@ export const de: Translation = {
       ai_furniture_detection_desc: 'Möbel erkennen und umfahren',
       ai_fluid_detection: 'Flüssigkeitserkennung',
       ai_fluid_detection_desc: 'Flüssigkeiten erkennen und vermeiden',
-      stain_avoidance: 'Fleckenvermeidung',
-      stain_avoidance_desc: 'Erkannte Flecken vermeiden',
-      collision_avoidance: 'Kollisionsvermeidung',
-      collision_avoidance_desc: 'Kollisionen mit Objekten verhindern',
       fill_light: 'Zusatzlicht',
       fill_light_desc: 'Zusatzlicht für bessere Erkennung nutzen',
     },

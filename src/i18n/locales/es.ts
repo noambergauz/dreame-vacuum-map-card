@@ -275,6 +275,8 @@ export const es: Translation = {
       recleaning_off: 'Desactivado',
       recleaning_in_deep_mode: 'En modo profundo',
       recleaning_in_all_modes: 'En todos los modos',
+      stain_avoidance: 'Evitación de manchas',
+      stain_avoidance_desc: 'Evitar manchas detectadas',
     },
     edge_corner: {
       title: 'Bordes y Esquinas',
@@ -325,8 +327,6 @@ export const es: Translation = {
     },
     ai_detection: {
       title: 'IA y detección',
-      obstacle_avoidance: 'Evitación de obstáculos',
-      obstacle_avoidance_desc: 'Usar sensores para evitar obstáculos',
       ai_obstacle_detection: 'Detección de obstáculos con IA',
       ai_obstacle_detection_desc: 'Usar IA para identificar y evitar obstáculos',
       ai_obstacle_image_upload: 'Carga de imágenes de obstáculos',
@@ -339,10 +339,6 @@ export const es: Translation = {
       ai_furniture_detection_desc: 'Detectar y navegar alrededor de muebles',
       ai_fluid_detection: 'Detección de líquidos',
       ai_fluid_detection_desc: 'Detectar y evitar líquidos',
-      stain_avoidance: 'Evitación de manchas',
-      stain_avoidance_desc: 'Evitar manchas detectadas',
-      collision_avoidance: 'Evitación de colisiones',
-      collision_avoidance_desc: 'Prevenir colisiones con objetos',
       fill_light: 'Luz de relleno',
       fill_light_desc: 'Usar luz de relleno para mejor detección',
     },

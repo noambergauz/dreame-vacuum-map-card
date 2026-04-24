@@ -13,12 +13,6 @@ interface AIToggle {
 
 const AI_TOGGLES: AIToggle[] = [
   {
-    key: 'obstacle_avoidance',
-    labelKey: 'settings.ai_detection.obstacle_avoidance',
-    descriptionKey: 'settings.ai_detection.obstacle_avoidance_desc',
-    switchEntitySuffix: 'obstacle_avoidance',
-  },
-  {
     key: 'ai_obstacle_detection',
     labelKey: 'settings.ai_detection.ai_obstacle_detection',
     descriptionKey: 'settings.ai_detection.ai_obstacle_detection_desc',
@@ -53,18 +47,6 @@ const AI_TOGGLES: AIToggle[] = [
     labelKey: 'settings.ai_detection.ai_fluid_detection',
     descriptionKey: 'settings.ai_detection.ai_fluid_detection_desc',
     switchEntitySuffix: 'ai_fluid_detection',
-  },
-  {
-    key: 'stain_avoidance',
-    labelKey: 'settings.ai_detection.stain_avoidance',
-    descriptionKey: 'settings.ai_detection.stain_avoidance_desc',
-    switchEntitySuffix: 'stain_avoidance',
-  },
-  {
-    key: 'collision_avoidance',
-    labelKey: 'settings.ai_detection.collision_avoidance',
-    descriptionKey: 'settings.ai_detection.collision_avoidance_desc',
-    switchEntitySuffix: 'collision_avoidance',
   },
   {
     key: 'fill_light',

@@ -274,6 +274,8 @@ export const he: Translation = {
       recleaning_off: 'כבוי',
       recleaning_in_deep_mode: 'במצב עמוק',
       recleaning_in_all_modes: 'בכל המצבים',
+      stain_avoidance: 'הימנעות מכתמים',
+      stain_avoidance_desc: 'הימנעות מכתמים שזוהו',
     },
     edge_corner: {
       title: 'קצוות ופינות',
@@ -324,8 +326,6 @@ export const he: Translation = {
     },
     ai_detection: {
       title: 'בינה מלאכותית וזיהוי',
-      obstacle_avoidance: 'הימנעות ממכשולים',
-      obstacle_avoidance_desc: 'שימוש בחיישנים להימנעות ממכשולים',
       ai_obstacle_detection: 'זיהוי מכשולים מבוסס AI',
       ai_obstacle_detection_desc: 'שימוש ב-AI לזיהוי והימנעות ממכשולים',
       ai_obstacle_image_upload: 'העלאת תמונות מכשולים',
@@ -338,10 +338,6 @@ export const he: Translation = {
       ai_furniture_detection_desc: 'זיהוי וניווט סביב רהיטים',
       ai_fluid_detection: 'זיהוי נוזלים',
       ai_fluid_detection_desc: 'זיהוי והימנעות מנוזלים',
-      stain_avoidance: 'הימנעות מכתמים',
-      stain_avoidance_desc: 'הימנעות מכתמים שזוהו',
-      collision_avoidance: 'מניעת התנגשות',
-      collision_avoidance_desc: 'מניעת התנגשות בחפצים',
       fill_light: 'תאורת עזר',
       fill_light_desc: 'שימוש בתאורת עזר לזיהוי טוב יותר',
     },

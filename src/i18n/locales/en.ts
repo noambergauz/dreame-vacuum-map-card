@@ -272,6 +272,8 @@ export const en = {
       recleaning_off: 'Off',
       recleaning_in_deep_mode: 'In Deep Mode',
       recleaning_in_all_modes: 'In All Modes',
+      stain_avoidance: 'Stain Avoidance',
+      stain_avoidance_desc: 'Avoid detected stains',
     },
     edge_corner: {
       title: 'Edge & Corner',
@@ -322,8 +324,6 @@ export const en = {
     },
     ai_detection: {
       title: 'AI & Detection',
-      obstacle_avoidance: 'Obstacle Avoidance',
-      obstacle_avoidance_desc: 'Use sensors to avoid obstacles',
       ai_obstacle_detection: 'AI Obstacle Detection',
       ai_obstacle_detection_desc: 'Use AI to identify and avoid obstacles',
       ai_obstacle_image_upload: 'Obstacle Image Upload',
@@ -336,10 +336,6 @@ export const en = {
       ai_furniture_detection_desc: 'Detect and navigate around furniture',
       ai_fluid_detection: 'Fluid Detection',
       ai_fluid_detection_desc: 'Detect and avoid liquids',
-      stain_avoidance: 'Stain Avoidance',
-      stain_avoidance_desc: 'Avoid detected stains',
-      collision_avoidance: 'Collision Avoidance',
-      collision_avoidance_desc: 'Prevent collisions with objects',
       fill_light: 'Fill Light',
       fill_light_desc: 'Use fill light for better detection',
     },

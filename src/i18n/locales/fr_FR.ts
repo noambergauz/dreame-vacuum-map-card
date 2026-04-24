@@ -274,6 +274,8 @@ export const fr_FR: Translation = {
       recleaning_off: 'Désactivé',
       recleaning_in_deep_mode: 'En mode profond',
       recleaning_in_all_modes: 'Dans tous les modes',
+      stain_avoidance: 'Évitement des taches',
+      stain_avoidance_desc: 'Éviter les taches détectées',
     },
     edge_corner: {
       title: 'Bords & Coins',
@@ -324,8 +326,6 @@ export const fr_FR: Translation = {
     },
     ai_detection: {
       title: 'IA & Détection',
-      obstacle_avoidance: "Évitement d'obstacles",
-      obstacle_avoidance_desc: 'Utiliser les capteurs pour éviter les obstacles',
       ai_obstacle_detection: "Détection d'obstacles par IA",
       ai_obstacle_detection_desc: "Utiliser l'IA pour identifier les obstacles",
       ai_obstacle_image_upload: "Envoi d'images d'obstacles",
@@ -338,10 +338,6 @@ export const fr_FR: Translation = {
       ai_furniture_detection_desc: 'Naviguer autour des meubles',
       ai_fluid_detection: 'Détection de liquides',
       ai_fluid_detection_desc: 'Détecter et éviter les flaques',
-      stain_avoidance: 'Évitement des taches',
-      stain_avoidance_desc: 'Éviter les taches détectées',
-      collision_avoidance: 'Évitement de collision',
-      collision_avoidance_desc: 'Prévenir les chocs avec les objets',
       fill_light: "Lumière d'appoint",
       fill_light_desc: 'Utiliser la lumière pour une meilleure détection',
     },

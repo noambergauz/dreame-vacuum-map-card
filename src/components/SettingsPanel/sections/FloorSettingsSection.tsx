@@ -19,10 +19,22 @@ const FLOOR_TOGGLES: FloorToggle[] = [
     switchEntitySuffix: 'collision_avoidance',
   },
   {
+    key: 'auto_recleaning',
+    labelKey: 'settings.floor.auto_recleaning',
+    descriptionKey: 'settings.floor.auto_recleaning_desc',
+    switchEntitySuffix: 'auto_recleaning',
+  },
+  {
     key: 'auto_mount_mop',
     labelKey: 'settings.floor.auto_mount_mop',
     descriptionKey: 'settings.floor.auto_mount_mop_desc',
     switchEntitySuffix: 'auto_mount_mop',
+  },
+  {
+    key: 'stain_avoidance',
+    labelKey: 'settings.floor.stain_avoidance',
+    descriptionKey: 'settings.floor.stain_avoidance_desc',
+    switchEntitySuffix: 'stain_avoidance',
   },
 ];
 

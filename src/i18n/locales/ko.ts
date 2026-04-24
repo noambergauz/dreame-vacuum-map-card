@@ -274,6 +274,8 @@ export const ko: Translation = {
       recleaning_off: '끔',
       recleaning_in_deep_mode: '딥 모드에서',
       recleaning_in_all_modes: '모든 모드에서',
+      stain_avoidance: '얼룩 회피',
+      stain_avoidance_desc: '감지된 얼룩을 피합니다',
     },
     edge_corner: {
       title: '가장자리 & 모서리',
@@ -324,8 +326,6 @@ export const ko: Translation = {
     },
     ai_detection: {
       title: 'AI 및 감지',
-      obstacle_avoidance: '장애물 회피',
-      obstacle_avoidance_desc: '센서를 사용하여 장애물을 피합니다',
       ai_obstacle_detection: 'AI 장애물 감지',
       ai_obstacle_detection_desc: 'AI를 사용하여 장애물을 식별하고 피합니다',
       ai_obstacle_image_upload: '장애물 이미지 업로드',
@@ -338,10 +338,6 @@ export const ko: Translation = {
       ai_furniture_detection_desc: '가구를 감지하고 주변을 탐색합니다',
       ai_fluid_detection: '액체 감지',
       ai_fluid_detection_desc: '액체를 감지하고 피합니다',
-      stain_avoidance: '얼룩 회피',
-      stain_avoidance_desc: '감지된 얼룩을 피합니다',
-      collision_avoidance: '충돌 회피',
-      collision_avoidance_desc: '물체와의 충돌을 방지합니다',
       fill_light: '보조 조명',
       fill_light_desc: '더 나은 감지를 위해 보조 조명을 사용합니다',
     },
