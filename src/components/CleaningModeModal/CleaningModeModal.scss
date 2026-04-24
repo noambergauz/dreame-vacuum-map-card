@@ -198,11 +198,10 @@
 
   &__power-grid {
     display: flex;
-    margin-bottom: 1rem;
     justify-content: left;
     gap: 2rem;
     overflow-x: auto;
-    padding-top: 0.5rem;
+    padding: 0.5rem 0;
 
     &--disabled {
       opacity: 0.5;
