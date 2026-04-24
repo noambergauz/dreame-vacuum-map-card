@@ -8,9 +8,8 @@ import { DockSettingsSection } from './sections/DockSettingsSection';
 import { EdgeCornerSection } from './sections/EdgeCornerSection';
 import { FloorSettingsSection } from './sections/FloorSettingsSection';
 import { QuickSettingsSection } from './sections/QuickSettingsSection';
-import { StationControlsSection } from './sections/StationControlsSection';
 import { VolumeSection } from './sections/VolumeSection';
-import { Brain, Gauge, Info, Layers, Settings2, Volume2, Home, Footprints, CornerDownRight, Dock } from 'lucide-react';
+import { Brain, Gauge, Info, Layers, Settings2, Volume2, Footprints, CornerDownRight, Dock } from 'lucide-react';
 import './SettingsPanel.scss';
 
 interface SettingsPanelProps {
@@ -32,6 +31,10 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
               <ConsumablesSection />
             </Accordion>
 
+            <Accordion title={t('settings.quick_settings.title')} icon={<Settings2 />}>
+              <QuickSettingsSection />
+            </Accordion>
+
             <Accordion title={t('settings.carpet.title')} icon={<Layers />}>
               <CarpetSettingsSection />
             </Accordion>
@@ -44,6 +47,10 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
               <EdgeCornerSection />
             </Accordion>
 
+            <Accordion title={t('settings.volume.title')} icon={<Volume2 />}>
+              <VolumeSection />
+            </Accordion>
+
             <Accordion title={t('settings.dock.title')} icon={<Dock />}>
               <DockSettingsSection />
             </Accordion>
@@ -54,18 +61,6 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
 
             <Accordion title={t('settings.device_info.title')} icon={<Info />}>
               <DeviceInfoSection />
-            </Accordion>
-
-            <Accordion title={t('settings.volume.title')} icon={<Volume2 />}>
-              <VolumeSection />
-            </Accordion>
-
-            <Accordion title={t('settings.quick_settings.title')} icon={<Settings2 />}>
-              <QuickSettingsSection />
-            </Accordion>
-
-            <Accordion title={t('settings.station_controls.title')} icon={<Home />}>
-              <StationControlsSection />
             </Accordion>
           </div>
         </div>

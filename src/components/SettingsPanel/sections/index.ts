@@ -6,5 +6,4 @@ export { DockSettingsSection } from './DockSettingsSection';
 export { EdgeCornerSection } from './EdgeCornerSection';
 export { FloorSettingsSection } from './FloorSettingsSection';
 export { QuickSettingsSection } from './QuickSettingsSection';
-export { StationControlsSection } from './StationControlsSection';
 export { VolumeSection } from './VolumeSection';
