@@ -264,6 +264,18 @@ export const ru: Translation = {
       vacuum_adaptation: 'Поднять швабру',
       vacuum_remove_mop: 'Снять тряпку',
     },
+    floor: {
+      title: 'Настройки пола',
+      collision_avoidance: 'Избегание столкновений',
+      collision_avoidance_desc: 'Замедление у стен и мебели',
+      auto_mount_mop: 'Авто-установка швабры',
+      auto_mount_mop_desc: 'Автоматически прикреплять насадку для мытья',
+      auto_recleaning: 'Авто-перечистка',
+      auto_recleaning_desc: 'Автоматически перечищать пропущенные участки',
+      recleaning_off: 'Выкл',
+      recleaning_in_deep_mode: 'В глубоком режиме',
+      recleaning_in_all_modes: 'Во всех режимах',
+    },
     ai_detection: {
       title: 'ИИ и распознавание',
       obstacle_avoidance: 'Избегание препятствий',

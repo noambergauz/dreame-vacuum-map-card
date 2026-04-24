@@ -263,6 +263,18 @@ export const he: Translation = {
       vacuum_adaptation: 'הרמת מגב',
       vacuum_remove_mop: 'הסר מגב',
     },
+    floor: {
+      title: 'הגדרות רצפה',
+      collision_avoidance: 'הימנעות מהתנגשות',
+      collision_avoidance_desc: 'האט ליד קירות ורהיטים',
+      auto_mount_mop: 'הרכבת מגב אוטומטית',
+      auto_mount_mop_desc: 'הרכב אוטומטית את כרית המגב בעת הצורך',
+      auto_recleaning: 'ניקוי חוזר אוטומטי',
+      auto_recleaning_desc: 'נקה אוטומטית אזורים שהוחמצו',
+      recleaning_off: 'כבוי',
+      recleaning_in_deep_mode: 'במצב עמוק',
+      recleaning_in_all_modes: 'בכל המצבים',
+    },
     ai_detection: {
       title: 'בינה מלאכותית וזיהוי',
       obstacle_avoidance: 'הימנעות ממכשולים',

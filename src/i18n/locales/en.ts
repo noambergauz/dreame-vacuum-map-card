@@ -261,6 +261,18 @@ export const en = {
       vacuum_adaptation: 'Mop Lift',
       vacuum_remove_mop: 'Remove Mop',
     },
+    floor: {
+      title: 'Floor Settings',
+      collision_avoidance: 'Collision Avoidance',
+      collision_avoidance_desc: 'Slow down near walls and furniture',
+      auto_mount_mop: 'Auto Mount Mop',
+      auto_mount_mop_desc: 'Automatically attach mop pad when needed',
+      auto_recleaning: 'Auto Re-Cleaning',
+      auto_recleaning_desc: 'Automatically re-clean missed areas',
+      recleaning_off: 'Off',
+      recleaning_in_deep_mode: 'In Deep Mode',
+      recleaning_in_all_modes: 'In All Modes',
+    },
     ai_detection: {
       title: 'AI & Detection',
       obstacle_avoidance: 'Obstacle Avoidance',

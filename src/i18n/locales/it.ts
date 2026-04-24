@@ -264,6 +264,18 @@ export const it: Translation = {
       vacuum_adaptation: 'Solleva panno',
       vacuum_remove_mop: 'Rimuovi panno',
     },
+    floor: {
+      title: 'Impostazioni pavimento',
+      collision_avoidance: 'Evita collisioni',
+      collision_avoidance_desc: 'Rallenta vicino a pareti e mobili',
+      auto_mount_mop: 'Monta panno auto',
+      auto_mount_mop_desc: 'Montare automaticamente il panno quando necessario',
+      auto_recleaning: 'Ri-pulizia auto',
+      auto_recleaning_desc: 'Ri-pulire automaticamente le aree mancate',
+      recleaning_off: 'Disattivato',
+      recleaning_in_deep_mode: 'In modalità profonda',
+      recleaning_in_all_modes: 'In tutte le modalità',
+    },
     ai_detection: {
       title: 'AI e rilevamento',
       obstacle_avoidance: 'Evitamento ostacoli',

@@ -264,6 +264,18 @@ export const es: Translation = {
       vacuum_adaptation: 'Levantar mopa',
       vacuum_remove_mop: 'Quitar mopa',
     },
+    floor: {
+      title: 'Configuración de suelo',
+      collision_avoidance: 'Evitar colisiones',
+      collision_avoidance_desc: 'Reducir velocidad cerca de paredes y muebles',
+      auto_mount_mop: 'Montar mopa auto',
+      auto_mount_mop_desc: 'Montar automáticamente la almohadilla de mopa',
+      auto_recleaning: 'Re-limpieza auto',
+      auto_recleaning_desc: 'Volver a limpiar áreas perdidas automáticamente',
+      recleaning_off: 'Desactivado',
+      recleaning_in_deep_mode: 'En modo profundo',
+      recleaning_in_all_modes: 'En todos los modos',
+    },
     ai_detection: {
       title: 'IA y detección',
       obstacle_avoidance: 'Evitación de obstáculos',

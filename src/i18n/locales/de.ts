@@ -265,6 +265,18 @@ export const de: Translation = {
       vacuum_adaptation: 'Mopp anheben',
       vacuum_remove_mop: 'Mopp entfernen',
     },
+    floor: {
+      title: 'Boden-Einstellungen',
+      collision_avoidance: 'Kollisionsvermeidung',
+      collision_avoidance_desc: 'Langsamer an Wänden und Möbeln',
+      auto_mount_mop: 'Auto-Mopp montieren',
+      auto_mount_mop_desc: 'Moppaufsatz automatisch anbringen',
+      auto_recleaning: 'Auto-Nachreinigung',
+      auto_recleaning_desc: 'Verpasste Bereiche automatisch nachreinigen',
+      recleaning_off: 'Aus',
+      recleaning_in_deep_mode: 'Im Tiefenmodus',
+      recleaning_in_all_modes: 'In allen Modi',
+    },
     ai_detection: {
       title: 'KI & Erkennung',
       obstacle_avoidance: 'Hindernisvermeidung',

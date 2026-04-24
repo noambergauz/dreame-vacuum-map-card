@@ -263,6 +263,18 @@ export const pl: Translation = {
       vacuum_adaptation: 'Podnieś mop',
       vacuum_remove_mop: 'Usuń mop',
     },
+    floor: {
+      title: 'Ustawienia podłogi',
+      collision_avoidance: 'Unikanie kolizji',
+      collision_avoidance_desc: 'Zwolnij przy ścianach i meblach',
+      auto_mount_mop: 'Auto montaż mopa',
+      auto_mount_mop_desc: 'Automatycznie zamontuj nakładkę mopa',
+      auto_recleaning: 'Automatyczne doczyszczanie',
+      auto_recleaning_desc: 'Automatycznie doczyszczaj pominięte obszary',
+      recleaning_off: 'Wył',
+      recleaning_in_deep_mode: 'W trybie głębokim',
+      recleaning_in_all_modes: 'We wszystkich trybach',
+    },
     ai_detection: {
       title: 'AI i Wykrywanie',
       obstacle_avoidance: 'Omijanie przeszkód',

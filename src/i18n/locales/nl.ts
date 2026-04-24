@@ -263,6 +263,18 @@ export const nl: Translation = {
       vacuum_adaptation: 'Dweil optillen',
       vacuum_remove_mop: 'Dweil verwijderen',
     },
+    floor: {
+      title: 'Vloerinstellingen',
+      collision_avoidance: 'Botsing vermijden',
+      collision_avoidance_desc: 'Vertragen bij muren en meubels',
+      auto_mount_mop: 'Auto dweil monteren',
+      auto_mount_mop_desc: 'Automatisch dweilpad bevestigen wanneer nodig',
+      auto_recleaning: 'Auto her-reiniging',
+      auto_recleaning_desc: 'Automatisch gemiste gebieden opnieuw reinigen',
+      recleaning_off: 'Uit',
+      recleaning_in_deep_mode: 'In diepe modus',
+      recleaning_in_all_modes: 'In alle modi',
+    },
     ai_detection: {
       title: 'AI & Detectie',
       obstacle_avoidance: 'Obstakelvermijding',

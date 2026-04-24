@@ -263,6 +263,18 @@ export const zh: Translation = {
       vacuum_adaptation: '抬升拖布',
       vacuum_remove_mop: '拆除拖布',
     },
+    floor: {
+      title: '地板设置',
+      collision_avoidance: '碰撞避让',
+      collision_avoidance_desc: '靠近墙壁和家具时减速',
+      auto_mount_mop: '自动安装拖布',
+      auto_mount_mop_desc: '需要时自动安装拖布垫',
+      auto_recleaning: '自动复清',
+      auto_recleaning_desc: '自动重新清洁遗漏区域',
+      recleaning_off: '关闭',
+      recleaning_in_deep_mode: '深度模式',
+      recleaning_in_all_modes: '所有模式',
+    },
     ai_detection: {
       title: 'AI 识别与避障',
       obstacle_avoidance: '避障功能',

@@ -263,6 +263,18 @@ export const fr_FR: Translation = {
       vacuum_adaptation: 'Lever serpillère',
       vacuum_remove_mop: 'Retirer serpillère',
     },
+    floor: {
+      title: 'Paramètres sol',
+      collision_avoidance: 'Évitement de collision',
+      collision_avoidance_desc: 'Ralentir près des murs et meubles',
+      auto_mount_mop: 'Montage auto serpillère',
+      auto_mount_mop_desc: 'Attacher automatiquement la serpillère',
+      auto_recleaning: 'Re-nettoyage auto',
+      auto_recleaning_desc: 'Re-nettoyer automatiquement les zones manquées',
+      recleaning_off: 'Désactivé',
+      recleaning_in_deep_mode: 'En mode profond',
+      recleaning_in_all_modes: 'Dans tous les modes',
+    },
     ai_detection: {
       title: 'IA & Détection',
       obstacle_avoidance: "Évitement d'obstacles",

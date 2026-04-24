@@ -263,6 +263,18 @@ export const ko: Translation = {
       vacuum_adaptation: '물걸레 들어올림',
       vacuum_remove_mop: '물걸레 제거',
     },
+    floor: {
+      title: '바닥 설정',
+      collision_avoidance: '충돌 회피',
+      collision_avoidance_desc: '벽과 가구 근처에서 속도 줄임',
+      auto_mount_mop: '자동 물걸레 장착',
+      auto_mount_mop_desc: '필요시 자동으로 물걸레 패드 장착',
+      auto_recleaning: '자동 재청소',
+      auto_recleaning_desc: '놓친 영역 자동 재청소',
+      recleaning_off: '끔',
+      recleaning_in_deep_mode: '딥 모드에서',
+      recleaning_in_all_modes: '모든 모드에서',
+    },
     ai_detection: {
       title: 'AI 및 감지',
       obstacle_avoidance: '장애물 회피',
