@@ -30,7 +30,7 @@ interface CustomModeProps {
   selfCleanTimeMax: number;
   baseEntityId: string;
   /** When true, disables settings that cannot be changed while cleaning */
-  isRunning?: boolean;
+  isCleaning?: boolean;
   /** Custom handler for cleaning mode selection (used for Customize mode) */
   onCleaningModeSelect?: (entityId: string, value: string) => void;
   /** When true, only show the cleaning mode selector (used when Customize is selected) */
@@ -56,7 +56,7 @@ export function CustomMode({
   selfCleanTimeMin,
   selfCleanTimeMax,
   baseEntityId,
-  isRunning = false,
+  isCleaning = false,
   onCleaningModeSelect,
   showOnlyCleaningModeSelector = false,
 }: CustomModeProps) {
@@ -79,6 +79,7 @@ export function CustomMode({
           entityId={entityIds.cleaningMode}
           t={t}
           customizeSelected={showOnlyCleaningModeSelector}
+          hideCustomize={isCleaning}
         />
       </section>
 
@@ -146,7 +147,7 @@ export function CustomMode({
                 cleaningRouteList={cleaningRouteList}
                 onSelect={setSelectOption}
                 entityId={entityIds.cleaningRoute}
-                disabled={isRunning}
+                disabled={isCleaning}
               />
             </section>
           )}

@@ -13,6 +13,8 @@ interface CleaningModeSelectorProps {
   t?: TranslateFunction;
   disabled?: boolean;
   customizeSelected?: boolean;
+  /** When true, hides the Customize option (e.g., while vacuum is running) */
+  hideCustomize?: boolean;
 }
 
 export function CleaningModeSelector({
@@ -23,10 +25,16 @@ export function CleaningModeSelector({
   t,
   disabled = false,
   customizeSelected = false,
+  hideCustomize = false,
 }: CleaningModeSelectorProps) {
+  // Filter out Customize option if hideCustomize is true
+  const filteredModeList = hideCustomize
+    ? cleaningModeList.filter((mode) => mode !== CLEANING_MODE.CUSTOMIZE)
+    : cleaningModeList;
+
   return (
     <div className={`cleaning-mode-modal__power-grid ${disabled ? 'cleaning-mode-modal__power-grid--disabled' : ''}`}>
-      {cleaningModeList.map((mode, idx) => {
+      {filteredModeList.map((mode, idx) => {
         const isSelected =
           mode === CLEANING_MODE.CUSTOMIZE ? customizeSelected : mode === cleaningMode && !customizeSelected;
 

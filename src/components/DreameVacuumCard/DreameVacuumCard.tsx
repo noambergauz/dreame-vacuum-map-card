@@ -70,13 +70,15 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   // Read customized_cleaning from entity attributes
   const isCustomizedCleaning = entity ? getAttr(entity.attributes.customized_cleaning, false) : false;
 
-  // Reset repeat count when vacuum stops running
-  const isRunning = entity ? getAttr(entity.attributes.running, false) : false;
+  // Check if vacuum is actively cleaning (state === 'cleaning' or started attribute)
+  const isCleaning = entity ? entity.state === 'cleaning' || getAttr(entity.attributes.started, false) : false;
+
+  // Reset repeat count when vacuum stops cleaning
   useEffect(() => {
-    if (!isRunning) {
+    if (!isCleaning) {
       resetRepeatCount();
     }
-  }, [isRunning, resetRepeatCount]);
+  }, [isCleaning, resetRepeatCount]);
 
   // Toast notifications
   const { toast, showToast, hideToast } = useToast();
@@ -199,23 +201,19 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             onShortcutsClick={handleShortcutsOpen}
             onRepeatClick={cycleRepeatCount}
             repeatCount={repeatCount}
-            disabled={isRunning}
+            disabled={isCleaning}
             customizeModeEnabled={isCustomizedCleaning}
           />
 
           <div className="dreame-vacuum-card__controls">
             {selectedMode === 'room' && <RoomSelectionDisplay selectedRooms={selectedRooms} />}
 
-            <ModeTabs
-              selectedMode={effectiveMode}
-              onModeChange={handleModeChange}
-              disabled={getAttr(entity.attributes.started, false)}
-            />
+            <ModeTabs selectedMode={effectiveMode} onModeChange={handleModeChange} disabled={isCleaning} />
 
             <ActionButtons
               selectedMode={selectedMode}
               selectedRoomsCount={selectedRooms.size}
-              isRunning={getAttr(entity.attributes.running, false)}
+              isCleaning={isCleaning}
               isPaused={getAttr(entity.attributes.paused, false)}
               isDocked={entity.state === 'docked' || getAttr(entity.attributes.docked, false)}
               onClean={handleCleanAction}
@@ -227,7 +225,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           </div>
         </div>
 
-        <CleaningModeModal opened={modalOpened} onClose={handleModalClose} isRunning={isRunning} />
+        <CleaningModeModal opened={modalOpened} onClose={handleModalClose} isCleaning={isCleaning} />
 
         <ShortcutsModal opened={shortcutsModalOpened} onClose={handleShortcutsClose} />
 

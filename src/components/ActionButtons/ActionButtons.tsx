@@ -6,7 +6,7 @@ import './ActionButtons.scss';
 interface ActionButtonsProps {
   selectedMode: CleaningSelectionMode;
   selectedRoomsCount: number;
-  isRunning: boolean;
+  isCleaning: boolean;
   isPaused: boolean;
   isDocked: boolean;
   onClean: () => void;
@@ -19,7 +19,7 @@ interface ActionButtonsProps {
 export function ActionButtons({
   selectedMode,
   selectedRoomsCount,
-  isRunning,
+  isCleaning,
   isPaused,
   isDocked,
   onClean,
@@ -49,8 +49,8 @@ export function ActionButtons({
 
   const handleStop = () => onStop(stopAction);
 
-  // Running state - show pause and stop
-  if (isRunning && !isPaused && !isDocked) {
+  // Cleaning state - show pause and stop
+  if (isCleaning && !isPaused && !isDocked) {
     return (
       <div className="action-buttons">
         <PauseButton onClick={onPause} />

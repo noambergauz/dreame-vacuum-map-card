@@ -15,10 +15,10 @@ interface CleaningModeModalProps {
   opened: boolean;
   onClose: () => void;
   /** When true, disables settings that cannot be changed while cleaning */
-  isRunning?: boolean;
+  isCleaning?: boolean;
 }
 
-export function CleaningModeModal({ opened, onClose, isRunning = false }: CleaningModeModalProps) {
+export function CleaningModeModal({ opened, onClose, isCleaning = false }: CleaningModeModalProps) {
   const { t } = useTranslation();
   const entity = useEntity();
   const hass = useHass();
@@ -138,7 +138,7 @@ export function CleaningModeModal({ opened, onClose, isRunning = false }: Cleani
             value={isCleanGenius ? UI_MODE_TYPE.CLEANGENIUS : UI_MODE_TYPE.CUSTOM}
             onChange={handleModeSwitch}
             options={modeOptions}
-            disabled={isRunning}
+            disabled={isCleaning}
           />
         </div>
 
@@ -149,7 +149,7 @@ export function CleaningModeModal({ opened, onClose, isRunning = false }: Cleani
               cleangeniusModeList={cleangeniusModeList}
               cleangenius={cleangenius}
               baseEntityId={baseEntityId}
-              isRunning={isRunning}
+              isCleaning={isCleaning}
             />
           ) : (
             <>
@@ -173,7 +173,7 @@ export function CleaningModeModal({ opened, onClose, isRunning = false }: Cleani
                 selfCleanTimeMin={selfCleanTimeMin}
                 selfCleanTimeMax={selfCleanTimeMax}
                 baseEntityId={baseEntityId}
-                isRunning={isRunning}
+                isCleaning={isCleaning}
                 onCleaningModeSelect={handleCleaningModeSelect}
                 showOnlyCleaningModeSelector={showCustomizeMode}
               />
