@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
 import { Droplets, Wind, Pipette, Sparkles, Waves, RotateCcw, Trash2, AlertCircle } from 'lucide-react';
 import { Toggle } from '@/components/common';
-import { useTranslation, getSwitchState } from '@/hooks';
+import { useTranslation, getSwitchState, useVacuumCapabilities } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
-import { STATION_BUTTON_SUFFIX } from '@/constants';
+import { STATION_BUTTON_SUFFIX, CAPABILITY } from '@/constants';
 import './QuickSettingsSection.scss';
 
 interface QuickSetting {
@@ -130,6 +130,11 @@ export function QuickSettingsSection() {
   const entity = useEntity();
   const hass = useHass();
   const entityName = entity.entity_id.split('.')[1] ?? '';
+  const capabilities = useVacuumCapabilities();
+
+  // Check DND capability for conditional rendering
+  const hasDnd = capabilities.has(CAPABILITY.DND);
+  const hasDndFunctions = capabilities.has(CAPABILITY.DND_FUNCTIONS);
 
   const handleToggle = useCallback(
     (switchEntitySuffix: string, newValue: boolean) => {
@@ -166,6 +171,10 @@ export function QuickSettingsSection() {
       {QUICK_SETTINGS.map((setting) => {
         const switchState = getSwitchState(hass, entityName, setting.switchEntitySuffix);
         if (switchState.disabled) return null;
+
+        // Check DND capability for DND-related settings
+        if (setting.key === 'dnd' && !hasDnd) return null;
+        if (setting.parentSwitchSuffix === 'dnd' && !hasDndFunctions) return null;
 
         // Check if this is a child setting that requires parent to be on
         if (setting.parentSwitchSuffix) {

@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
 import { Volume2, VolumeX, MapPin } from 'lucide-react';
 import { Toggle } from '@/components/common';
-import { useTranslation, getNumberState, getSwitchState, getSelectState } from '@/hooks';
+import { useTranslation, getNumberState, getSwitchState, getSelectState, useVacuumCapabilities } from '@/hooks';
 import { useEntity, useHass, useIsRtl } from '@/contexts';
+import { CAPABILITY } from '@/constants';
 import './VolumeSection.scss';
 
 const VOLUME_MIN = 0;
@@ -14,6 +15,10 @@ export function VolumeSection() {
   const hass = useHass();
   const isRtl = useIsRtl();
   const entityName = entity.entity_id.split('.')[1] ?? '';
+  const capabilities = useVacuumCapabilities();
+
+  // Check voice assistant capability
+  const hasVoiceAssistant = capabilities.has(CAPABILITY.VOICE_ASSISTANT);
 
   // Get volume entity state
   const volumeState = getNumberState(hass, entityName, 'volume');
@@ -123,7 +128,7 @@ export function VolumeSection() {
       </div>
 
       {/* Voice Assistant */}
-      {!voiceAssistantState.disabled && (
+      {hasVoiceAssistant && !voiceAssistantState.disabled && (
         <div className="volume-section__item">
           <div className="volume-section__info">
             <span className="volume-section__label">{t('settings.volume.voice_assistant')}</span>
@@ -138,7 +143,7 @@ export function VolumeSection() {
       )}
 
       {/* Voice Assistant Language */}
-      {!voiceAssistantLanguageState.disabled && voiceAssistantState.isOn && (
+      {hasVoiceAssistant && !voiceAssistantLanguageState.disabled && voiceAssistantState.isOn && (
         <div className="volume-section__item volume-section__item--select">
           <div className="volume-section__info">
             <span className="volume-section__label">{t('settings.volume.voice_language')}</span>

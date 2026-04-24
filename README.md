@@ -334,6 +334,12 @@ The built file will be in `dist/dreame-vacuum-map-card.js`
 - Home Assistant with the [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) integration installed
 - A supported Dreame robot vacuum
 
+## Dynamic Capability Support
+
+The card automatically detects your robot's capabilities and shows only the features it supports. Different Dreame models have different features (CleanGenius, hot washing, mop pad swing, etc.) - the card reads these from the `capabilities` attribute and hides unsupported options.
+
+For details on how this works and how to add support for missing capabilities, see [docs/CAPABILITIES.md](docs/CAPABILITIES.md).
+
 ## Credits
 
 - Original inspiration from [xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card)

@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { Toggle, SegmentedControl } from '@/components/common';
-import { useTranslation, getSwitchState, getSelectState, getButtonState } from '@/hooks';
+import { useTranslation, getSwitchState, getSelectState, getButtonState, useVacuumCapabilities } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
+import { CAPABILITY } from '@/constants';
 import './DockSettingsSection.scss';
 
 export function DockSettingsSection() {
@@ -9,6 +10,18 @@ export function DockSettingsSection() {
   const entity = useEntity();
   const hass = useHass();
   const entityName = entity.entity_id.split('.')[1] ?? '';
+  const capabilities = useVacuumCapabilities();
+
+  // Check capabilities for individual features
+  const hasSelfWash = capabilities.has(CAPABILITY.SELF_WASH_BASE);
+  const hasAutoEmpty = capabilities.has(CAPABILITY.AUTO_EMPTY_BASE);
+  const hasAutoDetergent = capabilities.has(CAPABILITY.AUTO_ADD_DETERGENT);
+  const hasSmartMopWashing = capabilities.has(CAPABILITY.SMART_MOP_WASHING);
+  const hasWashingMode = capabilities.has(CAPABILITY.WASHING_MODE);
+  const hasHotWashing = capabilities.has(CAPABILITY.HOT_WASHING);
+  const hasOffPeakCharging = capabilities.has(CAPABILITY.OFF_PEAK_CHARGING);
+  const hasStationCleaning = capabilities.has(CAPABILITY.STATION_CLEANING);
+  const hasAutoRewashing = capabilities.has(CAPABILITY.AUTO_REWASHING);
 
   const handleToggle = useCallback(
     (switchEntitySuffix: string, newValue: boolean) => {
@@ -94,7 +107,7 @@ export function DockSettingsSection() {
   return (
     <div className="dock-settings-section">
       {/* Self Clean (auto mop washing after cleaning) */}
-      {!selfCleanState.disabled && (
+      {hasSelfWash && !selfCleanState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.self_clean')}</span>
@@ -109,7 +122,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Auto Empty Mode */}
-      {!autoEmptyModeState.disabled && (
+      {hasAutoEmpty && !autoEmptyModeState.disabled && (
         <div className="dock-settings-section__item dock-settings-section__item--select">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.auto_empty_mode')}</span>
@@ -131,7 +144,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Auto Add Detergent */}
-      {!autoAddDetergentState.disabled && (
+      {hasAutoDetergent && !autoAddDetergentState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.auto_detergent')}</span>
@@ -146,7 +159,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Smart Mop Washing */}
-      {!smartMopWashingState.disabled && (
+      {hasSmartMopWashing && !smartMopWashingState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.smart_washing')}</span>
@@ -161,7 +174,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Washing Mode */}
-      {!washingModeState.disabled && (
+      {hasWashingMode && !washingModeState.disabled && (
         <div className="dock-settings-section__item dock-settings-section__item--select">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.washing_mode')}</span>
@@ -183,7 +196,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Water Temperature */}
-      {!waterTemperatureState.disabled && (
+      {hasHotWashing && !waterTemperatureState.disabled && (
         <div className="dock-settings-section__item dock-settings-section__item--select">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.water_temperature')}</span>
@@ -205,7 +218,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Auto Drying */}
-      {!autoDryingState.disabled && (
+      {hasSelfWash && !autoDryingState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.auto_drying')}</span>
@@ -220,7 +233,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Drying Time - Segmented Control */}
-      {!dryingTimeState.disabled && (
+      {hasSelfWash && !dryingTimeState.disabled && (
         <div className="dock-settings-section__item dock-settings-section__item--segmented">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.drying_time')}</span>
@@ -236,7 +249,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Auto Rewashing */}
-      {!autoRewashingState.disabled && (
+      {hasAutoRewashing && !autoRewashingState.disabled && (
         <div className="dock-settings-section__item dock-settings-section__item--select">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.auto_rewashing')}</span>
@@ -258,7 +271,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Off-Peak Charging */}
-      {!offPeakChargingState.disabled && (
+      {hasOffPeakCharging && !offPeakChargingState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.off_peak_charging')}</span>
@@ -273,7 +286,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Base Station Cleaning Button */}
-      {!baseStationCleaningState.disabled && (
+      {hasStationCleaning && !baseStationCleaningState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.station_cleaning')}</span>
@@ -290,7 +303,7 @@ export function DockSettingsSection() {
       )}
 
       {/* Base Station Self Repair Button */}
-      {!baseStationSelfRepairState.disabled && (
+      {hasStationCleaning && !baseStationSelfRepairState.disabled && (
         <div className="dock-settings-section__item">
           <div className="dock-settings-section__info">
             <span className="dock-settings-section__label">{t('settings.dock.self_repair')}</span>

@@ -11,6 +11,7 @@ export interface HassEntity {
     entity_picture?: string;
     rooms?: Record<string, Room[]>;
     selected_map?: string;
+    capabilities?: string[];
     [key: string]: unknown;
   };
   context: {

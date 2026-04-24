@@ -6,6 +6,9 @@
 // Re-export icon SVG constants
 export * from './icons';
 
+// Re-export capability constants
+export * from './capabilities';
+
 // Slider configuration
 export const SLIDER_CONFIG = {
   WETNESS: {

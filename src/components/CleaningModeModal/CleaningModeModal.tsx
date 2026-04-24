@@ -3,11 +3,11 @@ import { CleanGeniusMode } from './CleanGeniusMode';
 import { CustomMode } from './CustomMode';
 import { CustomizeMode } from './CustomizeMode';
 import type { CleanGeniusState } from '@/types/vacuum';
-import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
+import { useHomeAssistantServices, useVacuumEntityIds, getEntityState, useVacuumCapabilities } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntity, useHass } from '@/contexts';
 import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '@/utils';
-import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE } from '@/constants';
+import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE, CAPABILITY } from '@/constants';
 import { logger } from '@/utils/logger';
 import './CleaningModeModal.scss';
 
@@ -25,6 +25,10 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   const baseEntityId = extractBaseEntityId(entity.entity_id);
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
+  const capabilities = useVacuumCapabilities();
+
+  // Check if CleanGenius is supported
+  const hasCleanGenius = capabilities.has(CAPABILITY.CLEANGENIUS);
 
   // Get entity availability states
   const customizedCleaningSwitch = `switch.${baseEntityId}_customized_cleaning`;
@@ -92,6 +96,9 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   // We only disable if the entity explicitly exists but is unavailable, not if it doesn't exist
   const isModeSwitchDisabled = isCleaning || cleangeniusState.unavailable;
 
+  // If CleanGenius capability is not supported, force Custom mode
+  const effectiveIsCleanGenius = hasCleanGenius && isCleanGenius;
+
   const handleModeSwitch = (value: string) => {
     const isCleanGeniusMode = value === UI_MODE_TYPE.CLEANGENIUS;
 
@@ -128,23 +135,25 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   // Determine what to show in Custom mode:
   // - If customized_cleaning is true, show CustomizeMode (per-room settings)
   // - Otherwise show normal CustomMode (global settings)
-  const showCustomizeMode = !isCleanGenius && isCustomizedCleaning;
+  const showCustomizeMode = !effectiveIsCleanGenius && isCustomizedCleaning;
 
   return (
     <Modal opened={opened} onClose={onClose}>
       <div className="cleaning-mode-modal">
-        {/* Mode Toggle */}
-        <div className="cleaning-mode-modal__header">
-          <SegmentedControl
-            value={isCleanGenius ? UI_MODE_TYPE.CLEANGENIUS : UI_MODE_TYPE.CUSTOM}
-            onChange={handleModeSwitch}
-            options={modeOptions}
-            disabled={isModeSwitchDisabled}
-          />
-        </div>
+        {/* Mode Toggle - only show if CleanGenius is supported */}
+        {hasCleanGenius && (
+          <div className="cleaning-mode-modal__header">
+            <SegmentedControl
+              value={effectiveIsCleanGenius ? UI_MODE_TYPE.CLEANGENIUS : UI_MODE_TYPE.CUSTOM}
+              onChange={handleModeSwitch}
+              options={modeOptions}
+              disabled={isModeSwitchDisabled}
+            />
+          </div>
+        )}
 
         <div className="cleaning-mode-modal__content-wrapper">
-          {isCleanGenius ? (
+          {effectiveIsCleanGenius ? (
             <CleanGeniusMode
               cleangeniusMode={cleangeniusMode}
               cleangeniusModeList={cleangeniusModeList}

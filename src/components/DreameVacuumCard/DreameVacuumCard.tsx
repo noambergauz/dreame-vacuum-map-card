@@ -13,6 +13,7 @@ import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useThe
 import { extractEntityData, getEffectiveCleaningMode, getAttr, getActiveSegments } from '@/utils';
 import { isRtlLanguage } from '@/i18n';
 import { VacuumCardProvider } from '@/contexts';
+import { CAPABILITY } from '@/constants';
 import type { Hass, HassConfig } from '@/types/homeassistant';
 import type { SupportedLanguage } from '@/i18n/locales';
 import { useState, useRef, useEffect, useCallback } from 'react';
@@ -192,6 +193,9 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const finalMapEntityId = extractedMapEntityId || mapEntityId;
   const effectiveMode = getEffectiveCleaningMode(entity, selectedMode);
 
+  // Check for shortcuts capability
+  const hasShortcuts = (entity.attributes.capabilities ?? []).includes(CAPABILITY.SHORTCUTS);
+
   return (
     <VacuumCardProvider hass={hass} entity={entity} config={config} language={language as SupportedLanguage}>
       <div
@@ -221,7 +225,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             cleaningMode={getAttr(entity.attributes.cleaning_mode, 'Sweeping and mopping')}
             cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
             onClick={handleModalOpen}
-            onShortcutsClick={handleShortcutsOpen}
+            onShortcutsClick={hasShortcuts ? handleShortcutsOpen : undefined}
             onRepeatClick={cycleRepeatCount}
             repeatCount={repeatCount}
             disabled={isCleaning}

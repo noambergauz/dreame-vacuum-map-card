@@ -1,7 +1,8 @@
 import { useCallback } from 'react';
 import { Toggle } from '@/components/common';
-import { useTranslation, getSwitchState, getSelectState } from '@/hooks';
+import { useTranslation, getSwitchState, getSelectState, useVacuumCapabilities } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
+import { CAPABILITY } from '@/constants';
 import './EdgeCornerSection.scss';
 
 export function EdgeCornerSection() {
@@ -9,6 +10,11 @@ export function EdgeCornerSection() {
   const entity = useEntity();
   const hass = useHass();
   const entityName = entity.entity_id.split('.')[1] ?? '';
+  const capabilities = useVacuumCapabilities();
+
+  // Capability checks for individual features
+  const hasSideReach = capabilities.has(CAPABILITY.SIDE_REACH);
+  const hasMopPadSwing = capabilities.hasAny(CAPABILITY.MOP_PAD_SWING, CAPABILITY.MOP_PAD_SWING_PLUS);
 
   const handleToggle = useCallback(
     (switchEntitySuffix: string, newValue: boolean) => {
@@ -48,7 +54,7 @@ export function EdgeCornerSection() {
   return (
     <div className="edge-corner-section">
       {/* Side Reach */}
-      {!sideReachState.disabled && (
+      {hasSideReach && !sideReachState.disabled && (
         <div className="edge-corner-section__item">
           <div className="edge-corner-section__info">
             <span className="edge-corner-section__label">{t('settings.edge_corner.side_reach')}</span>
@@ -63,7 +69,7 @@ export function EdgeCornerSection() {
       )}
 
       {/* Mop Extend */}
-      {!mopExtendState.disabled && (
+      {hasMopPadSwing && !mopExtendState.disabled && (
         <>
           <div className="edge-corner-section__item">
             <div className="edge-corner-section__info">
@@ -118,7 +124,7 @@ export function EdgeCornerSection() {
         </>
       )}
       {/* Mop Extend Frequency */}
-      {!frequencyState.disabled && (
+      {hasMopPadSwing && !frequencyState.disabled && (
         <div className="edge-corner-section__item edge-corner-section__item--select">
           <div className="edge-corner-section__info">
             <span className="edge-corner-section__label">{t('settings.edge_corner.extend_frequency')}</span>
