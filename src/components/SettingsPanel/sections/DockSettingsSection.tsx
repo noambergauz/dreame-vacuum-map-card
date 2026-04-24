@@ -42,18 +42,22 @@ export function DockSettingsSection() {
   );
 
   // Get switch states
+  const selfCleanState = getSwitchState(hass, entityName, 'self_clean');
   const autoAddDetergentState = getSwitchState(hass, entityName, 'auto_add_detergent');
   const smartMopWashingState = getSwitchState(hass, entityName, 'smart_mop_washing');
   const autoDryingState = getSwitchState(hass, entityName, 'auto_drying');
+  const offPeakChargingState = getSwitchState(hass, entityName, 'off_peak_charging');
 
   // Get select states
   const autoEmptyModeState = getSelectState(hass, entityName, 'auto_empty_mode');
   const washingModeState = getSelectState(hass, entityName, 'washing_mode');
   const waterTemperatureState = getSelectState(hass, entityName, 'water_temperature');
   const dryingTimeState = getSelectState(hass, entityName, 'drying_time');
+  const autoRewashingState = getSelectState(hass, entityName, 'auto_rewashing');
 
-  // Get button state
+  // Get button states
   const baseStationCleaningState = getButtonState(hass, entityName, 'base_station_cleaning');
+  const baseStationSelfRepairState = getButtonState(hass, entityName, 'base_station_self_repair');
 
   // Get options from entities with fallbacks
   const autoEmptyOptions = (hass.states[`select.${entityName}_auto_empty_mode`]?.attributes?.options as string[]) ?? [
@@ -78,6 +82,8 @@ export function DockSettingsSection() {
     '3h',
     '4h',
   ];
+  const autoRewashingOptions = (hass.states[`select.${entityName}_auto_rewashing`]?.attributes
+    ?.options as string[]) ?? ['off', 'in_deep_mode', 'in_all_modes'];
 
   // Build segmented control options for drying time
   const dryingTimeSegmentOptions = dryingTimeOptions.map((option) => ({
@@ -87,6 +93,21 @@ export function DockSettingsSection() {
 
   return (
     <div className="dock-settings-section">
+      {/* Self Clean (auto mop washing after cleaning) */}
+      {!selfCleanState.disabled && (
+        <div className="dock-settings-section__item">
+          <div className="dock-settings-section__info">
+            <span className="dock-settings-section__label">{t('settings.dock.self_clean')}</span>
+            <span className="dock-settings-section__description">{t('settings.dock.self_clean_desc')}</span>
+          </div>
+          <Toggle
+            checked={selfCleanState.isOn}
+            disabled={selfCleanState.unavailable}
+            onChange={(checked) => handleToggle('self_clean', checked)}
+          />
+        </div>
+      )}
+
       {/* Auto Empty Mode */}
       {!autoEmptyModeState.disabled && (
         <div className="dock-settings-section__item dock-settings-section__item--select">
@@ -214,6 +235,43 @@ export function DockSettingsSection() {
         </div>
       )}
 
+      {/* Auto Rewashing */}
+      {!autoRewashingState.disabled && (
+        <div className="dock-settings-section__item dock-settings-section__item--select">
+          <div className="dock-settings-section__info">
+            <span className="dock-settings-section__label">{t('settings.dock.auto_rewashing')}</span>
+            <span className="dock-settings-section__description">{t('settings.dock.auto_rewashing_desc')}</span>
+          </div>
+          <select
+            className="dock-settings-section__select"
+            value={autoRewashingState.state?.toLowerCase() ?? 'off'}
+            disabled={autoRewashingState.unavailable}
+            onChange={(e) => handleSelectChange('auto_rewashing', e.target.value)}
+          >
+            {autoRewashingOptions.map((option) => (
+              <option key={option} value={option.toLowerCase()}>
+                {t(`settings.dock.rewashing_${option.toLowerCase()}`)}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Off-Peak Charging */}
+      {!offPeakChargingState.disabled && (
+        <div className="dock-settings-section__item">
+          <div className="dock-settings-section__info">
+            <span className="dock-settings-section__label">{t('settings.dock.off_peak_charging')}</span>
+            <span className="dock-settings-section__description">{t('settings.dock.off_peak_charging_desc')}</span>
+          </div>
+          <Toggle
+            checked={offPeakChargingState.isOn}
+            disabled={offPeakChargingState.unavailable}
+            onChange={(checked) => handleToggle('off_peak_charging', checked)}
+          />
+        </div>
+      )}
+
       {/* Base Station Cleaning Button */}
       {!baseStationCleaningState.disabled && (
         <div className="dock-settings-section__item">
@@ -227,6 +285,23 @@ export function DockSettingsSection() {
             onClick={() => handleButtonPress('base_station_cleaning')}
           >
             {t('settings.dock.clean_now')}
+          </button>
+        </div>
+      )}
+
+      {/* Base Station Self Repair Button */}
+      {!baseStationSelfRepairState.disabled && (
+        <div className="dock-settings-section__item">
+          <div className="dock-settings-section__info">
+            <span className="dock-settings-section__label">{t('settings.dock.self_repair')}</span>
+            <span className="dock-settings-section__description">{t('settings.dock.self_repair_desc')}</span>
+          </div>
+          <button
+            className="dock-settings-section__button"
+            disabled={baseStationSelfRepairState.unavailable}
+            onClick={() => handleButtonPress('base_station_self_repair')}
+          >
+            {t('settings.dock.repair_now')}
           </button>
         </div>
       )}

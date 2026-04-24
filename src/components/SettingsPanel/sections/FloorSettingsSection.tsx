@@ -13,16 +13,16 @@ interface FloorToggle {
 
 const FLOOR_TOGGLES: FloorToggle[] = [
   {
+    key: 'obstacle_avoidance',
+    labelKey: 'settings.floor.obstacle_avoidance',
+    descriptionKey: 'settings.floor.obstacle_avoidance_desc',
+    switchEntitySuffix: 'obstacle_avoidance',
+  },
+  {
     key: 'collision_avoidance',
     labelKey: 'settings.floor.collision_avoidance',
     descriptionKey: 'settings.floor.collision_avoidance_desc',
     switchEntitySuffix: 'collision_avoidance',
-  },
-  {
-    key: 'auto_recleaning',
-    labelKey: 'settings.floor.auto_recleaning',
-    descriptionKey: 'settings.floor.auto_recleaning_desc',
-    switchEntitySuffix: 'auto_recleaning',
   },
   {
     key: 'auto_mount_mop',
@@ -35,6 +35,18 @@ const FLOOR_TOGGLES: FloorToggle[] = [
     labelKey: 'settings.floor.stain_avoidance',
     descriptionKey: 'settings.floor.stain_avoidance_desc',
     switchEntitySuffix: 'stain_avoidance',
+  },
+  {
+    key: 'floor_direction_cleaning',
+    labelKey: 'settings.floor.floor_direction_cleaning',
+    descriptionKey: 'settings.floor.floor_direction_cleaning_desc',
+    switchEntitySuffix: 'floor_direction_cleaning',
+  },
+  {
+    key: 'large_particles_boost',
+    labelKey: 'settings.floor.large_particles_boost',
+    descriptionKey: 'settings.floor.large_particles_boost_desc',
+    switchEntitySuffix: 'large_particles_boost',
   },
 ];
 

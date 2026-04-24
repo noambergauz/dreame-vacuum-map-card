@@ -7,9 +7,10 @@ import { DeviceInfoSection } from './sections/DeviceInfoSection';
 import { DockSettingsSection } from './sections/DockSettingsSection';
 import { EdgeCornerSection } from './sections/EdgeCornerSection';
 import { FloorSettingsSection } from './sections/FloorSettingsSection';
+import { MapSettingsSection } from './sections/MapSettingsSection';
 import { QuickSettingsSection } from './sections/QuickSettingsSection';
 import { VolumeSection } from './sections/VolumeSection';
-import { Brain, Gauge, Info, Layers, Settings2, Volume2, Footprints, CornerDownRight, Dock } from 'lucide-react';
+import { Brain, Gauge, Info, Layers, Settings2, Volume2, Footprints, CornerDownRight, Dock, Map } from 'lucide-react';
 import './SettingsPanel.scss';
 
 interface SettingsPanelProps {
@@ -57,6 +58,10 @@ export function SettingsPanel({ opened, onClose }: SettingsPanelProps) {
 
             <Accordion title={t('settings.ai_detection.title')} icon={<Brain />}>
               <AIDetectionSection />
+            </Accordion>
+
+            <Accordion title={t('settings.map.title')} icon={<Map />}>
+              <MapSettingsSection />
             </Accordion>
 
             <Accordion title={t('settings.device_info.title')} icon={<Info />}>

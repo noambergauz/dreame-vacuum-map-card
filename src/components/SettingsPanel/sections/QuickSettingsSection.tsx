@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Droplets, Wind, Pipette, Sparkles, Waves } from 'lucide-react';
+import { Droplets, Wind, Pipette, Sparkles, Waves, RotateCcw, Trash2, AlertCircle } from 'lucide-react';
 import { Toggle } from '@/components/common';
 import { useTranslation, getSwitchState } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
@@ -11,6 +11,8 @@ interface QuickSetting {
   labelKey: string;
   descriptionKey: string;
   switchEntitySuffix: string;
+  /** Parent switch that must be ON for this setting to be shown */
+  parentSwitchSuffix?: string;
 }
 
 interface StationAction {
@@ -29,10 +31,38 @@ const QUICK_SETTINGS: QuickSetting[] = [
     switchEntitySuffix: 'child_lock',
   },
   {
+    key: 'resume_cleaning',
+    labelKey: 'settings.quick_settings.resume_cleaning',
+    descriptionKey: 'settings.quick_settings.resume_cleaning_desc',
+    switchEntitySuffix: 'resume_cleaning',
+  },
+  {
     key: 'dnd',
     labelKey: 'settings.quick_settings.dnd',
     descriptionKey: 'settings.quick_settings.dnd_desc',
     switchEntitySuffix: 'dnd',
+  },
+  // DND sub-options - only shown when DND is on
+  {
+    key: 'dnd_disable_resume_cleaning',
+    labelKey: 'settings.quick_settings.dnd_disable_resume',
+    descriptionKey: 'settings.quick_settings.dnd_disable_resume_desc',
+    switchEntitySuffix: 'dnd_disable_resume_cleaning',
+    parentSwitchSuffix: 'dnd',
+  },
+  {
+    key: 'dnd_disable_auto_empty',
+    labelKey: 'settings.quick_settings.dnd_disable_auto_empty',
+    descriptionKey: 'settings.quick_settings.dnd_disable_auto_empty_desc',
+    switchEntitySuffix: 'dnd_disable_auto_empty',
+    parentSwitchSuffix: 'dnd',
+  },
+  {
+    key: 'dnd_reduce_volume',
+    labelKey: 'settings.quick_settings.dnd_reduce_volume',
+    descriptionKey: 'settings.quick_settings.dnd_reduce_volume_desc',
+    switchEntitySuffix: 'dnd_reduce_volume',
+    parentSwitchSuffix: 'dnd',
   },
 ];
 
@@ -71,6 +101,27 @@ const STATION_ACTIONS: StationAction[] = [
     descriptionKey: 'settings.station_controls.empty_water_tank_desc',
     buttonEntitySuffix: STATION_BUTTON_SUFFIX.EMPTY_WATER_TANK,
     icon: <Waves size={18} />,
+  },
+  {
+    key: 'start_auto_empty',
+    labelKey: 'settings.station_controls.start_auto_empty',
+    descriptionKey: 'settings.station_controls.start_auto_empty_desc',
+    buttonEntitySuffix: 'start_auto_empty',
+    icon: <Trash2 size={18} />,
+  },
+  {
+    key: 'start_recleaning',
+    labelKey: 'settings.station_controls.start_recleaning',
+    descriptionKey: 'settings.station_controls.start_recleaning_desc',
+    buttonEntitySuffix: 'start_recleaning',
+    icon: <RotateCcw size={18} />,
+  },
+  {
+    key: 'clear_warning',
+    labelKey: 'settings.station_controls.clear_warning',
+    descriptionKey: 'settings.station_controls.clear_warning_desc',
+    buttonEntitySuffix: 'clear_warning',
+    icon: <AlertCircle size={18} />,
   },
 ];
 
@@ -115,8 +166,20 @@ export function QuickSettingsSection() {
       {QUICK_SETTINGS.map((setting) => {
         const switchState = getSwitchState(hass, entityName, setting.switchEntitySuffix);
         if (switchState.disabled) return null;
+
+        // Check if this is a child setting that requires parent to be on
+        if (setting.parentSwitchSuffix) {
+          const parentState = getSwitchState(hass, entityName, setting.parentSwitchSuffix);
+          if (!parentState.isOn) return null;
+        }
+
+        const isChildSetting = !!setting.parentSwitchSuffix;
+
         return (
-          <div key={setting.key} className="quick-settings-section__item">
+          <div
+            key={setting.key}
+            className={`quick-settings-section__item ${isChildSetting ? 'quick-settings-section__item--child' : ''}`}
+          >
             <div className="quick-settings-section__info">
               <span className="quick-settings-section__label">{t(setting.labelKey)}</span>
               <span className="quick-settings-section__description">{t(setting.descriptionKey)}</span>
