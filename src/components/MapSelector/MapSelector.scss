@@ -27,6 +27,12 @@
       background: var(--surface-bg-hover, #ebebeb);
       border-color: var(--accent-color, #007aff);
     }
+
+    &--disabled,
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   }
 
   &__icon {

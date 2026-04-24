@@ -24,6 +24,9 @@ export function MapSelector() {
   const maps = useMemo(() => (attributes.maps as MapInfo[] | undefined) ?? [], [attributes.maps]);
   const selectedMapId = attributes.selected_map_id ?? attributes.selected_map;
 
+  // Check if vacuum is active (can't change maps while running)
+  const isVacuumActive = !!attributes.started;
+
   // Derive the select entity ID for map selection
   const entityName = config.entity?.split('.')[1] ?? '';
   const selectEntityId = `select.${entityName}_selected_map`;
@@ -76,9 +79,10 @@ export function MapSelector() {
   return (
     <div className="map-selector" ref={containerRef}>
       <button
-        className={`map-selector__button ${isOpen ? 'map-selector__button--open' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
+        className={`map-selector__button ${isOpen ? 'map-selector__button--open' : ''} ${isVacuumActive ? 'map-selector__button--disabled' : ''}`}
+        onClick={() => !isVacuumActive && setIsOpen(!isOpen)}
         type="button"
+        disabled={isVacuumActive}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
