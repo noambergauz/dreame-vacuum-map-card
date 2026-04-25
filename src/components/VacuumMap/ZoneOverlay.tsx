@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useTransformContext } from 'react-zoom-pan-pinch';
+import { useTransformContext, useTransformEffect } from 'react-zoom-pan-pinch';
 import type { Zone } from '@/types/homeassistant';
 import { useMachineState } from '@/contexts';
 import { logger } from '@/utils/logger';
@@ -11,11 +11,11 @@ interface ZoneOverlayProps {
   contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
-type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
+type ResizeHandle = 'top' | 'right' | 'bottom' | 'left' | null;
 
 /**
  * Zone selection overlay that works inside TransformComponent.
- * Handles zone creation (click) and resizing (drag handles).
+ * Handles zone creation (click) and resizing (drag edge handles).
  * The zone rectangle pans/zooms with the map content.
  */
 export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: ZoneOverlayProps) {
@@ -23,6 +23,15 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
   const { phase } = useMachineState();
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
+
+  // Track scale reactively to counter-scale handles for consistent visual size
+  const [scale, setScale] = useState(transformContext.state.scale);
+  useTransformEffect(
+    useCallback((state) => {
+      setScale(state.state.scale);
+    }, [])
+  );
+  const handleScale = 1 / scale;
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
   const getContentCoordinates = useCallback(
@@ -96,23 +105,20 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
       if (!coords) return;
 
       const newZone: Zone = { ...resizeStartZone };
+      const minSize = 5;
 
       switch (resizingHandle) {
-        case 'tl':
-          newZone.x1 = Math.min(coords.x, resizeStartZone.x2 - 5);
-          newZone.y1 = Math.min(coords.y, resizeStartZone.y2 - 5);
+        case 'top':
+          newZone.y1 = Math.min(coords.y, resizeStartZone.y2 - minSize);
           break;
-        case 'tr':
-          newZone.x2 = Math.max(coords.x, resizeStartZone.x1 + 5);
-          newZone.y1 = Math.min(coords.y, resizeStartZone.y2 - 5);
+        case 'bottom':
+          newZone.y2 = Math.max(coords.y, resizeStartZone.y1 + minSize);
           break;
-        case 'bl':
-          newZone.x1 = Math.min(coords.x, resizeStartZone.x2 - 5);
-          newZone.y2 = Math.max(coords.y, resizeStartZone.y1 + 5);
+        case 'left':
+          newZone.x1 = Math.min(coords.x, resizeStartZone.x2 - minSize);
           break;
-        case 'br':
-          newZone.x2 = Math.max(coords.x, resizeStartZone.x1 + 5);
-          newZone.y2 = Math.max(coords.y, resizeStartZone.y1 + 5);
+        case 'right':
+          newZone.x2 = Math.max(coords.x, resizeStartZone.x1 + minSize);
           break;
       }
 
@@ -158,30 +164,39 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
           {!isInCleaningSession && (
             <>
               <div
-                className="vacuum-map__zone-handle vacuum-map__zone-handle--tl"
-                onMouseDown={(e) => handleResizeStart(e, 'tl')}
-                onTouchStart={(e) => handleResizeStart(e, 'tl')}
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--top"
+                style={{ transform: `translateX(-50%) scale(${handleScale})` }}
+                onMouseDown={(e) => handleResizeStart(e, 'top')}
+                onTouchStart={(e) => handleResizeStart(e, 'top')}
                 title="Resize"
               />
               <div
-                className="vacuum-map__zone-handle vacuum-map__zone-handle--tr"
-                onMouseDown={(e) => handleResizeStart(e, 'tr')}
-                onTouchStart={(e) => handleResizeStart(e, 'tr')}
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--right"
+                style={{ transform: `translateY(-50%) scale(${handleScale})` }}
+                onMouseDown={(e) => handleResizeStart(e, 'right')}
+                onTouchStart={(e) => handleResizeStart(e, 'right')}
                 title="Resize"
               />
               <div
-                className="vacuum-map__zone-handle vacuum-map__zone-handle--bl"
-                onMouseDown={(e) => handleResizeStart(e, 'bl')}
-                onTouchStart={(e) => handleResizeStart(e, 'bl')}
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--bottom"
+                style={{ transform: `translateX(-50%) scale(${handleScale})` }}
+                onMouseDown={(e) => handleResizeStart(e, 'bottom')}
+                onTouchStart={(e) => handleResizeStart(e, 'bottom')}
                 title="Resize"
               />
               <div
-                className="vacuum-map__zone-handle vacuum-map__zone-handle--br"
-                onMouseDown={(e) => handleResizeStart(e, 'br')}
-                onTouchStart={(e) => handleResizeStart(e, 'br')}
+                className="vacuum-map__zone-handle vacuum-map__zone-handle--left"
+                style={{ transform: `translateY(-50%) scale(${handleScale})` }}
+                onMouseDown={(e) => handleResizeStart(e, 'left')}
+                onTouchStart={(e) => handleResizeStart(e, 'left')}
                 title="Resize"
               />
-              <button className="vacuum-map__zone-clear" onClick={handleClearZone} title={clearZoneLabel}>
+              <button
+                className="vacuum-map__zone-clear"
+                style={{ transform: `scale(${handleScale})` }}
+                onClick={handleClearZone}
+                title={clearZoneLabel}
+              >
                 ×
               </button>
             </>

@@ -115,7 +115,7 @@ function deriveControls(
     canToggleMaxPower: !isInCleaningSession,
 
     // Actions
-    canStartCleaning: phase === 'idle',
+    canStartCleaning: !isInCleaningSession && phase !== 'returning' && phase !== 'error',
     canPause: isActivelyCleaning,
     canResume: isPaused,
     canStop: isInCleaningSession,

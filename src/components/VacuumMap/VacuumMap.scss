@@ -113,15 +113,12 @@
 
   &__zone-handle {
     position: absolute;
-    width: 1.5rem;
-    height: 1.5rem;
     background: #007aff;
     border: 0.125rem solid white;
-    border-radius: 50%;
-    cursor: pointer;
+    border-radius: 0.25rem;
     pointer-events: auto;
     box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
-    transition: all 0.2s ease;
+    transition: background 0.2s ease;
     z-index: 10;
     touch-action: none;
 
@@ -136,59 +133,44 @@
 
     &:hover {
       background: #0051d5;
-      transform: scale(1.2);
     }
 
     &:active {
-      transform: scale(0.9);
+      background: #003d99;
     }
 
-    &--tl {
-      top: -0.75rem;
-
-      @include position-start(-0.75rem);
-
-      cursor: nwse-resize;
-
-      [dir='rtl'] & {
-        cursor: nesw-resize;
-      }
+    // Horizontal strips (top/bottom edges)
+    &--top,
+    &--bottom {
+      width: 2.5rem;
+      height: 0.5rem;
+      left: 50%;
+      cursor: ns-resize;
     }
 
-    &--tr {
-      top: -0.75rem;
-
-      @include position-end(-0.75rem);
-
-      cursor: nesw-resize;
-
-      [dir='rtl'] & {
-        cursor: nwse-resize;
-      }
+    &--top {
+      top: -0.25rem;
     }
 
-    &--bl {
-      bottom: -0.75rem;
-
-      @include position-start(-0.75rem);
-
-      cursor: nesw-resize;
-
-      [dir='rtl'] & {
-        cursor: nwse-resize;
-      }
+    &--bottom {
+      bottom: -0.25rem;
     }
 
-    &--br {
-      bottom: -0.75rem;
+    // Vertical strips (left/right edges)
+    &--left,
+    &--right {
+      width: 0.5rem;
+      height: 2.5rem;
+      top: 50%;
+      cursor: ew-resize;
+    }
 
-      @include position-end(-0.75rem);
+    &--left {
+      @include position-start(-0.25rem);
+    }
 
-      cursor: nwse-resize;
-
-      [dir='rtl'] & {
-        cursor: nesw-resize;
-      }
+    &--right {
+      @include position-end(-0.25rem);
     }
   }
 
@@ -212,17 +194,17 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 0.125rem 0.5rem rgba(255, 59, 48, 0.4);
-    transition: all 0.2s ease;
+    transition: background 0.2s ease;
     line-height: 1;
     padding: 0;
+    z-index: 11;
 
     &:hover {
       background: #ff1f0f;
-      transform: scale(1.1);
     }
 
     &:active {
-      transform: scale(0.95);
+      background: #cc0000;
     }
   }
 
