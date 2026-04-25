@@ -77,7 +77,7 @@ export function VacuumMap({
   const { t } = useTranslation();
   const hass = useHass();
   const { phase } = useMachineState();
-  const isVacuumActive = phase !== 'idle';
+  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const mapEntity = hass.states[mapEntityId];
   const mapUrl = mapEntity?.attributes?.entity_picture;
   const mapRef = useRef<HTMLDivElement>(null);
@@ -202,7 +202,7 @@ export function VacuumMap({
 
               {selectedMode === 'room' &&
                 effectiveRoomViewMode === 'map' &&
-                !isVacuumActive &&
+                !isInCleaningSession &&
                 imageDimensions.width > 0 &&
                 imageDimensions.height > 0 && (
                   <RoomSegments
@@ -236,7 +236,7 @@ export function VacuumMap({
 
       {selectedMode === 'room' && (
         <>
-          {effectiveRoomViewMode === 'map' && !isVacuumActive && (
+          {effectiveRoomViewMode === 'map' && !isInCleaningSession && (
             <div className="vacuum-map__overlay">{t('vacuum_map.room_overlay')}</div>
           )}
 

@@ -29,7 +29,7 @@ function RoomSegmentsInner({
   imageHeight,
 }: RoomSegmentsProps) {
   const { phase } = useMachineState();
-  const isVacuumActive = phase !== 'idle';
+  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   logger.debug('RoomSegments', 'Render, selectedRooms:', Array.from(selectedRooms.keys()));
 
   const roomPaths = useMemo(() => {
@@ -81,7 +81,7 @@ function RoomSegmentsInner({
             d={path}
             className={`vacuum-map__room-segment ${isSelected ? 'vacuum-map__room-segment--selected' : ''}`}
             fill={isSelected ? 'var(--accent-bg, rgba(212, 175, 55, 0.3))' : 'transparent'}
-            stroke={!isVacuumActive && isSelected ? 'var(--accent-color, #D4AF37)' : 'rgba(255, 255, 255, 0.2)'}
+            stroke={!isInCleaningSession && isSelected ? 'var(--accent-color, #D4AF37)' : 'rgba(255, 255, 255, 0.2)'}
             strokeWidth="2"
             style={ROOM_PATH_STYLE}
             onPointerDown={handlePointerDown}

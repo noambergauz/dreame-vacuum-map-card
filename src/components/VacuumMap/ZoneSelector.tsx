@@ -12,7 +12,7 @@ type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
 
 export function ZoneSelector({ zone, onZoneChange, clearZoneLabel }: ZoneSelectorProps) {
   const { phase } = useMachineState();
-  const isVacuumActive = phase !== 'idle';
+  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
@@ -95,7 +95,7 @@ export function ZoneSelector({ zone, onZoneChange, clearZoneLabel }: ZoneSelecto
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {!isVacuumActive && (
+          {!isInCleaningSession && (
             <>
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--tl"

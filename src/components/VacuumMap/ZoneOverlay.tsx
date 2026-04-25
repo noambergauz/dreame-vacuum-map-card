@@ -21,7 +21,7 @@ type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
 export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: ZoneOverlayProps) {
   const transformContext = useTransformContext();
   const { phase } = useMachineState();
-  const isVacuumActive = phase !== 'idle';
+  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
@@ -155,7 +155,7 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {!isVacuumActive && (
+          {!isInCleaningSession && (
             <>
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--tl"
