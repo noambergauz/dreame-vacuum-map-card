@@ -1,6 +1,6 @@
 import { Settings } from 'lucide-react';
 import { useTranslation } from '@/hooks';
-import { useAreaUnit, useEntity } from '@/contexts';
+import { useAreaUnit, useEntity, useMachineState } from '@/contexts';
 import { getAttr, isNumber } from '@/utils';
 import './Header.scss';
 import {
@@ -21,7 +21,8 @@ export function Header({ deviceName, onSettingsClick }: HeaderProps) {
   const { t } = useTranslation();
   const areaUnit = useAreaUnit();
   const entity = useEntity();
-  const statusText = getAttr(entity.attributes.status, entity.state);
+  const { rawState } = useMachineState();
+  const statusText = rawState.charAt(0).toUpperCase() + rawState.slice(1).replace(/_/g, ' ');
   const cleanedArea = getAttr(entity.attributes.cleaned_area, 0);
   const cleaningTime = getAttr(entity.attributes.cleaning_time, 0);
   const batteryLevel = getAttr(entity.attributes.battery, 0);
@@ -38,8 +39,6 @@ export function Header({ deviceName, onSettingsClick }: HeaderProps) {
 
   const progress = getAttr(entity.attributes.cleaning_progress, 0) || getAttr(entity.attributes.drying_progress, 0);
 
-  const status = entity.attributes.status;
-
   return (
     <div className="header">
       <div className="header__top">
@@ -54,7 +53,7 @@ export function Header({ deviceName, onSettingsClick }: HeaderProps) {
         )}
       </div>
 
-      {status !== 'Sleeping' && progress > 0 && (
+      {rawState !== 'sleeping' && progress > 0 && (
         <div className="header__progress">
           <div className="header__progress-bar">
             <div className="header__progress-fill" style={{ width: `${progress}%` }} />
