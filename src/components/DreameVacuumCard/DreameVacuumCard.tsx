@@ -213,7 +213,6 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             zone={selectedZone}
             onZoneChange={setSelectedZone}
             onImageDimensionsChange={handleImageDimensionsChange}
-            isStarted={getAttr(entity.attributes.started, false)}
             defaultRoomView={config.default_room_view}
           />
 

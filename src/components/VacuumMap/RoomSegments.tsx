@@ -1,5 +1,6 @@
 import { useMemo, useCallback, memo } from 'react';
 import type { Room } from '@/types/homeassistant';
+import { useMachineState } from '@/contexts';
 import { createRoomPath } from '@/utils/roomParser';
 import { logger } from '@/utils/logger';
 
@@ -10,7 +11,6 @@ interface RoomSegmentsProps {
   calibrationPoints: { vacuum: { x: number; y: number }; map: { x: number; y: number } }[];
   imageWidth: number;
   imageHeight: number;
-  isStarted?: boolean;
 }
 
 // Extracted style constant to avoid recreation
@@ -27,8 +27,9 @@ function RoomSegmentsInner({
   calibrationPoints,
   imageWidth,
   imageHeight,
-  isStarted,
 }: RoomSegmentsProps) {
+  const { phase } = useMachineState();
+  const isVacuumActive = phase !== 'idle';
   logger.debug('RoomSegments', 'Render, selectedRooms:', Array.from(selectedRooms.keys()));
 
   const roomPaths = useMemo(() => {
@@ -80,7 +81,7 @@ function RoomSegmentsInner({
             d={path}
             className={`vacuum-map__room-segment ${isSelected ? 'vacuum-map__room-segment--selected' : ''}`}
             fill={isSelected ? 'var(--accent-bg, rgba(212, 175, 55, 0.3))' : 'transparent'}
-            stroke={!isStarted && isSelected ? 'var(--accent-color, #D4AF37)' : 'rgba(255, 255, 255, 0.2)'}
+            stroke={!isVacuumActive && isSelected ? 'var(--accent-color, #D4AF37)' : 'rgba(255, 255, 255, 0.2)'}
             strokeWidth="2"
             style={ROOM_PATH_STYLE}
             onPointerDown={handlePointerDown}

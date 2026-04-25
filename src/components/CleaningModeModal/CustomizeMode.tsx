@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CircularButton, Accordion } from '@/components/common';
 import { useTranslation, useRoomSettings, getEntityState } from '@/hooks';
 import { useHass, useIsRtl } from '@/contexts';
@@ -73,6 +73,12 @@ function RoomWetnessSlider({
 }: RoomWetnessSliderProps) {
   const [localValue, setLocalValue] = useState(value);
   const isRtl = useIsRtl();
+
+  // Sync local state when prop changes (e.g., entity update from HA)
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
   const percent = ((localValue - min) / (max - min)) * 100;
   const thumbWidth = 20;
   const tooltipPosition = `calc(${percent}% + ${thumbWidth / 2 - (percent * thumbWidth) / 100}px)`;

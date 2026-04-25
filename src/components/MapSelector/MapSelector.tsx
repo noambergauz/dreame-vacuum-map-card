@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, Check, Map } from 'lucide-react';
 import { useTranslation, getSelectState } from '@/hooks';
-import { useEntity, useHass, useConfig } from '@/contexts';
+import { useEntity, useHass, useConfig, useMachineState } from '@/contexts';
 import './MapSelector.scss';
 
 interface MapInfo {
@@ -19,13 +19,14 @@ export function MapSelector() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const attributes = entity.attributes;
+  const { phase } = useMachineState();
 
   // Get available maps from entity attributes
   const maps = useMemo(() => (attributes.maps as MapInfo[] | undefined) ?? [], [attributes.maps]);
   const selectedMapId = attributes.selected_map_id ?? attributes.selected_map;
 
   // Check if vacuum is active (can't change maps while running)
-  const isVacuumActive = !!attributes.started;
+  const isVacuumActive = phase !== 'idle';
 
   // Derive the select entity ID for map selection
   const entityName = config.entity?.split('.')[1] ?? '';

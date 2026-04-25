@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SLIDER_CONFIG, MOP_PAD_HUMIDITY } from '@/constants';
 import { useIsRtl } from '@/contexts';
 
@@ -25,6 +25,11 @@ export function WetnessSlider({
 }: WetnessSliderProps) {
   const [localValue, setLocalValue] = useState(wetnessLevel);
   const isRtl = useIsRtl();
+
+  // Sync local state when prop changes (e.g., entity update from HA)
+  useEffect(() => {
+    setLocalValue(wetnessLevel);
+  }, [wetnessLevel]);
   const { MIN, MAX } = SLIDER_CONFIG.WETNESS;
   const percent = ((localValue - MIN) / (MAX - MIN)) * 100;
   const thumbWidth = 20;

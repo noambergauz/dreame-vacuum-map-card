@@ -2,7 +2,7 @@ import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
 import type { CleaningSelectionMode, Zone, CalibrationPoint, RoomViewMode } from '@/types/homeassistant';
 import { useTranslation } from '@/hooks';
-import { useHass } from '@/contexts';
+import { useHass, useMachineState } from '@/contexts';
 import { parseRoomsFromCamera } from '@/utils/roomParser';
 import { STORAGE_KEY } from '@/constants';
 import { RoomSegments } from './RoomSegments';
@@ -19,7 +19,6 @@ interface VacuumMapProps {
   zone: Zone | null;
   onZoneChange: (zone: Zone | null) => void;
   onImageDimensionsChange?: (width: number, height: number) => void;
-  isStarted?: boolean;
   defaultRoomView?: RoomViewMode;
 }
 
@@ -73,11 +72,12 @@ export function VacuumMap({
   zone,
   onZoneChange,
   onImageDimensionsChange,
-  isStarted = false,
   defaultRoomView = 'map',
 }: VacuumMapProps) {
   const { t } = useTranslation();
   const hass = useHass();
+  const { phase } = useMachineState();
+  const isVacuumActive = phase !== 'idle';
   const mapEntity = hass.states[mapEntityId];
   const mapUrl = mapEntity?.attributes?.entity_picture;
   const mapRef = useRef<HTMLDivElement>(null);
@@ -202,7 +202,7 @@ export function VacuumMap({
 
               {selectedMode === 'room' &&
                 effectiveRoomViewMode === 'map' &&
-                !isStarted &&
+                !isVacuumActive &&
                 imageDimensions.width > 0 &&
                 imageDimensions.height > 0 && (
                   <RoomSegments
@@ -212,7 +212,6 @@ export function VacuumMap({
                     calibrationPoints={calibrationPoints}
                     imageWidth={imageDimensions.width}
                     imageHeight={imageDimensions.height}
-                    isStarted={isStarted}
                   />
                 )}
 
@@ -221,7 +220,6 @@ export function VacuumMap({
                   zone={zone}
                   onZoneChange={onZoneChange}
                   clearZoneLabel={t('vacuum_map.clear_zone')}
-                  isStarted={isStarted}
                   contentRef={contentRef}
                 />
               )}
@@ -238,7 +236,7 @@ export function VacuumMap({
 
       {selectedMode === 'room' && (
         <>
-          {effectiveRoomViewMode === 'map' && !isStarted && (
+          {effectiveRoomViewMode === 'map' && !isVacuumActive && (
             <div className="vacuum-map__overlay">{t('vacuum_map.room_overlay')}</div>
           )}
 

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Volume2, VolumeX, MapPin } from 'lucide-react';
 import { Toggle } from '@/components/common';
 import { useTranslation, getNumberState, getSwitchState, getSelectState, useVacuumCapabilities } from '@/hooks';
@@ -34,6 +34,12 @@ export function VolumeSection() {
     (hass.states[`select.${entityName}_voice_assistant_language`]?.attributes?.options as string[]) ?? [];
 
   const [localValue, setLocalValue] = useState(currentVolume);
+
+  // Sync local state when prop changes (e.g., entity update from HA)
+  useEffect(() => {
+    setLocalValue(currentVolume);
+  }, [currentVolume]);
+
   const volumePercent = ((localValue - VOLUME_MIN) / (VOLUME_MAX - VOLUME_MIN)) * 100;
 
   // Calculate tooltip position accounting for thumb width

@@ -1,13 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useTransformContext } from 'react-zoom-pan-pinch';
 import type { Zone } from '@/types/homeassistant';
+import { useMachineState } from '@/contexts';
 import { logger } from '@/utils/logger';
 
 interface ZoneOverlayProps {
   zone: Zone | null;
   onZoneChange: (zone: Zone | null) => void;
   clearZoneLabel: string;
-  isStarted?: boolean;
   contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -18,8 +18,10 @@ type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
  * Handles zone creation (click) and resizing (drag handles).
  * The zone rectangle pans/zooms with the map content.
  */
-export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, isStarted = false, contentRef }: ZoneOverlayProps) {
+export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: ZoneOverlayProps) {
   const transformContext = useTransformContext();
+  const { phase } = useMachineState();
+  const isVacuumActive = phase !== 'idle';
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
@@ -153,7 +155,7 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, isStarted = fa
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {!isStarted && (
+          {!isVacuumActive && (
             <>
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--tl"

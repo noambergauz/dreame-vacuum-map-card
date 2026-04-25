@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import type { Zone } from '@/types/homeassistant';
+import { useMachineState } from '@/contexts';
 
 interface ZoneSelectorProps {
   zone: Zone | null;
   onZoneChange: (zone: Zone | null) => void;
   clearZoneLabel: string;
-  isStarted?: boolean;
 }
 
 type ResizeHandle = 'tl' | 'tr' | 'bl' | 'br' | null;
 
-export function ZoneSelector({ zone, onZoneChange, clearZoneLabel, isStarted = false }: ZoneSelectorProps) {
+export function ZoneSelector({ zone, onZoneChange, clearZoneLabel }: ZoneSelectorProps) {
+  const { phase } = useMachineState();
+  const isVacuumActive = phase !== 'idle';
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
 
@@ -93,7 +95,7 @@ export function ZoneSelector({ zone, onZoneChange, clearZoneLabel, isStarted = f
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {!isStarted && (
+          {!isVacuumActive && (
             <>
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--tl"

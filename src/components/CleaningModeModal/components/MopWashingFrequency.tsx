@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CircularButton } from '@/components/common';
 import type { SelfCleanFrequency } from '@/types/vacuum';
 import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '@/utils';
@@ -62,6 +62,15 @@ export function MopWashingFrequency({
   const [localTime, setLocalTime] = useState(selfCleanTime);
   const areaUnit = useAreaUnit();
   const isRtl = useIsRtl();
+
+  // Sync local state when props change (e.g., entity update from HA)
+  useEffect(() => {
+    setLocalArea(selfCleanArea);
+  }, [selfCleanArea]);
+
+  useEffect(() => {
+    setLocalTime(selfCleanTime);
+  }, [selfCleanTime]);
 
   const isByArea = selfCleanFrequency === 'By area';
   const isByTime = selfCleanFrequency === 'By time';

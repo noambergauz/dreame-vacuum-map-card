@@ -156,7 +156,7 @@
 
   &__horizontal-scroll {
     display: flex;
-    justify-content: left;
+    justify-content: flex-start;
     overflow-x: auto;
     padding-bottom: 0.5rem;
     padding-top: 0.5rem;
@@ -198,7 +198,7 @@
 
   &__power-grid {
     display: flex;
-    justify-content: left;
+    justify-content: flex-start;
     gap: 2rem;
     overflow-x: auto;
     padding: 0.5rem 0;
@@ -414,7 +414,7 @@
 
   &__route-grid {
     display: flex;
-    justify-content: left;
+    justify-content: flex-start;
     overflow-x: auto;
     padding-bottom: 0.5rem;
     padding-top: 0.5rem;
