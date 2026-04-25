@@ -71,6 +71,10 @@ export function buildNumberEntityId(baseEntityId: string, suffix: string): strin
   return `number.${baseEntityId}_${suffix}`;
 }
 
+export function buildSensorEntityId(baseEntityId: string, suffix: string): string {
+  return `sensor.${baseEntityId}_${suffix}`;
+}
+
 export function extractBaseEntityId(entityId: string): string {
   return entityId.replace('vacuum.', '');
 }

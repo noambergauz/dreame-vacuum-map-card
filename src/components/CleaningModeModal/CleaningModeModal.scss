@@ -253,6 +253,11 @@
     position: relative;
     padding: 0 0.5rem;
     margin-bottom: 0.75rem;
+
+    &--disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
   }
 
   &__slider-wrapper {

@@ -77,7 +77,8 @@ export function MopWashingFrequency({
   const minutesShortUnit = t ? t('units.minutes_short') : 'm';
   const gradientDirection = isRtl ? 'to left' : 'to right';
 
-  const isSliderDisabled = isByArea ? areaDisabled || frequencyDisabled : timeDisabled || frequencyDisabled;
+  // Slider disabled state is independent of frequency buttons
+  const isSliderDisabled = isByArea ? areaDisabled : timeDisabled;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (isSliderDisabled) return;

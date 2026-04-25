@@ -45,6 +45,7 @@ export const SERVICE_ACTION = {
   RETURN_TO_BASE: 'return_to_base',
   VACUUM_CLEAN_SEGMENT: 'vacuum_clean_segment',
   PRESS: 'press',
+  SET_FAN_SPEED: 'set_fan_speed',
 } as const;
 
 // Entity name suffixes

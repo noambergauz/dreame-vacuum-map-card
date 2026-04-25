@@ -79,6 +79,23 @@ export function useHomeAssistantServices(hass: Hass) {
     [callService]
   );
 
+  /**
+   * Set vacuum fan speed (suction level).
+   * This works during cleaning when the select entity is unavailable.
+   * @param entityId - The vacuum entity ID (e.g., 'vacuum.dima')
+   * @param fanSpeed - The fan speed level (e.g., 'quiet', 'standard', 'strong', 'turbo')
+   */
+  const setFanSpeed = useCallback(
+    (entityId: string, fanSpeed: string) => {
+      logger.debug('HA', 'Vacuum Set fan speed:', entityId, '→', fanSpeed);
+      callService(SERVICE_DOMAIN.VACUUM, SERVICE_ACTION.SET_FAN_SPEED, {
+        entity_id: entityId,
+        fan_speed: fanSpeed,
+      });
+    },
+    [callService]
+  );
+
   return {
     setSelectOption,
     setSwitch,
@@ -86,6 +103,7 @@ export function useHomeAssistantServices(hass: Hass) {
     startVacuum,
     returnToBase,
     cleanSegments,
+    setFanSpeed,
     callService,
   };
 }

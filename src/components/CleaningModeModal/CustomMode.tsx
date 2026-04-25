@@ -1,6 +1,7 @@
+import { useCallback } from 'react';
 import { useHomeAssistantServices, useVacuumEntityIds, getEntityState, useVacuumCapabilities } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useHass } from '@/contexts';
+import { useHass, useEntity } from '@/contexts';
 import { CLEANING_MODE, CAPABILITY } from '@/constants';
 import {
   CleaningModeSelector,
@@ -61,7 +62,8 @@ export function CustomMode({
   showOnlyCleaningModeSelector = false,
 }: CustomModeProps) {
   const hass = useHass();
-  const { setSelectOption, setSwitch, setNumber } = useHomeAssistantServices(hass);
+  const entity = useEntity();
+  const { setSelectOption, setSwitch, setNumber, setFanSpeed } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
   const { t } = useTranslation();
   const capabilities = useVacuumCapabilities();
@@ -72,18 +74,59 @@ export function CustomMode({
   const hasSelfCleanFrequency = capabilities.has(CAPABILITY.SELF_CLEAN_FREQUENCY);
   const hasCleaningRoute = capabilities.has(CAPABILITY.CLEANING_ROUTE);
 
+  // Check if customized cleaning is active from vacuum entity attributes
+  // The vacuum entity's customized_cleaning attribute is true only when:
+  // - customized_cleaning switch is on AND
+  // - NOT zone_cleaning AND NOT spot_cleaning
+  // This is the correct check for whether fan_speed can be changed during cleaning
+  const isCustomizedCleaningActive = entity.attributes.customized_cleaning === true;
+
   // Get entity availability states
   const cleaningModeState = getEntityState(hass, entityIds.cleaningMode);
-  const suctionLevelState = getEntityState(hass, entityIds.suctionLevel);
-  const maxSuctionPowerState = getEntityState(hass, entityIds.maxSuctionPower);
-  const wetnessLevelState = getEntityState(hass, entityIds.wetnessLevel);
-  const selfCleanFrequencyState = getEntityState(hass, entityIds.selfCleanFrequency);
-  const selfCleanAreaState = getEntityState(hass, entityIds.selfCleanArea);
-  const selfCleanTimeState = getEntityState(hass, entityIds.selfCleanTime);
-  const cleaningRouteState = getEntityState(hass, entityIds.cleaningRoute);
+
+  // Check if robot is currently in mopping phase by reading state sensor
+  // sensor.{base}_state can be "mopping", "sweeping", "idle", etc.
+  const stateSensorState = getEntityState(hass, entityIds.stateSensor);
+  const isCurrentlyInDisabledState =
+    stateSensorState.state === 'mopping' || stateSensorState.state === 'paused' || stateSensorState.state === 'washing';
 
   // Use custom handler if provided, otherwise use default setSelectOption
   const handleCleaningModeSelect = onCleaningModeSelect || setSelectOption;
+
+  // Handler for suction level changes
+  // During cleaning (without customized cleaning), use vacuum.set_fan_speed service
+  // which works when select entity is unavailable.
+  // When customized_cleaning is enabled, suction cannot be changed globally - each room has its own settings.
+  const handleSuctionLevelSelect = useCallback(
+    (_entityId: string, value: string) => {
+      if (isCleaning && !isCustomizedCleaningActive) {
+        // Map suction level names to fan_speed values
+        // The select entity uses "Quiet" but vacuum.set_fan_speed expects "Silent"
+        const suctionToFanSpeed: Record<string, string> = {
+          quiet: 'silent',
+          standard: 'standard',
+          strong: 'strong',
+          turbo: 'turbo',
+        };
+        // Use vacuum.set_fan_speed - map suction level to fan speed name
+        const fanSpeed = suctionToFanSpeed[value] || value;
+        setFanSpeed(entity.entity_id, fanSpeed);
+      } else if (!isCleaning) {
+        // Use select.select_option when not cleaning
+        setSelectOption(entityIds.suctionLevel, value);
+      }
+      // When isCleaning && isCustomizedCleaningActive, do nothing - can't change suction globally
+    },
+    [isCleaning, isCustomizedCleaningActive, setFanSpeed, setSelectOption, entity.entity_id, entityIds.suctionLevel]
+  );
+
+  // Suction level is disabled when:
+  // 1. Cleaning with customized cleaning enabled (per-room settings override global suction)
+  // 2. Cleaning mode is "Mopping" (mop-only mode doesn't use suction)
+  // 3. Robot is currently in the mopping phase (e.g., mopping phase of "Mopping after sweeping")
+  const isMoppingOnly = cleaningMode === CLEANING_MODE.MOPPING;
+  const isSuctionLevelDisabled =
+    (isCleaning && isCustomizedCleaningActive) || isMoppingOnly || isCurrentlyInDisabledState;
 
   // In Customize mode, the cleaning_mode entity becomes unavailable (per-room settings override it).
   // Allow mode switching so users can exit Customize mode - clicking another mode turns off
@@ -115,14 +158,14 @@ export function CustomMode({
               suctionLevel={suctionLevel}
               suctionLevelList={suctionLevelList}
               maxSuctionPower={maxSuctionPower}
-              onSelectSuctionLevel={setSelectOption}
+              onSelectSuctionLevel={handleSuctionLevelSelect}
               onToggleMaxPower={setSwitch}
               suctionLevelEntityId={entityIds.suctionLevel}
               maxSuctionPowerEntityId={entityIds.maxSuctionPower}
               maxPlusDescription={t('custom_mode.max_plus_description')}
               t={t}
-              suctionLevelDisabled={isCleaning || suctionLevelState.unavailable}
-              maxPowerDisabled={isCleaning || maxSuctionPowerState.unavailable}
+              suctionLevelDisabled={isSuctionLevelDisabled}
+              maxPowerDisabled={isCleaning}
               hideMaxPower={!hasMaxSuctionPower}
             />
           </section>
@@ -138,7 +181,7 @@ export function CustomMode({
                 slightlyDryLabel={t('custom_mode.slightly_dry')}
                 moistLabel={t('custom_mode.moist')}
                 wetLabel={t('custom_mode.wet')}
-                disabled={isCleaning || wetnessLevelState.unavailable}
+                disabled={isCleaning}
               />
             </section>
           )}
@@ -162,9 +205,9 @@ export function CustomMode({
                 areaEntityId={entityIds.selfCleanArea}
                 timeEntityId={entityIds.selfCleanTime}
                 t={t}
-                frequencyDisabled={isCleaning || selfCleanFrequencyState.unavailable}
-                areaDisabled={isCleaning || selfCleanAreaState.unavailable}
-                timeDisabled={isCleaning || selfCleanTimeState.unavailable}
+                frequencyDisabled={isCleaning}
+                areaDisabled={false}
+                timeDisabled={false}
               />
             </section>
           )}
@@ -179,7 +222,7 @@ export function CustomMode({
                 cleaningRouteList={cleaningRouteList}
                 onSelect={setSelectOption}
                 entityId={entityIds.cleaningRoute}
-                disabled={isCleaning || cleaningRouteState.unavailable}
+                disabled={isCleaning}
               />
             </section>
           )}

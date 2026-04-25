@@ -48,7 +48,9 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   // We need to check if it's "off" (entity) or "Off" (attribute) to determine if CleanGenius is active
   const cleangeniusEntityState = cleangeniusState.state?.toLowerCase();
   const cleangeniusAttrState = getAttr(entity.attributes.cleangenius, CLEANGENIUS_STATE.OFF);
-  const isCleanGenius = cleangeniusEntityState
+  const isValidEntityState =
+    cleangeniusEntityState && cleangeniusEntityState !== 'unavailable' && cleangeniusEntityState !== 'unknown';
+  const isCleanGenius = isValidEntityState
     ? cleangeniusEntityState !== 'off'
     : cleangeniusAttrState !== CLEANGENIUS_STATE.OFF;
 
@@ -63,7 +65,10 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   const maxSuctionPower = getAttr(entity.attributes.max_suction_power, DEFAULTS.MAX_SUCTION_POWER);
   const selfCleanArea = getAttr(entity.attributes.self_clean_area, DEFAULTS.SELF_CLEAN_AREA);
   const selfCleanFrequency = getAttr(entity.attributes.self_clean_frequency, DEFAULTS.SELF_CLEAN_FREQUENCY);
-  const selfCleanFrequencyList = getStringArrayAttr('self_clean_frequency_list', ['By area', 'By time', 'By room']);
+  // Use fallback when list is empty (happens during cleaning)
+  const baseSelfCleanFrequencyList = getStringArrayAttr('self_clean_frequency_list', []) || [];
+  const selfCleanFrequencyList =
+    baseSelfCleanFrequencyList.length > 0 ? baseSelfCleanFrequencyList : ['By area', 'By time', 'By room'];
   const selfCleanAreaMin = getAttr(entity.attributes.self_clean_area_min, DEFAULTS.SELF_CLEAN_AREA_MIN);
   const selfCleanAreaMax = getAttr(entity.attributes.self_clean_area_max, DEFAULTS.SELF_CLEAN_AREA_MAX);
   const selfCleanTime = getAttr(entity.attributes.previous_self_clean_time, DEFAULTS.SELF_CLEAN_TIME);
@@ -77,20 +82,27 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   ];
 
   // Get cleaning mode list and add Customize option
-  const baseCleaningModeList = getStringArrayAttr('cleaning_mode_list', [
-    'Sweeping',
-    'Mopping',
-    'Sweeping and mopping',
-    'Mopping after sweeping',
-  ]);
+  // Use fallback when list is empty (happens during cleaning)
+  const baseCleaningModeList = getStringArrayAttr('cleaning_mode_list', []) || [];
+  const effectiveCleaningModeList =
+    baseCleaningModeList.length > 0
+      ? baseCleaningModeList
+      : ['Sweeping', 'Mopping', 'Sweeping and mopping', 'Mopping after sweeping'];
 
   // Add "Customize" as the last option
-  const cleaningModeList = [...baseCleaningModeList, CLEANING_MODE.CUSTOMIZE];
+  const cleaningModeList = [...effectiveCleaningModeList, CLEANING_MODE.CUSTOMIZE];
 
   const cleangeniusModeList = getStringArrayAttr('cleangenius_mode_list', ['Vacuum and mop', 'Mop after vacuum']);
 
-  const suctionLevelList = getStringArrayAttr('suction_level_list', ['Quiet', 'Standard', 'Strong', 'Turbo']);
-  const cleaningRouteList = getStringArrayAttr('cleaning_route_list', ['Quick', 'Standard', 'Intensive', 'Deep']);
+  // Use fallback when list is empty (happens during cleaning)
+  const baseSuctionLevelList = getStringArrayAttr('suction_level_list', []) || [];
+  const suctionLevelList =
+    baseSuctionLevelList.length > 0 ? baseSuctionLevelList : ['Quiet', 'Standard', 'Strong', 'Turbo'];
+
+  // Use fallback when list is empty (happens during cleaning)
+  const baseCleaningRouteList = getStringArrayAttr('cleaning_route_list', []) || [];
+  const cleaningRouteList =
+    baseCleaningRouteList.length > 0 ? baseCleaningRouteList : ['Quick', 'Standard', 'Intensive', 'Deep'];
 
   // Combined disabled state: isCleaning OR cleangenius entity is unavailable (exists but not available)
   // We only disable if the entity explicitly exists but is unavailable, not if it doesn't exist

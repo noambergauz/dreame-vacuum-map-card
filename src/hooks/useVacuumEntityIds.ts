@@ -5,7 +5,13 @@
 
 import { useMemo } from 'react';
 import { ENTITY_SUFFIX } from '@/constants';
-import { buildEntityId, buildSwitchEntityId, buildNumberEntityId, extractBaseEntityId } from '@/utils/converters';
+import {
+  buildEntityId,
+  buildSwitchEntityId,
+  buildNumberEntityId,
+  buildSensorEntityId,
+  extractBaseEntityId,
+} from '@/utils/converters';
 
 export interface VacuumEntityIds {
   base: string;
@@ -20,6 +26,8 @@ export interface VacuumEntityIds {
   selfCleanFrequency: string;
   selfCleanArea: string;
   selfCleanTime: string;
+  /** Sensor entity that indicates current cleaning state (sweeping, mopping, etc.) */
+  stateSensor: string;
 }
 
 export function useVacuumEntityIds(vacuumEntityId: string): VacuumEntityIds {
@@ -39,6 +47,7 @@ export function useVacuumEntityIds(vacuumEntityId: string): VacuumEntityIds {
       selfCleanFrequency: buildEntityId(baseEntityId, ENTITY_SUFFIX.SELF_CLEAN_FREQUENCY),
       selfCleanArea: buildNumberEntityId(baseEntityId, ENTITY_SUFFIX.SELF_CLEAN_AREA),
       selfCleanTime: buildNumberEntityId(baseEntityId, ENTITY_SUFFIX.SELF_CLEAN_TIME),
+      stateSensor: buildSensorEntityId(baseEntityId, 'state'),
     };
   }, [vacuumEntityId]);
 }
