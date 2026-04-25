@@ -5,7 +5,7 @@ import { CustomizeMode } from './CustomizeMode';
 import type { CleanGeniusState } from '@/types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds, getEntityState, useVacuumCapabilities } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useEntity, useHass } from '@/contexts';
+import { useEntity, useHass, useMachineState } from '@/contexts';
 import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '@/utils';
 import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE, CAPABILITY } from '@/constants';
 import { logger } from '@/utils/logger';
@@ -14,38 +14,29 @@ import './CleaningModeModal.scss';
 interface CleaningModeModalProps {
   opened: boolean;
   onClose: () => void;
-  /** When true, disables settings that cannot be changed while cleaning */
-  isCleaning?: boolean;
 }
 
-export function CleaningModeModal({ opened, onClose, isCleaning = false }: CleaningModeModalProps) {
+export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
   const { t } = useTranslation();
   const entity = useEntity();
   const hass = useHass();
+  const { phase, isCustomizedCleaning } = useMachineState();
   const baseEntityId = extractBaseEntityId(entity.entity_id);
   const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
   const capabilities = useVacuumCapabilities();
 
-  // Check if CleanGenius is supported
   const hasCleanGenius = capabilities.has(CAPABILITY.CLEANGENIUS);
+  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
 
-  // Get entity availability states
   const customizedCleaningSwitch = `switch.${baseEntityId}_customized_cleaning`;
-  const customizedCleaningState = getEntityState(hass, customizedCleaningSwitch);
   const cleangeniusState = getEntityState(hass, entityIds.cleangenius);
 
-  // Read customized_cleaning from switch entity state
-  const isCustomizedCleaning = customizedCleaningState.isOn;
-
-  // Helper function for type-safe array attribute access
   const getStringArrayAttr = (key: string, defaultValue: string[]): string[] => {
     const value = entity.attributes[key];
     return Array.isArray(value) ? (value as string[]) : defaultValue;
   };
 
-  // Read cleangenius state - entity state is lowercase, attributes are capitalized
-  // We need to check if it's "off" (entity) or "Off" (attribute) to determine if CleanGenius is active
   const cleangeniusEntityState = cleangeniusState.state?.toLowerCase();
   const cleangeniusAttrState = getAttr(entity.attributes.cleangenius, CLEANGENIUS_STATE.OFF);
   const isValidEntityState =
@@ -54,9 +45,7 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
     ? cleangeniusEntityState !== 'off'
     : cleangeniusAttrState !== CLEANGENIUS_STATE.OFF;
 
-  // For display purposes, use the attribute value which has proper casing
   const cleangenius = cleangeniusAttrState;
-
   const cleaningMode = getAttr(entity.attributes.cleaning_mode, DEFAULTS.CLEANING_MODE);
   const cleangeniusMode = getAttr(entity.attributes.cleangenius_mode, DEFAULTS.CLEANGENIUS_MODE);
   const suctionLevel = getAttr(entity.attributes.suction_level, DEFAULTS.SUCTION_LEVEL);
@@ -65,56 +54,46 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
   const maxSuctionPower = getAttr(entity.attributes.max_suction_power, DEFAULTS.MAX_SUCTION_POWER);
   const selfCleanArea = getAttr(entity.attributes.self_clean_area, DEFAULTS.SELF_CLEAN_AREA);
   const selfCleanFrequency = getAttr(entity.attributes.self_clean_frequency, DEFAULTS.SELF_CLEAN_FREQUENCY);
-  // Use fallback when list is empty (happens during cleaning)
-  const baseSelfCleanFrequencyList = getStringArrayAttr('self_clean_frequency_list', []) || [];
+  const mopPadHumidity = getAttr(entity.attributes.mop_pad_humidity, DEFAULTS.MOP_PAD_HUMIDITY);
+
+  const baseSelfCleanFrequencyList = getStringArrayAttr('self_clean_frequency_list', []);
   const selfCleanFrequencyList =
     baseSelfCleanFrequencyList.length > 0 ? baseSelfCleanFrequencyList : ['By area', 'By time', 'By room'];
+
   const selfCleanAreaMin = getAttr(entity.attributes.self_clean_area_min, DEFAULTS.SELF_CLEAN_AREA_MIN);
   const selfCleanAreaMax = getAttr(entity.attributes.self_clean_area_max, DEFAULTS.SELF_CLEAN_AREA_MAX);
   const selfCleanTime = getAttr(entity.attributes.previous_self_clean_time, DEFAULTS.SELF_CLEAN_TIME);
   const selfCleanTimeMin = getAttr(entity.attributes.self_clean_time_min, DEFAULTS.SELF_CLEAN_TIME_MIN);
   const selfCleanTimeMax = getAttr(entity.attributes.self_clean_time_max, DEFAULTS.SELF_CLEAN_TIME_MAX);
-  const mopPadHumidity = getAttr(entity.attributes.mop_pad_humidity, DEFAULTS.MOP_PAD_HUMIDITY);
 
   const modeOptions = [
     { value: UI_MODE_TYPE.CLEANGENIUS, label: t('cleaning_mode.clean_genius') },
     { value: UI_MODE_TYPE.CUSTOM, label: t('cleaning_mode.custom') },
   ];
 
-  // Get cleaning mode list and add Customize option
-  // Use fallback when list is empty (happens during cleaning)
-  const baseCleaningModeList = getStringArrayAttr('cleaning_mode_list', []) || [];
+  const baseCleaningModeList = getStringArrayAttr('cleaning_mode_list', []);
   const effectiveCleaningModeList =
     baseCleaningModeList.length > 0
       ? baseCleaningModeList
       : ['Sweeping', 'Mopping', 'Sweeping and mopping', 'Mopping after sweeping'];
-
-  // Add "Customize" as the last option
   const cleaningModeList = [...effectiveCleaningModeList, CLEANING_MODE.CUSTOMIZE];
 
   const cleangeniusModeList = getStringArrayAttr('cleangenius_mode_list', ['Vacuum and mop', 'Mop after vacuum']);
 
-  // Use fallback when list is empty (happens during cleaning)
-  const baseSuctionLevelList = getStringArrayAttr('suction_level_list', []) || [];
+  const baseSuctionLevelList = getStringArrayAttr('suction_level_list', []);
   const suctionLevelList =
     baseSuctionLevelList.length > 0 ? baseSuctionLevelList : ['Quiet', 'Standard', 'Strong', 'Turbo'];
 
-  // Use fallback when list is empty (happens during cleaning)
-  const baseCleaningRouteList = getStringArrayAttr('cleaning_route_list', []) || [];
+  const baseCleaningRouteList = getStringArrayAttr('cleaning_route_list', []);
   const cleaningRouteList =
     baseCleaningRouteList.length > 0 ? baseCleaningRouteList : ['Quick', 'Standard', 'Intensive', 'Deep'];
 
-  // Combined disabled state: isCleaning OR cleangenius entity is unavailable (exists but not available)
-  // We only disable if the entity explicitly exists but is unavailable, not if it doesn't exist
-  const isModeSwitchDisabled = isCleaning || cleangeniusState.unavailable;
-
-  // If CleanGenius capability is not supported, force Custom mode
+  const isModeSwitchDisabled = isInCleaningSession || cleangeniusState.unavailable;
   const effectiveIsCleanGenius = hasCleanGenius && isCleanGenius;
 
   const handleModeSwitch = (value: string) => {
     const isCleanGeniusMode = value === UI_MODE_TYPE.CLEANGENIUS;
 
-    // Turn off customized cleaning when switching to CleanGenius
     if (isCleanGeniusMode && isCustomizedCleaning) {
       hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
     }
@@ -125,7 +104,6 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
     setSelectOption(entityIds.cleangenius, convertCleanGeniusStateToService(state as CleanGeniusState));
   };
 
-  // Handle cleaning mode selection in CustomMode
   const handleCleaningModeSelect = (entityId: string, value: string) => {
     if (value === CLEANING_MODE.CUSTOMIZE) {
       logger.debug('CleaningModeModal', 'Enabling customized cleaning');
@@ -134,8 +112,6 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
     }
 
     if (isCustomizedCleaning) {
-      // Turn off customized_cleaning first, then set the new mode after a delay
-      // (turning off customize reverts to previous mode, then we set the new one)
       logger.debug('CleaningModeModal', 'Disabling customized cleaning');
       hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
       setTimeout(() => setSelectOption(entityId, value), 300);
@@ -144,15 +120,11 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
     }
   };
 
-  // Determine what to show in Custom mode:
-  // - If customized_cleaning is true, show CustomizeMode (per-room settings)
-  // - Otherwise show normal CustomMode (global settings)
   const showCustomizeMode = !effectiveIsCleanGenius && isCustomizedCleaning;
 
   return (
     <Modal opened={opened} onClose={onClose}>
       <div className="cleaning-mode-modal">
-        {/* Mode Toggle - only show if CleanGenius is supported */}
         {hasCleanGenius && (
           <div className="cleaning-mode-modal__header">
             <SegmentedControl
@@ -171,11 +143,9 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
               cleangeniusModeList={cleangeniusModeList}
               cleangenius={cleangenius}
               baseEntityId={baseEntityId}
-              isCleaning={isCleaning}
             />
           ) : (
             <>
-              {/* Always show CleaningModeSelector at top in Custom mode */}
               <CustomMode
                 cleaningMode={isCustomizedCleaning ? CLEANING_MODE.CUSTOMIZE : cleaningMode}
                 cleaningModeList={cleaningModeList}
@@ -195,12 +165,10 @@ export function CleaningModeModal({ opened, onClose, isCleaning = false }: Clean
                 selfCleanTimeMin={selfCleanTimeMin}
                 selfCleanTimeMax={selfCleanTimeMax}
                 baseEntityId={baseEntityId}
-                isCleaning={isCleaning}
                 onCleaningModeSelect={handleCleaningModeSelect}
                 showOnlyCleaningModeSelector={showCustomizeMode}
               />
 
-              {/* Show per-room settings when customize is enabled */}
               {showCustomizeMode && <CustomizeMode baseEntityId={baseEntityId} />}
             </>
           )}

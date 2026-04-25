@@ -38,11 +38,11 @@ function clearRepeatCount(): void {
   }
 }
 
-interface UseVacuumCardStateOptions {
+interface UseCardUIStateOptions {
   defaultMode?: CleaningSelectionMode;
 }
 
-export function useVacuumCardState({ defaultMode = DEFAULTS.MODE }: UseVacuumCardStateOptions = {}) {
+export function useCardUIState({ defaultMode = DEFAULTS.MODE }: UseCardUIStateOptions = {}) {
   const [selectedMode, setSelectedMode] = useState<CleaningSelectionMode>(defaultMode);
   const [selectedRooms, setSelectedRooms] = useState<Map<number, string>>(new Map());
   const [selectedZone, setSelectedZone] = useState<Zone | null>(null);

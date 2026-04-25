@@ -9,7 +9,7 @@ import { ShortcutsModal } from '@/components/ShortcutsModal';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { RoomSelectionDisplay } from '@/components/RoomSelectionDisplay';
 import { Toast } from '@/components/common';
-import { useVacuumCardState, useVacuumServices, useToast, useTranslation, useTheme } from '@/hooks';
+import { useCardUIState, useVacuumServices, useToast, useTranslation, useTheme } from '@/hooks';
 import { extractEntityData, getEffectiveCleaningMode, getAttr, getActiveSegments } from '@/utils';
 import { isRtlLanguage } from '@/i18n';
 import { VacuumCardProvider } from '@/contexts';
@@ -65,13 +65,10 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     handleRoomToggle,
     cycleRepeatCount,
     resetRepeatCount,
-  } = useVacuumCardState({ defaultMode: config.default_mode });
+  } = useCardUIState({ defaultMode: config.default_mode });
 
   // Get map entity ID
   const mapEntityId = config.map_entity || `camera.${config.entity.split('.')[1]}_map`;
-
-  // Read customized_cleaning from entity attributes
-  const isCustomizedCleaning = entity ? getAttr(entity.attributes.customized_cleaning, false) : false;
 
   // Check if vacuum is actively cleaning (state === 'cleaning' or started attribute)
   const isCleaning = entity ? entity.state === 'cleaning' || getAttr(entity.attributes.started, false) : false;
@@ -228,21 +225,16 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             onShortcutsClick={hasShortcuts ? handleShortcutsOpen : undefined}
             onRepeatClick={cycleRepeatCount}
             repeatCount={repeatCount}
-            disabled={isCleaning}
-            customizeModeEnabled={isCustomizedCleaning}
           />
 
           <div className="dreame-vacuum-card__controls">
             {selectedMode === 'room' && <RoomSelectionDisplay selectedRooms={selectedRooms} />}
 
-            <ModeTabs selectedMode={effectiveMode} onModeChange={handleModeChange} disabled={isCleaning} />
+            <ModeTabs selectedMode={effectiveMode} onModeChange={handleModeChange} />
 
             <ActionButtons
               selectedMode={selectedMode}
               selectedRoomsCount={selectedRooms.size}
-              isCleaning={isCleaning}
-              isPaused={getAttr(entity.attributes.paused, false)}
-              isDocked={entity.state === 'docked' || getAttr(entity.attributes.docked, false)}
               onClean={handleCleanAction}
               onPause={handlePause}
               onResume={handleResume}
@@ -252,7 +244,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           </div>
         </div>
 
-        <CleaningModeModal opened={modalOpened} onClose={handleModalClose} isCleaning={isCleaning} />
+        <CleaningModeModal opened={modalOpened} onClose={handleModalClose} />
 
         <ShortcutsModal opened={shortcutsModalOpened} onClose={handleShortcutsClose} />
 

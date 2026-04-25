@@ -4,7 +4,7 @@
 
 export { useHomeAssistantServices } from './useHomeAssistantServices';
 export { useVacuumEntityIds } from './useVacuumEntityIds';
-export { useVacuumCardState } from './useVacuumCardState';
+export { useCardUIState } from './useCardUIState';
 export { useVacuumServices } from './useVacuumServices';
 export { useToast } from './useToast';
 export { useTranslation } from './useTranslation';
@@ -13,7 +13,9 @@ export { useButtonConfig } from './useButtonConfig';
 export { useRoomSettings } from './useRoomSettings';
 export { getEntityState, getSwitchState, getSelectState, getNumberState, getButtonState } from './useEntityState';
 export { useVacuumCapabilities } from './useVacuumCapabilities';
+export { useVacuumMachineState } from './useVacuumMachineState';
 export type { VacuumEntityIds } from './useVacuumEntityIds';
 export type { RoomSetting } from './useRoomSettings';
 export type { EntityState } from './useEntityState';
 export type { VacuumCapabilities } from './useVacuumCapabilities';
+export type { VacuumMachineState, VacuumControls } from './useVacuumMachineState';

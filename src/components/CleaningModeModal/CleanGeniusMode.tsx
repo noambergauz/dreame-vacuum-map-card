@@ -2,7 +2,7 @@ import { Toggle } from '@/components/common';
 import type { CleanGeniusMode as CleanGeniusModeType, CleanGeniusState } from '@/types/vacuum';
 import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useHass } from '@/contexts';
+import { useHass, useMachineState } from '@/contexts';
 import {
   getCleanGeniusModeIcon,
   getCleanGeniusModeFriendlyName,
@@ -17,8 +17,6 @@ interface CleanGeniusModeProps {
   cleangeniusModeList: string[];
   cleangenius: string;
   baseEntityId: string;
-  /** When true, disables settings that cannot be changed while cleaning */
-  isCleaning?: boolean;
 }
 
 export function CleanGeniusMode({
@@ -26,24 +24,21 @@ export function CleanGeniusMode({
   cleangeniusModeList,
   cleangenius,
   baseEntityId,
-  isCleaning = false,
 }: CleanGeniusModeProps) {
   const hass = useHass();
+  const { phase } = useMachineState();
   const { setSelectOption } = useHomeAssistantServices(hass);
   const { t } = useTranslation();
-
   const entityIds = useVacuumEntityIds(baseEntityId);
 
-  // Get entity availability states
+  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
+
   const cleangeniusState = getEntityState(hass, entityIds.cleangenius);
   const cleaningRouteState = getEntityState(hass, entityIds.cleaningRoute);
   const cleangeniusModeState = getEntityState(hass, entityIds.cleangeniusMode);
 
-  // Combined disabled state - only disable if entity exists but is unavailable
-  const isModeDisabled = isCleaning || cleangeniusModeState.unavailable;
-  // Only check cleangenius entity for Deep Cleaning - cleaningRoute may be unavailable
-  // when CleanGenius is active (route is auto-managed), but we can still toggle deep cleaning
-  const isDeepCleaningDisabled = isCleaning || cleangeniusState.unavailable;
+  const isModeDisabled = isInCleaningSession || cleangeniusModeState.unavailable;
+  const isDeepCleaningDisabled = isInCleaningSession || cleangeniusState.unavailable;
 
   const handleDeepCleaningToggle = (enabled: boolean) => {
     const state = enabled ? CLEANGENIUS_STATE.DEEP_CLEANING : CLEANGENIUS_STATE.ROUTINE_CLEANING;
@@ -51,7 +46,6 @@ export function CleanGeniusMode({
 
     setSelectOption(entityIds.cleangenius, convertCleanGeniusStateToService(state as CleanGeniusState));
 
-    // Only set cleaning route if entity is available (it may be auto-managed in CleanGenius mode)
     if (cleaningRouteState.available) {
       setSelectOption(entityIds.cleaningRoute, convertToLowerCase(route));
     }

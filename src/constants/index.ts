@@ -9,6 +9,9 @@ export * from './icons';
 // Re-export capability constants
 export * from './capabilities';
 
+// Re-export vacuum state machine constants
+export * from './vacuumStates';
+
 // Slider configuration
 export const SLIDER_CONFIG = {
   WETNESS: {
