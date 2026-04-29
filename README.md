@@ -89,7 +89,7 @@ entity: vacuum.dreame_vacuum_entity
 title: Dreame Vacuum
 map_entity: camera.dreame_vacuum_entity # Optional, defaults to camera.${ENTITY_NAME}_map
 theme: light # Optional, 'light' (default), 'dark', or 'custom'
-language: en # Optional, 'en' (default) or 'de'
+language: en # Optional, 'en' (default), 'de', 'cs', etc.
 default_mode: all # Optional, 'all' (default), 'room', or 'zone'
 default_room_view: map # Optional, 'map' (default) or 'list'
 buttons: # Optional
@@ -212,6 +212,7 @@ The card supports multiple languages. Currently available:
 - **German (de)** - Deutsch
 - **Russian (ru)** - Русский
 - **Polish (pl)** - Polski
+- **Czech (cs)** - Čeština
 - **Italian (it)** - Italiano
 - **Dutch (nl)** - Nederlands
 - **Spanish (es)** - Español

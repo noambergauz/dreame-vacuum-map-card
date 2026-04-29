@@ -96,7 +96,7 @@ export const configSchema = z.object({
   title: z.string().optional(),
   theme: z.enum(['light', 'dark', 'custom']).optional(),
   custom_theme: customThemeSchema,
-  language: z.enum(['en', 'de', 'ru', 'pl', 'it', 'nl', 'es', 'zh', 'he', 'fr_FR', 'ko']).optional(),
+  language: z.enum(['en', 'de', 'ru', 'pl', 'it', 'nl', 'es', 'zh', 'he', 'fr_FR', 'ko', 'cs']).optional(),
   default_mode: z.enum(['room', 'all', 'zone']).optional(),
   default_room_view: z.enum(['map', 'list']).optional(),
   buttons: z.array(buttonConfigSchema).optional(),
