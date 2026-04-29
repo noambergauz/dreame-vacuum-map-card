@@ -45,6 +45,7 @@ class DreameVacuumMapCard extends HTMLElement {
   }
 
   set hass(hass: Hass) {
+    console.debug('Received Home Assistant instance:', hass);
     this._hass = hass;
     this.render();
   }

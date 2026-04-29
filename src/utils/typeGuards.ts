@@ -59,8 +59,8 @@ export function isObject(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
-// HA entity ID format: domain.object_id (both alphanumeric with underscores, starts with letter)
-const entityIdPattern = /^[a-z][a-z0-9_]*\.[a-z][a-z0-9_]*$/;
+// HA entity ID format: domain.object_id (domain starts with letter, object_id starts with letter or digit)
+const entityIdPattern = /^[a-z][a-z0-9_]*\.[a-z0-9][a-z0-9_]*$/;
 
 const entityIdSchema = z.string().regex(entityIdPattern, 'Invalid entity ID format. Expected: domain.object_id');
 const vacuumEntitySchema = entityIdSchema.refine((id) => id.startsWith('vacuum.'), {
