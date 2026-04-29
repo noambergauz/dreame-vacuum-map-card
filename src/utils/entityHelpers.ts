@@ -1,4 +1,4 @@
-import type { HassEntity, HassConfig, RoomPosition, CleaningSelectionMode, Hass } from '@/types/homeassistant';
+import type { HassEntity, HassConfig, RoomPosition, CleaningSelectionMode, Hass, Room } from '@/types/homeassistant';
 import { getAttr } from './typeGuards';
 
 export function extractEntityData(entity: HassEntity | undefined, config: HassConfig) {
@@ -9,9 +9,13 @@ export function extractEntityData(entity: HassEntity | undefined, config: HassCo
   const deviceName = config.title || entity.attributes?.friendly_name || 'Dreame Vacuum';
   const mapEntityId = config.map_entity || `camera.${config.entity.split('.')[1]}_map`;
 
-  const entityRooms = entity.attributes?.rooms?.[entity.attributes?.selected_map || ''];
-  const rooms: RoomPosition[] = entityRooms
-    ? entityRooms.map((room) => ({
+  // Vacuum entity rooms are structured as Record<mapName, Room[]>
+  const selectedMap = entity.attributes?.selected_map || '';
+  const entityRooms = entity.attributes?.rooms?.[selectedMap];
+
+  // Handle rooms array from vacuum entity
+  const rooms: RoomPosition[] = Array.isArray(entityRooms)
+    ? entityRooms.map((room: Room) => ({
         id: room.id,
         name: room.name,
         x: 50,

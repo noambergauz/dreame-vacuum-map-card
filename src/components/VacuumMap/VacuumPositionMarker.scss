@@ -1,0 +1,63 @@
+// Vacuum Position Marker Styles (SVG-based with MDI icon)
+.vacuum-position-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+
+  &__bg {
+    fill: var(--vacuum-marker-bg, rgba(255, 255, 255, 0.9));
+    stroke: var(--vacuum-marker-stroke, #4caf50);
+    stroke-width: 2;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  }
+
+  &__icon {
+    fill: var(--vacuum-marker-color, #4caf50);
+  }
+
+  // Cleaning state - add pulse animation
+  &--cleaning {
+    .vacuum-position-marker__bg {
+      animation: vacuum-pulse 1.5s ease-in-out infinite;
+    }
+  }
+}
+
+// Charger/Dock Marker Styles (SVG-based with MDI icon)
+.charger-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+
+  &__bg {
+    fill: var(--charger-marker-bg, rgba(255, 255, 255, 0.9));
+    stroke: var(--charger-marker-stroke, #ffc107);
+    stroke-width: 2;
+    filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+  }
+
+  &__icon {
+    fill: var(--charger-marker-color, #ffc107);
+  }
+}
+
+// Pulse animation for cleaning state
+@keyframes vacuum-pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}

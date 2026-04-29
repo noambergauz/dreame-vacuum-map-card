@@ -9,7 +9,9 @@ export interface HassEntity {
     cleaned_area?: number;
     cleaning_time?: number;
     entity_picture?: string;
-    rooms?: Record<string, Room[]>;
+    // Note: rooms structure varies between vacuum entity (Record<string, Room[]>)
+    // and camera entity (Record<string, Room>)
+    rooms?: Record<string, Room[] | Room>;
     selected_map?: string;
     capabilities?: string[];
     [key: string]: unknown;
@@ -59,6 +61,8 @@ export interface HassConfig {
   default_mode?: CleaningSelectionMode;
   default_room_view?: RoomViewMode;
   buttons?: ButtonConfig[];
+  /** Show vacuum and charger position markers on the map (default: false, since map image already renders them) */
+  show_vacuum_position?: boolean;
 }
 
 export interface HassUnitSystem {
@@ -112,4 +116,15 @@ export interface Zone {
 export interface CalibrationPoint {
   vacuum: { x: number; y: number };
   map: { x: number; y: number };
+}
+
+/**
+ * Position of the vacuum or charger on the map
+ * x, y: vacuum coordinates (need conversion via calibration points)
+ * a: angle in degrees (0 = east, 90 = south, 180 = west, 270 = north)
+ */
+export interface VacuumPosition {
+  x: number;
+  y: number;
+  a: number;
 }

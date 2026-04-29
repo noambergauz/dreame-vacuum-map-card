@@ -1,14 +1,22 @@
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
-import type { CleaningSelectionMode, Zone, CalibrationPoint, RoomViewMode } from '@/types/homeassistant';
+import type {
+  CleaningSelectionMode,
+  Zone,
+  CalibrationPoint,
+  RoomViewMode,
+  VacuumPosition,
+} from '@/types/homeassistant';
 import { useTranslation } from '@/hooks';
-import { useHass, useMachineState } from '@/contexts';
+import { useHass, useMachineState, useConfig } from '@/contexts';
 import { parseRoomsFromCamera } from '@/utils/roomParser';
 import { STORAGE_KEY } from '@/constants';
 import { RoomSegments } from './RoomSegments';
 import { MapControls } from './MapControls';
 import { RoomListView } from './RoomListView';
 import { ZoneOverlay } from './ZoneOverlay';
+import { VacuumPositionMarker } from './VacuumPositionMarker';
+import { ChargerMarker } from './ChargerMarker';
 import './VacuumMap.scss';
 
 interface VacuumMapProps {
@@ -76,6 +84,7 @@ export function VacuumMap({
 }: VacuumMapProps) {
   const { t } = useTranslation();
   const hass = useHass();
+  const config = useConfig();
   const { phase } = useMachineState();
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const mapEntity = hass.states[mapEntityId];
@@ -126,6 +135,21 @@ export function VacuumMap({
     [hass.states[mapEntityId]?.attributes?.rooms, mapEntityId]
   );
   const calibrationPoints = (mapEntity?.attributes?.calibration_points as CalibrationPoint[] | undefined) ?? [];
+
+  // Extract vacuum and charger positions from map entity attributes
+  const vacuumPosition = mapEntity?.attributes?.vacuum_position as VacuumPosition | undefined;
+  const chargerPosition = mapEntity?.attributes?.charger_position as VacuumPosition | undefined;
+
+  // Determine if vacuum is currently cleaning (not docked)
+  const isCleaning = phase === 'cleaning';
+
+  // Only show position markers if explicitly enabled in config (default: false)
+  // The map image already renders robot/charger icons by default from the integration
+  const showPositionMarkers = config.show_vacuum_position === true;
+  const showVacuumMarker =
+    showPositionMarkers && vacuumPosition && imageDimensions.width > 0 && imageDimensions.height > 0;
+  const showChargerMarker =
+    showPositionMarkers && chargerPosition && imageDimensions.width > 0 && imageDimensions.height > 0;
 
   const handleImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -199,6 +223,27 @@ export function VacuumMap({
                 onLoad={handleImageLoad}
                 draggable={false}
               />
+
+              {/* Charger/dock marker - always visible when position available */}
+              {showChargerMarker && (
+                <ChargerMarker
+                  position={chargerPosition}
+                  calibrationPoints={calibrationPoints}
+                  imageWidth={imageDimensions.width}
+                  imageHeight={imageDimensions.height}
+                />
+              )}
+
+              {/* Vacuum position marker - shows current robot location */}
+              {showVacuumMarker && (
+                <VacuumPositionMarker
+                  position={vacuumPosition}
+                  calibrationPoints={calibrationPoints}
+                  imageWidth={imageDimensions.width}
+                  imageHeight={imageDimensions.height}
+                  isCleaning={isCleaning}
+                />
+              )}
 
               {selectedMode === 'room' &&
                 effectiveRoomViewMode === 'map' &&

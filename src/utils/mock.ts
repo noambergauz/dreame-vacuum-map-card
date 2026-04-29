@@ -38,6 +38,59 @@ export function createMockHass(): Hass {
     attributes: {
       friendly_name: 'Vacuum Map',
       entity_picture: '/api/camera_proxy/camera.vacuum_map',
+      // Calibration points for coordinate conversion (maps vacuum coords to image pixels)
+      calibration_points: [
+        { vacuum: { x: 0, y: 0 }, map: { x: 450, y: 300 } },
+        { vacuum: { x: 1000, y: 0 }, map: { x: 530, y: 300 } },
+        { vacuum: { x: 0, y: 1000 }, map: { x: 450, y: 220 } },
+      ],
+      // Charger/dock position (vacuum coordinates)
+      charger_position: {
+        x: 148,
+        y: 412,
+        a: 271,
+      },
+      // Current vacuum position (vacuum coordinates)
+      vacuum_position: {
+        x: -2500,
+        y: 1800,
+        a: 45,
+      },
+      // Room segments data (keyed by room ID)
+      rooms: {
+        '1': {
+          id: 1,
+          x0: -6000,
+          y0: 3550,
+          x1: -4250,
+          y1: 5300,
+          room_id: 1,
+          name: 'Living Room',
+          icon: 'mdi:sofa',
+        },
+        '2': {
+          id: 2,
+          x0: -4200,
+          y0: 2000,
+          x1: -2500,
+          y1: 3500,
+          room_id: 2,
+          name: 'Kitchen',
+          icon: 'mdi:silverware-fork-knife',
+        },
+        '3': {
+          id: 3,
+          x0: -2400,
+          y0: 1000,
+          x1: -500,
+          y1: 2500,
+          room_id: 3,
+          name: 'Bedroom',
+          icon: 'mdi:bed',
+        },
+      },
+      // Currently active/cleaning segments
+      active_segments: [],
     },
     context: { id: 'mock-camera', parent_id: null, user_id: null },
     last_changed: new Date().toISOString(),
