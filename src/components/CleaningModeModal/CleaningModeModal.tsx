@@ -22,7 +22,7 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
   const hass = useHass();
   const { phase, isCustomizedCleaning } = useMachineState();
   const baseEntityId = extractBaseEntityId(entity.entity_id);
-  const { setSelectOption, setSwitch } = useHomeAssistantServices(hass);
+  const { setSelectOption } = useHomeAssistantServices(hass);
   const entityIds = useVacuumEntityIds(baseEntityId);
   const capabilities = useVacuumCapabilities();
 
@@ -97,8 +97,6 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
     if (isCleanGeniusMode && isCustomizedCleaning) {
       hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
     }
-
-    setSwitch(entityIds.customMoppingMode, !isCleanGeniusMode);
 
     const state = isCleanGeniusMode ? CLEANGENIUS_STATE.ROUTINE_CLEANING : CLEANGENIUS_STATE.OFF;
     setSelectOption(entityIds.cleangenius, convertCleanGeniusStateToService(state as CleanGeniusState));

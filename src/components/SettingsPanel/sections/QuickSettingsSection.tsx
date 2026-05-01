@@ -3,7 +3,7 @@ import { Droplets, Wind, Pipette, Sparkles, Waves, RotateCcw, Trash2, AlertCircl
 import { Toggle } from '@/components/common';
 import { useTranslation, getSwitchState, useVacuumCapabilities } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
-import { STATION_BUTTON_SUFFIX, CAPABILITY } from '@/constants';
+import { DREAME_BUTTONS, CAPABILITY } from '@/constants';
 import './QuickSettingsSection.scss';
 
 interface QuickSetting {
@@ -71,56 +71,56 @@ const STATION_ACTIONS: StationAction[] = [
     key: 'self_clean',
     labelKey: 'settings.station_controls.self_clean',
     descriptionKey: 'settings.station_controls.self_clean_desc',
-    buttonEntitySuffix: STATION_BUTTON_SUFFIX.SELF_CLEAN,
+    buttonEntitySuffix: DREAME_BUTTONS.SELF_CLEAN.key,
     icon: <Droplets size={18} />,
   },
   {
     key: 'manual_drying',
     labelKey: 'settings.station_controls.manual_drying',
     descriptionKey: 'settings.station_controls.manual_drying_desc',
-    buttonEntitySuffix: STATION_BUTTON_SUFFIX.MANUAL_DRYING,
+    buttonEntitySuffix: DREAME_BUTTONS.MANUAL_DRYING.key,
     icon: <Wind size={18} />,
   },
   {
     key: 'water_tank_draining',
     labelKey: 'settings.station_controls.water_tank_draining',
     descriptionKey: 'settings.station_controls.water_tank_draining_desc',
-    buttonEntitySuffix: STATION_BUTTON_SUFFIX.WATER_TANK_DRAINING,
+    buttonEntitySuffix: DREAME_BUTTONS.WATER_TANK_DRAINING.key,
     icon: <Pipette size={18} />,
   },
   {
     key: 'base_station_cleaning',
     labelKey: 'settings.station_controls.base_station_cleaning',
     descriptionKey: 'settings.station_controls.base_station_cleaning_desc',
-    buttonEntitySuffix: STATION_BUTTON_SUFFIX.BASE_STATION_CLEANING,
+    buttonEntitySuffix: DREAME_BUTTONS.BASE_STATION_CLEANING.key,
     icon: <Sparkles size={18} />,
   },
   {
     key: 'empty_water_tank',
     labelKey: 'settings.station_controls.empty_water_tank',
     descriptionKey: 'settings.station_controls.empty_water_tank_desc',
-    buttonEntitySuffix: STATION_BUTTON_SUFFIX.EMPTY_WATER_TANK,
+    buttonEntitySuffix: DREAME_BUTTONS.EMPTY_WATER_TANK.key,
     icon: <Waves size={18} />,
   },
   {
     key: 'start_auto_empty',
     labelKey: 'settings.station_controls.start_auto_empty',
     descriptionKey: 'settings.station_controls.start_auto_empty_desc',
-    buttonEntitySuffix: 'start_auto_empty',
+    buttonEntitySuffix: DREAME_BUTTONS.START_AUTO_EMPTY.key,
     icon: <Trash2 size={18} />,
   },
   {
     key: 'start_recleaning',
     labelKey: 'settings.station_controls.start_recleaning',
     descriptionKey: 'settings.station_controls.start_recleaning_desc',
-    buttonEntitySuffix: 'start_recleaning',
+    buttonEntitySuffix: DREAME_BUTTONS.START_RECLEANING.key,
     icon: <RotateCcw size={18} />,
   },
   {
     key: 'clear_warning',
     labelKey: 'settings.station_controls.clear_warning',
     descriptionKey: 'settings.station_controls.clear_warning_desc',
-    buttonEntitySuffix: 'clear_warning',
+    buttonEntitySuffix: DREAME_BUTTONS.CLEAR_WARNING.key,
     icon: <AlertCircle size={18} />,
   },
 ];

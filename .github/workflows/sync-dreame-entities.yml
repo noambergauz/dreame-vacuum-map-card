@@ -1,0 +1,87 @@
+name: Sync Dreame Entities
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sunday at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  check-entities:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout map card repo
+        uses: actions/checkout@v4
+        with:
+          path: map-card
+
+      - name: Checkout dreame-vacuum integration
+        uses: actions/checkout@v4
+        with:
+          repository: Tasshack/dreame-vacuum
+          path: dreame-vacuum
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run extraction script
+        run: |
+          cd map-card
+          python scripts/extract-dreame-entities.py ../dreame-vacuum
+
+      - name: Check for changes
+        id: diff
+        run: |
+          cd map-card
+          if git diff --quiet src/generated/dreame-entities.ts; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            git diff src/generated/dreame-entities.ts
+          fi
+
+      - name: Create issue if changes detected
+        if: steps.diff.outputs.changed == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { execSync } = require('child_process');
+            const diff = execSync('cd map-card && git diff src/generated/dreame-entities.ts', { encoding: 'utf8' });
+            const fs = require('fs');
+            const initContent = fs.readFileSync('dreame-vacuum/custom_components/dreame_vacuum/dreame/__init__.py', 'utf8');
+            const versionMatch = initContent.match(/VERSION\s*=\s*["']([^"']+)["']/);
+            const version = versionMatch ? versionMatch[1] : 'unknown';
+            const addedLines = (diff.match(/^\+[^+]/gm) || []).length;
+            const removedLines = (diff.match(/^-[^-]/gm) || []).length;
+            
+            const issueBody = `## Dreame Vacuum Integration Entity Changes Detected
+
+            The weekly sync has detected changes in the dreame-vacuum integration entity definitions.
+
+            **Integration Version:** ${version}
+            **Changes:** +${addedLines} / -${removedLines} lines
+
+            1. Review the changes below
+            2. Update \`src/config/entity-ui-mapping.ts\` if new entities should be displayed
+            3. Run \`python scripts/extract-dreame-entities.py\` locally to update the generated file
+            4. Test the card with the new entities
+
+            <details>
+            <summary>View Diff</summary>
+
+            \`\`\`diff
+            ${diff.substring(0, 60000)}
+            \`\`\`
+
+            </details>
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Sync] Dreame Vacuum Integration entities updated (${version})`,
+              body: issueBody,
+              labels: ['sync', 'entities']
+            });

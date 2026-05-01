@@ -56,7 +56,6 @@ export interface VacuumEntityAttributes {
   wetness_level?: number;
   mop_pad_humidity?: MopPadHumidity;
   mop_pad_humidity_list?: MopPadHumidity[];
-  custom_mopping_mode?: boolean;
 
   // Cleaning route
   cleaning_route?: CleaningRoute;

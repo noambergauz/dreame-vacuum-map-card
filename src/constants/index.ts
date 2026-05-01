@@ -3,11 +3,21 @@
  * Eliminates magic numbers and strings throughout the codebase
  */
 
+// Re-export generated entity definitions (source of truth)
+export * from '../generated/dreame-entities';
+
+// Re-export UI mapping config
+export * from '../config/entity-ui-mapping';
+
 // Re-export icon SVG constants
 export * from './icons';
 
-// Re-export capability constants
-export * from './capabilities';
+// Capability alias - DREAME_CAPABILITIES is the source of truth
+import { DREAME_CAPABILITIES } from '../generated/dreame-entities';
+
+export const CAPABILITY = DREAME_CAPABILITIES;
+
+export type CapabilityString = (typeof CAPABILITY)[keyof typeof CAPABILITY];
 
 // Re-export vacuum state machine constants
 export * from './vacuumStates';
@@ -49,30 +59,6 @@ export const SERVICE_ACTION = {
   VACUUM_CLEAN_SEGMENT: 'vacuum_clean_segment',
   PRESS: 'press',
   SET_FAN_SPEED: 'set_fan_speed',
-} as const;
-
-// Entity name suffixes
-export const ENTITY_SUFFIX = {
-  CLEANING_MODE: 'cleaning_mode',
-  CLEANGENIUS_MODE: 'cleangenius_mode',
-  CLEANGENIUS: 'cleangenius',
-  SUCTION_LEVEL: 'suction_level',
-  CLEANING_ROUTE: 'cleaning_route',
-  MAX_SUCTION_POWER: 'max_suction_power',
-  CUSTOM_MOPPING_MODE: 'custom_mopping_mode',
-  WETNESS_LEVEL: 'wetness_level',
-  SELF_CLEAN_FREQUENCY: 'self_clean_frequency',
-  SELF_CLEAN_AREA: 'self_clean_area',
-  SELF_CLEAN_TIME: 'self_clean_time',
-} as const;
-
-// Station button entity suffixes
-export const STATION_BUTTON_SUFFIX = {
-  SELF_CLEAN: 'self_clean',
-  MANUAL_DRYING: 'manual_drying',
-  WATER_TANK_DRAINING: 'water_tank_draining',
-  BASE_STATION_CLEANING: 'base_station_cleaning',
-  EMPTY_WATER_TANK: 'empty_water_tank',
 } as const;
 
 // Cleaning modes

@@ -4,7 +4,7 @@
  */
 import { useMemo } from 'react';
 import { useEntity } from '@/contexts';
-import type { CapabilityString } from '@/constants/capabilities';
+import type { CapabilityString } from '@/constants';
 
 export interface VacuumCapabilities {
   /** Raw capabilities array from entity */
