@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const ko: Translation = {
+  // Common
+  common: {
+    run: '실행',
+    start: '시작',
+    stop: '정지',
+    cancel: '취소',
+    save: '저장',
+    apply: '적용',
+    reset: '초기화',
+  },
+
   // Room Selector
   room_selector: {
     title: '방 선택',
@@ -230,6 +241,7 @@ export const ko: Translation = {
     },
     volume: {
       title: '볼륨 및 사운드',
+      volume: '볼륨',
       test_sound: '위치 찾기',
       muted: '음소거됨',
       voice_assistant: '음성 어시스턴트',

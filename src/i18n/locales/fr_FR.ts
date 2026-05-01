@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const fr_FR: Translation = {
+  // Common
+  common: {
+    run: 'Exécuter',
+    start: 'Démarrer',
+    stop: 'Arrêter',
+    cancel: 'Annuler',
+    save: 'Enregistrer',
+    apply: 'Appliquer',
+    reset: 'Réinitialiser',
+  },
+
   // Room selector
   room_selector: {
     title: 'Sélectionner des pièces',
@@ -230,6 +241,7 @@ export const fr_FR: Translation = {
     },
     volume: {
       title: 'Volume & Son',
+      volume: 'Volume',
       test_sound: "Localiser l'aspirateur",
       muted: 'Muet',
       voice_assistant: 'Assistant vocal',

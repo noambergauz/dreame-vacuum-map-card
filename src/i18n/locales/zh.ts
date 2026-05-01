@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const zh: Translation = {
+  // Common (通用)
+  common: {
+    run: '运行',
+    start: '开始',
+    stop: '停止',
+    cancel: '取消',
+    save: '保存',
+    apply: '应用',
+    reset: '重置',
+  },
+
   // Room Selector (房间选择器)
   room_selector: {
     title: '选择房间',
@@ -230,6 +241,7 @@ export const zh: Translation = {
     },
     volume: {
       title: '音量与语音',
+      volume: '音量',
       test_sound: '寻找机器',
       muted: '已静音',
       voice_assistant: '语音助手',

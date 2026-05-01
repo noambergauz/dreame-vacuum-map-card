@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const es: Translation = {
+  // Common
+  common: {
+    run: 'Ejecutar',
+    start: 'Iniciar',
+    stop: 'Detener',
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    apply: 'Aplicar',
+    reset: 'Restablecer',
+  },
+
   // Room Selector
   room_selector: {
     title: 'Seleccionar Habitaciones',
@@ -231,6 +242,7 @@ export const es: Translation = {
     },
     volume: {
       title: 'Volumen y sonido',
+      volume: 'Volumen',
       test_sound: 'Localizar',
       muted: 'Silenciado',
       voice_assistant: 'Asistente de voz',

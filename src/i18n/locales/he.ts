@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const he: Translation = {
+  // Common
+  common: {
+    run: 'הפעל',
+    start: 'התחל',
+    stop: 'עצור',
+    cancel: 'בטל',
+    save: 'שמור',
+    apply: 'החל',
+    reset: 'אפס',
+  },
+
   // בחירת חדרים
   room_selector: {
     title: 'בחר חדרים',
@@ -230,6 +241,7 @@ export const he: Translation = {
     },
     volume: {
       title: 'עוצמת קול וצליל',
+      volume: 'עוצמה',
       test_sound: 'אתר מכשיר',
       muted: 'מושתק',
       voice_assistant: 'עוזר קולי',

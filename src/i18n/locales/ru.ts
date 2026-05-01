@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const ru: Translation = {
+  // Common
+  common: {
+    run: 'Запустить',
+    start: 'Старт',
+    stop: 'Стоп',
+    cancel: 'Отмена',
+    save: 'Сохранить',
+    apply: 'Применить',
+    reset: 'Сбросить',
+  },
+
   // Room Selector
   room_selector: {
     title: 'Выбор комнат',
@@ -231,6 +242,7 @@ export const ru: Translation = {
     },
     volume: {
       title: 'Громкость и звук',
+      volume: 'Громкость',
       test_sound: 'Найти',
       muted: 'Без звука',
       voice_assistant: 'Голосовой помощник',

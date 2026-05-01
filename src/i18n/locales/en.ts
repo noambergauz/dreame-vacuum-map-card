@@ -1,4 +1,15 @@
 export const en = {
+  // Common
+  common: {
+    run: 'Run',
+    start: 'Start',
+    stop: 'Stop',
+    cancel: 'Cancel',
+    save: 'Save',
+    apply: 'Apply',
+    reset: 'Reset',
+  },
+
   // Room Selector
   room_selector: {
     title: 'Select Rooms',
@@ -228,6 +239,7 @@ export const en = {
     },
     volume: {
       title: 'Volume & Sound',
+      volume: 'Volume',
       test_sound: 'Locate',
       muted: 'Muted',
       voice_assistant: 'Voice Assistant',

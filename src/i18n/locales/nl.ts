@@ -1,6 +1,17 @@
 import type { Translation } from './en';
 
 export const nl: Translation = {
+  // Common
+  common: {
+    run: 'Uitvoeren',
+    start: 'Start',
+    stop: 'Stop',
+    cancel: 'Annuleren',
+    save: 'Opslaan',
+    apply: 'Toepassen',
+    reset: 'Resetten',
+  },
+
   // Kamer Kiezer
   room_selector: {
     title: 'Kamers Selecteren',
@@ -230,6 +241,7 @@ export const nl: Translation = {
     },
     volume: {
       title: 'Volume & Geluid',
+      volume: 'Volume',
       test_sound: 'Lokaliseren',
       muted: 'Gedempt',
       voice_assistant: 'Spraakassistent',
