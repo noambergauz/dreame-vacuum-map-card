@@ -8,7 +8,7 @@
 import { useMemo } from 'react';
 import type { Hass, HassEntity } from '@/types/homeassistant';
 import { getEntityState } from './useEntityState';
-import { extractBaseEntityId, buildSensorEntityId } from '@/utils/converters';
+import { extractBaseEntityId } from '@/utils/converters';
 import {
   STATE_TO_PHASE,
   STATE_TO_TASK,
@@ -16,6 +16,8 @@ import {
   DEFAULT_PHASE,
   DEFAULT_TASK,
   CLEANING_MODE,
+  buildEntityId,
+  DREAME_SENSORS,
   type VacuumPhase,
   type CleaningTask,
 } from '@/constants';
@@ -133,7 +135,7 @@ function deriveControls(
 export function useVacuumMachineState(hass: Hass, entity: HassEntity): VacuumMachineState {
   return useMemo(() => {
     const baseEntityId = extractBaseEntityId(entity.entity_id);
-    const stateSensorId = buildSensorEntityId(baseEntityId, 'state');
+    const stateSensorId = buildEntityId('sensor', baseEntityId, DREAME_SENSORS.STATE.key);
 
     // Get sensor state (primary source)
     const sensorState = getEntityState(hass, stateSensorId);

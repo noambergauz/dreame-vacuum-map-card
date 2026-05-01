@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import type { Hass } from '@/types/homeassistant';
+import { buildSegmentEntityId, DREAME_SEGMENT_SELECTS, DREAME_SEGMENT_NUMBERS } from '@/constants';
 import { logger } from '@/utils/logger';
 
 export interface RoomSetting {
@@ -46,9 +47,14 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
     return rooms.map((room) => ({
       roomId: room.id,
       roomName: room.name,
-      suctionEntityId: `select.${baseEntityId}_room_${room.id}_suction_level`,
-      wetnessEntityId: `number.${baseEntityId}_room_${room.id}_wetness_level`,
-      cleaningTimesEntityId: `select.${baseEntityId}_room_${room.id}_cleaning_times`,
+      suctionEntityId: buildSegmentEntityId('select', baseEntityId, room.id, DREAME_SEGMENT_SELECTS.SUCTION_LEVEL.key),
+      wetnessEntityId: buildSegmentEntityId('number', baseEntityId, room.id, DREAME_SEGMENT_NUMBERS.WETNESS_LEVEL.key),
+      cleaningTimesEntityId: buildSegmentEntityId(
+        'select',
+        baseEntityId,
+        room.id,
+        DREAME_SEGMENT_SELECTS.CLEANING_TIMES.key
+      ),
     }));
   }, [baseEntityId, rooms]);
 
@@ -88,7 +94,7 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
   // Set suction level for a room
   const setSuctionLevel = useCallback(
     (roomId: number, value: string) => {
-      const entityId = `select.${baseEntityId}_room_${roomId}_suction_level`;
+      const entityId = buildSegmentEntityId('select', baseEntityId, roomId, DREAME_SEGMENT_SELECTS.SUCTION_LEVEL.key);
       logger.debug('RoomSettings', 'Setting suction level:', { roomId, value, entityId });
       hass.callService('select', 'select_option', {
         entity_id: entityId,
@@ -101,7 +107,7 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
   // Set wetness level for a room
   const setWetnessLevel = useCallback(
     (roomId: number, value: number) => {
-      const entityId = `number.${baseEntityId}_room_${roomId}_wetness_level`;
+      const entityId = buildSegmentEntityId('number', baseEntityId, roomId, DREAME_SEGMENT_NUMBERS.WETNESS_LEVEL.key);
       logger.debug('RoomSettings', 'Setting wetness level:', { roomId, value, entityId });
       hass.callService('number', 'set_value', {
         entity_id: entityId,
@@ -114,7 +120,7 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
   // Set cleaning times for a room
   const setCleaningTimes = useCallback(
     (roomId: number, value: string) => {
-      const entityId = `select.${baseEntityId}_room_${roomId}_cleaning_times`;
+      const entityId = buildSegmentEntityId('select', baseEntityId, roomId, DREAME_SEGMENT_SELECTS.CLEANING_TIMES.key);
       logger.debug('RoomSettings', 'Setting cleaning times:', { roomId, value, entityId });
       hass.callService('select', 'select_option', {
         entity_id: entityId,

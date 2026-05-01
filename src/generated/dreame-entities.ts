@@ -583,10 +583,16 @@ export const DREAME_BINARY_SENSORS = {
   LDS_STATUS: { key: 'lds_status', platform: 'binary_sensor', name: 'LDS Status' },
 } as const;
 
+export const DREAME_CAMERAS = {
+  MAP: { key: 'map', platform: 'camera', icon: 'mdi:map' },
+} as const;
+
 // Per-room entity templates
 export const DREAME_SEGMENT_SELECTS = {
+  SUCTION_LEVEL: { key: 'suction_level', platform: 'select' },
   MOP_PAD_HUMIDITY: { key: 'mop_pad_humidity', platform: 'select' },
   CLEANING_TIMES: { key: 'cleaning_times', platform: 'select' },
+  CLEANING_MODE: { key: 'cleaning_mode', platform: 'select' },
   CUSTOM_MOPPING_ROUTE: { key: 'custom_mopping_route', platform: 'select' },
   MOP_TYPE: { key: 'mop_type', platform: 'select' },
   ORDER: { key: 'order', platform: 'select' },
@@ -596,7 +602,9 @@ export const DREAME_SEGMENT_SELECTS = {
   NAME: { key: 'name', platform: 'select' },
 } as const;
 
-export const DREAME_SEGMENT_NUMBERS = {} as const;
+export const DREAME_SEGMENT_NUMBERS = {
+  WETNESS_LEVEL: { key: 'wetness_level', platform: 'number' },
+} as const;
 
 export const DREAME_SERVICES = {
   VACUUM_CLEAN_SEGMENT: { key: 'vacuum_clean_segment', domain: 'dreame_vacuum' },
@@ -1163,8 +1171,11 @@ export type DreameButtonKey = keyof typeof DREAME_BUTTONS;
 export type DreameNumberKey = keyof typeof DREAME_NUMBERS;
 export type DreameTimeKey = keyof typeof DREAME_TIMES;
 export type DreameBinarySensorKey = keyof typeof DREAME_BINARY_SENSORS;
+export type DreameCameraKey = keyof typeof DREAME_CAMERAS;
 export type DreameServiceKey = keyof typeof DREAME_SERVICES;
 export type DreameCapability = keyof typeof DREAME_CAPABILITIES;
+export type DreameSegmentSelectKey = keyof typeof DREAME_SEGMENT_SELECTS;
+export type DreameSegmentNumberKey = keyof typeof DREAME_SEGMENT_NUMBERS;
 
 export function buildEntityId(platform: string, deviceName: string, entityKey: string): string {
   return `${platform}.${deviceName}_${entityKey}`;

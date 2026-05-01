@@ -7,7 +7,15 @@ import { useHomeAssistantServices, useVacuumEntityIds, getEntityState, useVacuum
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntity, useHass, useMachineState } from '@/contexts';
 import { convertCleanGeniusStateToService, extractBaseEntityId, getAttr } from '@/utils';
-import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE, CAPABILITY } from '@/constants';
+import {
+  CLEANGENIUS_STATE,
+  UI_MODE_TYPE,
+  DEFAULTS,
+  CLEANING_MODE,
+  CAPABILITY,
+  buildEntityId,
+  DREAME_SWITCHES,
+} from '@/constants';
 import { logger } from '@/utils/logger';
 import './CleaningModeModal.scss';
 
@@ -29,7 +37,7 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
   const hasCleanGenius = capabilities.has(CAPABILITY.CLEANGENIUS);
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
 
-  const customizedCleaningSwitch = `switch.${baseEntityId}_customized_cleaning`;
+  const customizedCleaningSwitch = buildEntityId('switch', baseEntityId, DREAME_SWITCHES.CUSTOMIZED_CLEANING.key);
   const cleangeniusState = getEntityState(hass, entityIds.cleangenius);
 
   const getStringArrayAttr = (key: string, defaultValue: string[]): string[] => {

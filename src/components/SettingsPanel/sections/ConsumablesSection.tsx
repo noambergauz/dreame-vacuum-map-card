@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useTranslation } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
 import { getAttr } from '@/utils';
+import { DREAME_SENSORS, DREAME_SERVICES } from '@/constants';
 import './ConsumablesSection.scss';
 
 interface ConsumableItem {
@@ -16,29 +17,29 @@ const CONSUMABLES: ConsumableItem[] = [
   {
     key: 'main_brush',
     labelKey: 'settings.consumables.main_brush',
-    percentKey: 'main_brush_left',
-    hoursKey: 'main_brush_time_left',
+    percentKey: DREAME_SENSORS.MAIN_BRUSH_LEFT.key,
+    hoursKey: DREAME_SENSORS.MAIN_BRUSH_TIME_LEFT.key,
     consumableKey: 'main_brush',
   },
   {
     key: 'side_brush',
     labelKey: 'settings.consumables.side_brush',
-    percentKey: 'side_brush_left',
-    hoursKey: 'side_brush_time_left',
+    percentKey: DREAME_SENSORS.SIDE_BRUSH_LEFT.key,
+    hoursKey: DREAME_SENSORS.SIDE_BRUSH_TIME_LEFT.key,
     consumableKey: 'side_brush',
   },
   {
     key: 'filter',
     labelKey: 'settings.consumables.filter',
-    percentKey: 'filter_left',
-    hoursKey: 'filter_time_left',
+    percentKey: DREAME_SENSORS.FILTER_LEFT.key,
+    hoursKey: DREAME_SENSORS.FILTER_TIME_LEFT.key,
     consumableKey: 'filter',
   },
   {
     key: 'sensor',
     labelKey: 'settings.consumables.sensor',
-    percentKey: 'sensor_dirty_left',
-    hoursKey: 'sensor_dirty_time_left',
+    percentKey: DREAME_SENSORS.SENSOR_DIRTY_LEFT.key,
+    hoursKey: DREAME_SENSORS.SENSOR_DIRTY_TIME_LEFT.key,
     consumableKey: 'sensor',
   },
 ];
@@ -51,7 +52,7 @@ export function ConsumablesSection() {
 
   const handleReset = useCallback(
     (consumableKey: string) => {
-      hass.callService('dreame_vacuum', 'vacuum_reset_consumable', {
+      hass.callService(DREAME_SERVICES.VACUUM_RESET_CONSUMABLE.domain, DREAME_SERVICES.VACUUM_RESET_CONSUMABLE.key, {
         entity_id: entity.entity_id,
         consumable: consumableKey,
       });

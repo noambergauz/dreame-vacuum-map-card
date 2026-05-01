@@ -59,22 +59,6 @@ export function convertToLowerCase(value: string): string {
   return value.toLowerCase();
 }
 
-export function buildEntityId(baseEntityId: string, suffix: string): string {
-  return `select.${baseEntityId}_${suffix}`;
-}
-
-export function buildSwitchEntityId(baseEntityId: string, suffix: string): string {
-  return `switch.${baseEntityId}_${suffix}`;
-}
-
-export function buildNumberEntityId(baseEntityId: string, suffix: string): string {
-  return `number.${baseEntityId}_${suffix}`;
-}
-
-export function buildSensorEntityId(baseEntityId: string, suffix: string): string {
-  return `sensor.${baseEntityId}_${suffix}`;
-}
-
 export function extractBaseEntityId(entityId: string): string {
   return entityId.replace('vacuum.', '');
 }

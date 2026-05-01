@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, Check, Map } from 'lucide-react';
 import { useTranslation, getSelectState } from '@/hooks';
 import { useEntity, useHass, useConfig, useMachineState } from '@/contexts';
+import { buildEntityId, DREAME_SELECTS } from '@/constants';
 import './MapSelector.scss';
 
 interface MapInfo {
@@ -30,7 +31,7 @@ export function MapSelector() {
 
   // Derive the select entity ID for map selection
   const entityName = config.entity?.split('.')[1] ?? '';
-  const selectEntityId = `select.${entityName}_selected_map`;
+  const selectEntityId = buildEntityId('select', entityName, DREAME_SELECTS.SELECTED_MAP.key);
 
   // Check select entity availability
   const selectState = getSelectState(hass, entityName, 'selected_map');

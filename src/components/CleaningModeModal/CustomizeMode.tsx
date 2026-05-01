@@ -8,6 +8,11 @@ import {
   SUCTION_STANDARD_ICON_SVG,
   SUCTION_STRONG_ICON_SVG,
   SUCTION_TURBO_ICON_SVG,
+  buildEntityId,
+  buildSegmentEntityId,
+  DREAME_CAMERAS,
+  DREAME_SEGMENT_SELECTS,
+  DREAME_SEGMENT_NUMBERS,
 } from '@/constants';
 import type { ReactNode } from 'react';
 import type { RoomSetting } from '@/hooks';
@@ -241,7 +246,7 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
   const hass = useHass();
 
   // Get map entity ID and parse rooms
-  const mapEntityId = `camera.${baseEntityId}_map`;
+  const mapEntityId = buildEntityId('camera', baseEntityId, DREAME_CAMERAS.MAP.key);
   const rooms = parseRoomsFromCamera(hass, mapEntityId);
 
   // Use room settings hook to read/write HA entities
@@ -286,9 +291,24 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
           if (!setting) return null;
 
           // Check entity availability for each room setting
-          const suctionEntityId = `select.${baseEntityId}_room_${room.id}_suction_level`;
-          const wetnessEntityId = `number.${baseEntityId}_room_${room.id}_wetness_level`;
-          const cleaningTimesEntityId = `select.${baseEntityId}_room_${room.id}_cleaning_times`;
+          const suctionEntityId = buildSegmentEntityId(
+            'select',
+            baseEntityId,
+            room.id,
+            DREAME_SEGMENT_SELECTS.SUCTION_LEVEL.key
+          );
+          const wetnessEntityId = buildSegmentEntityId(
+            'number',
+            baseEntityId,
+            room.id,
+            DREAME_SEGMENT_NUMBERS.WETNESS_LEVEL.key
+          );
+          const cleaningTimesEntityId = buildSegmentEntityId(
+            'select',
+            baseEntityId,
+            room.id,
+            DREAME_SEGMENT_SELECTS.CLEANING_TIMES.key
+          );
 
           const suctionState = getEntityState(hass, suctionEntityId);
           const wetnessState = getEntityState(hass, wetnessEntityId);
