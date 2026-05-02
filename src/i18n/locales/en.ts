@@ -131,6 +131,20 @@ export const en = {
     water_high: 'High',
     mop_washing_frequency_title: 'Mop-washing frequency',
     route_title: 'Route',
+    mop_pressure_title: 'Mop Pressure',
+    mop_temperature_title: 'Water Temperature',
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Light',
+    normal: 'Normal',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Normal',
+    warm: 'Warm',
   },
 
   // Customize Cleaning Mode
@@ -320,6 +334,8 @@ export const en = {
       large_particles_boost_desc: 'Increase suction for large debris',
       pet_focused_cleaning: 'Pet Focused Cleaning',
       pet_focused_cleaning_desc: 'Extra cleaning in pet areas',
+      low_lying_area_frequency: 'Low-Lying Area Frequency',
+      low_lying_area_frequency_desc: 'How often to clean low-lying areas under furniture',
     },
     edge_corner: {
       title: 'Edge & Corner',
@@ -395,6 +411,8 @@ export const en = {
       self_repair: 'Self Repair',
       self_repair_desc: 'Run station self-repair diagnostics',
       repair_now: 'Repair',
+      scraper_frequency: 'Scraper Frequency',
+      scraper_frequency_desc: 'How often to clean the rubber scraper',
     },
     ai_detection: {
       title: 'AI & Detection',

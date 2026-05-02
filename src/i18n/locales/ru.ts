@@ -134,6 +134,20 @@ export const ru: Translation = {
     water_high: 'Высокий',
     mop_washing_frequency_title: 'Периодичность промывки швабры',
     route_title: 'Маршрут',
+    mop_pressure_title: 'Давление швабры',
+    mop_temperature_title: 'Температура воды',
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Лёгкое',
+    normal: 'Нормальное',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Обычная',
+    warm: 'Тёплая',
   },
 
   // Customize Cleaning Mode
@@ -323,6 +337,8 @@ export const ru: Translation = {
       large_particles_boost_desc: 'Увеличить всасывание для крупного мусора',
       pet_focused_cleaning: 'Уборка в зонах питомцев',
       pet_focused_cleaning_desc: 'Дополнительная уборка в местах обитания питомцев',
+      low_lying_area_frequency: 'Частота уборки низких зон',
+      low_lying_area_frequency_desc: 'Как часто убирать низкие зоны под мебелью',
     },
     edge_corner: {
       title: 'Края и углы',
@@ -398,6 +414,8 @@ export const ru: Translation = {
       self_repair: 'Самодиагностика',
       self_repair_desc: 'Запустить диагностику станции',
       repair_now: 'Диагностика',
+      scraper_frequency: 'Частота очистки скребка',
+      scraper_frequency_desc: 'Как часто очищать резиновый скребок',
     },
     ai_detection: {
       title: 'ИИ и распознавание',

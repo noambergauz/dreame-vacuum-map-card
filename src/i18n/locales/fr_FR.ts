@@ -133,6 +133,20 @@ export const fr_FR: Translation = {
     water_high: 'Élevé',
     mop_washing_frequency_title: 'Fréquence de lavage de serpillère',
     route_title: 'Trajectoire de nettoyage',
+    mop_pressure_title: 'Pression de la serpillère',
+    mop_temperature_title: "Température de l'eau",
+  },
+
+  // Niveaux de pression serpillère
+  mop_pressure: {
+    light: 'Légère',
+    normal: 'Normale',
+  },
+
+  // Niveaux de température eau
+  mop_temperature: {
+    normal: 'Normale',
+    warm: 'Tiède',
   },
 
   // Customize Cleaning Mode
@@ -322,6 +336,8 @@ export const fr_FR: Translation = {
       large_particles_boost_desc: "Augmenter l'aspiration pour les gros débris",
       pet_focused_cleaning: 'Nettoyage zones animaux',
       pet_focused_cleaning_desc: 'Nettoyage supplémentaire dans les zones des animaux',
+      low_lying_area_frequency: 'Fréquence zones basses',
+      low_lying_area_frequency_desc: 'Fréquence de nettoyage des zones basses sous les meubles',
     },
     edge_corner: {
       title: 'Bords & Coins',
@@ -397,6 +413,8 @@ export const fr_FR: Translation = {
       self_repair: 'Auto-réparation',
       self_repair_desc: 'Diagnostic et réparation automatiques',
       repair_now: 'Réparer',
+      scraper_frequency: 'Fréquence du racleur',
+      scraper_frequency_desc: 'Fréquence de nettoyage du racleur en caoutchouc',
     },
     ai_detection: {
       title: 'IA & Détection',

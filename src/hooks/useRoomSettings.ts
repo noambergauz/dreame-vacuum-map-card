@@ -16,6 +16,12 @@ export interface RoomSetting {
   // Cleaning times (cycles)
   cleaningTimes: string | null;
   cleaningTimesOptions: string[];
+  // Mop pressure (Light/Normal)
+  mopPressure: string | null;
+  mopPressureOptions: string[];
+  // Mop temperature (Normal/Warm)
+  mopTemperature: string | null;
+  mopTemperatureOptions: string[];
   // Whether entities exist for this room
   hasEntities: boolean;
 }
@@ -31,6 +37,8 @@ interface UseRoomSettingsReturn {
   setSuctionLevel: (roomId: number, value: string) => void;
   setWetnessLevel: (roomId: number, value: number) => void;
   setCleaningTimes: (roomId: number, value: string) => void;
+  setMopPressure: (roomId: number, value: string) => void;
+  setMopTemperature: (roomId: number, value: string) => void;
 }
 
 /**
@@ -40,6 +48,8 @@ interface UseRoomSettingsReturn {
  * - select.{device}_room_{id}_suction_level
  * - number.{device}_room_{id}_wetness_level
  * - select.{device}_room_{id}_cleaning_times
+ * - select.{device}_room_{id}_mop_pressure
+ * - select.{device}_room_{id}_mop_temperature
  */
 export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOptions): UseRoomSettingsReturn {
   // Extract only the entity IDs we need to avoid depending on entire hass.states
@@ -55,6 +65,18 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
         room.id,
         DREAME_SEGMENT_SELECTS.CLEANING_TIMES.key
       ),
+      mopPressureEntityId: buildSegmentEntityId(
+        'select',
+        baseEntityId,
+        room.id,
+        DREAME_SEGMENT_SELECTS.MOP_PRESSURE.key
+      ),
+      mopTemperatureEntityId: buildSegmentEntityId(
+        'select',
+        baseEntityId,
+        room.id,
+        DREAME_SEGMENT_SELECTS.MOP_TEMPERATURE.key
+      ),
     }));
   }, [baseEntityId, rooms]);
 
@@ -67,9 +89,17 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
       const suctionEntity = hass.states[entityIds.suctionEntityId];
       const wetnessEntity = hass.states[entityIds.wetnessEntityId];
       const cleaningTimesEntity = hass.states[entityIds.cleaningTimesEntityId];
+      const mopPressureEntity = hass.states[entityIds.mopPressureEntityId];
+      const mopTemperatureEntity = hass.states[entityIds.mopTemperatureEntityId];
 
       // Check if at least one entity exists
-      const hasEntities = !!(suctionEntity || wetnessEntity || cleaningTimesEntity);
+      const hasEntities = !!(
+        suctionEntity ||
+        wetnessEntity ||
+        cleaningTimesEntity ||
+        mopPressureEntity ||
+        mopTemperatureEntity
+      );
 
       settings.set(entityIds.roomId, {
         roomId: entityIds.roomId,
@@ -84,6 +114,12 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
         // Cleaning times
         cleaningTimes: cleaningTimesEntity?.state ?? null,
         cleaningTimesOptions: (cleaningTimesEntity?.attributes?.options as string[]) ?? [],
+        // Mop pressure
+        mopPressure: mopPressureEntity?.state ?? null,
+        mopPressureOptions: (mopPressureEntity?.attributes?.options as string[]) ?? [],
+        // Mop temperature
+        mopTemperature: mopTemperatureEntity?.state ?? null,
+        mopTemperatureOptions: (mopTemperatureEntity?.attributes?.options as string[]) ?? [],
         hasEntities,
       });
     }
@@ -130,10 +166,38 @@ export function useRoomSettings({ hass, baseEntityId, rooms }: UseRoomSettingsOp
     [hass, baseEntityId]
   );
 
+  // Set mop pressure for a room
+  const setMopPressure = useCallback(
+    (roomId: number, value: string) => {
+      const entityId = buildSegmentEntityId('select', baseEntityId, roomId, DREAME_SEGMENT_SELECTS.MOP_PRESSURE.key);
+      logger.debug('RoomSettings', 'Setting mop pressure:', { roomId, value, entityId });
+      hass.callService('select', 'select_option', {
+        entity_id: entityId,
+        option: value,
+      });
+    },
+    [hass, baseEntityId]
+  );
+
+  // Set mop temperature for a room
+  const setMopTemperature = useCallback(
+    (roomId: number, value: string) => {
+      const entityId = buildSegmentEntityId('select', baseEntityId, roomId, DREAME_SEGMENT_SELECTS.MOP_TEMPERATURE.key);
+      logger.debug('RoomSettings', 'Setting mop temperature:', { roomId, value, entityId });
+      hass.callService('select', 'select_option', {
+        entity_id: entityId,
+        option: value,
+      });
+    },
+    [hass, baseEntityId]
+  );
+
   return {
     roomSettings,
     setSuctionLevel,
     setWetnessLevel,
     setCleaningTimes,
+    setMopPressure,
+    setMopTemperature,
   };
 }

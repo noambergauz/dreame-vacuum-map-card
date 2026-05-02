@@ -591,6 +591,8 @@ export const DREAME_CAMERAS = {
 export const DREAME_SEGMENT_SELECTS = {
   SUCTION_LEVEL: { key: 'suction_level', platform: 'select' },
   MOP_PAD_HUMIDITY: { key: 'mop_pad_humidity', platform: 'select' },
+  MOP_PRESSURE: { key: 'mop_pressure', platform: 'select' },
+  MOP_TEMPERATURE: { key: 'mop_temperature', platform: 'select' },
   CLEANING_TIMES: { key: 'cleaning_times', platform: 'select' },
   CLEANING_MODE: { key: 'cleaning_mode', platform: 'select' },
   CUSTOM_MOPPING_ROUTE: { key: 'custom_mopping_route', platform: 'select' },

@@ -133,6 +133,20 @@ export const pl: Translation = {
     water_high: 'Wysoka',
     mop_washing_frequency_title: 'Częstotliwość mycia mopa',
     route_title: 'Trasa',
+    mop_pressure_title: 'Siła nacisku mopa',
+    mop_temperature_title: 'Temperatura wody',
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Lekki',
+    normal: 'Normalny',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Normalna',
+    warm: 'Ciepła',
   },
 
   // Customize Cleaning Mode
@@ -322,6 +336,8 @@ export const pl: Translation = {
       large_particles_boost_desc: 'Zwiększ siłę ssania dla dużych zanieczyszczeń',
       pet_focused_cleaning: 'Sprzątanie stref zwierząt',
       pet_focused_cleaning_desc: 'Dodatkowe sprzątanie w strefach zwierząt',
+      low_lying_area_frequency: 'Częstotliwość niskich stref',
+      low_lying_area_frequency_desc: 'Jak często sprzątać niskie obszary pod meblami',
     },
     edge_corner: {
       title: 'Krawędzie i Rogi',
@@ -397,6 +413,8 @@ export const pl: Translation = {
       self_repair: 'Samonaprawa',
       self_repair_desc: 'Uruchom diagnostykę samonaprawy stacji',
       repair_now: 'Napraw',
+      scraper_frequency: 'Częstotliwość skrobaka',
+      scraper_frequency_desc: 'Jak często czyścić gumowy skrobak',
     },
     ai_detection: {
       title: 'AI i Wykrywanie',

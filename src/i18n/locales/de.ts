@@ -135,6 +135,20 @@ export const de: Translation = {
     water_high: 'Hoch',
     mop_washing_frequency_title: 'Wischmopp-Waschfrequenz',
     route_title: 'Route',
+    mop_pressure_title: 'Wischdruck',
+    mop_temperature_title: 'Wassertemperatur',
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Leicht',
+    normal: 'Normal',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Normal',
+    warm: 'Warm',
   },
 
   // Customize Cleaning Mode
@@ -324,6 +338,8 @@ export const de: Translation = {
       large_particles_boost_desc: 'Saugleistung für große Partikel erhöhen',
       pet_focused_cleaning: 'Haustier-fokussierte Reinigung',
       pet_focused_cleaning_desc: 'Extra Reinigung in Haustierbereichen',
+      low_lying_area_frequency: 'Niedrigbereich-Häufigkeit',
+      low_lying_area_frequency_desc: 'Wie oft niedrige Bereiche unter Möbeln gereinigt werden',
     },
     edge_corner: {
       title: 'Kanten & Ecken',
@@ -399,6 +415,8 @@ export const de: Translation = {
       self_repair: 'Selbstreparatur',
       self_repair_desc: 'Stations-Selbstdiagnose ausführen',
       repair_now: 'Reparieren',
+      scraper_frequency: 'Schaber-Häufigkeit',
+      scraper_frequency_desc: 'Wie oft der Gummischaber gereinigt wird',
     },
     ai_detection: {
       title: 'KI & Erkennung',

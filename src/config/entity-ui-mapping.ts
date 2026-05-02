@@ -256,6 +256,14 @@ export const FLOOR_SETTINGS_SECTION: SectionDefinition = {
     sw('LARGE_PARTICLES_BOOST', 'settings.floor.large_particles_boost', 'settings.floor.large_particles_boost_desc'),
     sw('PET_FOCUSED_CLEANING', 'settings.floor.pet_focused_cleaning', 'settings.floor.pet_focused_cleaning_desc'),
     sel('AUTO_RECLEANING', 'settings.floor.auto_recleaning', 'settings.floor.auto_recleaning_desc'),
+    sel(
+      'LOW_LYING_AREA_FREQUENCY',
+      'settings.floor.low_lying_area_frequency',
+      'settings.floor.low_lying_area_frequency_desc',
+      {
+        capability: CAP.LOW_LYING_AREA_FREQUENCY,
+      }
+    ),
   ],
 };
 
@@ -380,6 +388,9 @@ export const DOCK_SETTINGS_SECTION: SectionDefinition = {
     }),
     btn('BASE_STATION_SELF_REPAIR', 'settings.dock.self_repair', 'settings.dock.self_repair_desc', {
       capability: CAP.STATION_CLEANING,
+    }),
+    sel('SCRAPER_FREQUENCY', 'settings.dock.scraper_frequency', 'settings.dock.scraper_frequency_desc', {
+      capability: CAP.SCRAPER_FREQUENCY,
     }),
   ],
 };

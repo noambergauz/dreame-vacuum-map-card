@@ -134,6 +134,20 @@ export const it: Translation = {
     water_high: 'Alto',
     mop_washing_frequency_title: 'Frequenza lavaggio mop',
     route_title: 'Percorso',
+    mop_pressure_title: 'Pressione Mop',
+    mop_temperature_title: "Temperatura dell'acqua",
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Leggera',
+    normal: 'Normale',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Normale',
+    warm: 'Calda',
   },
 
   // Customize Cleaning Mode
@@ -323,6 +337,8 @@ export const it: Translation = {
       large_particles_boost_desc: "Aumenta l'aspirazione per detriti grandi",
       pet_focused_cleaning: 'Pulizia aree animali',
       pet_focused_cleaning_desc: 'Pulizia extra nelle aree degli animali domestici',
+      low_lying_area_frequency: 'Frequenza zone basse',
+      low_lying_area_frequency_desc: 'Quanto spesso pulire le zone basse sotto i mobili',
     },
     edge_corner: {
       title: 'Bordi e Angoli',
@@ -398,6 +414,8 @@ export const it: Translation = {
       self_repair: 'Autoriparazione',
       self_repair_desc: 'Esegui la diagnostica di autoriparazione della stazione',
       repair_now: 'Ripara',
+      scraper_frequency: 'Frequenza raschietto',
+      scraper_frequency_desc: 'Quanto spesso pulire il raschietto in gomma',
     },
     ai_detection: {
       title: 'AI e rilevamento',

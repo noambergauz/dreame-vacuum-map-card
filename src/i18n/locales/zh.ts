@@ -133,6 +133,20 @@ export const zh: Translation = {
     water_high: '高',
     mop_washing_frequency_title: '拖布回洗频率',
     route_title: '路径设置',
+    mop_pressure_title: '拖地压力',
+    mop_temperature_title: '水温',
+  },
+
+  // 拖地压力选项
+  mop_pressure: {
+    light: '轻柔',
+    normal: '标准',
+  },
+
+  // 水温选项
+  mop_temperature: {
+    normal: '常温',
+    warm: '温水',
   },
 
   // 定制清洁模式
@@ -322,6 +336,8 @@ export const zh: Translation = {
       large_particles_boost_desc: '增加吸力清理大颗粒杂物',
       pet_focused_cleaning: '宠物区域清洁',
       pet_focused_cleaning_desc: '在宠物活动区域加强清洁',
+      low_lying_area_frequency: '低矮区域清洁频率',
+      low_lying_area_frequency_desc: '多久清洁一次家具下方的低矮区域',
     },
     edge_corner: {
       title: '边角清洁',
@@ -397,6 +413,8 @@ export const zh: Translation = {
       self_repair: '自检修复',
       self_repair_desc: '运行基站自检修复诊断',
       repair_now: '修复',
+      scraper_frequency: '刮板清洁频率',
+      scraper_frequency_desc: '多久清洁一次橡胶刮板',
     },
     ai_detection: {
       title: 'AI 识别与避障',

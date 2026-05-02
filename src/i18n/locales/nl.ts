@@ -133,6 +133,20 @@ export const nl: Translation = {
     water_high: 'Hoog',
     mop_washing_frequency_title: 'Dweil-wasfrequentie',
     route_title: 'Route',
+    mop_pressure_title: 'Dweildruk',
+    mop_temperature_title: 'Watertemperatuur',
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Licht',
+    normal: 'Normaal',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Normaal',
+    warm: 'Warm',
   },
 
   // Aanpassen Schoonmaakmodus
@@ -322,6 +336,8 @@ export const nl: Translation = {
       large_particles_boost_desc: 'Zuigkracht verhogen voor groot vuil',
       pet_focused_cleaning: 'Huisdier-gerichte reiniging',
       pet_focused_cleaning_desc: 'Extra reiniging in huisdiergebieden',
+      low_lying_area_frequency: 'Lage-zonefrequentie',
+      low_lying_area_frequency_desc: 'Hoe vaak lage zones onder meubels reinigen',
     },
     edge_corner: {
       title: 'Randen & Hoeken',
@@ -397,6 +413,8 @@ export const nl: Translation = {
       self_repair: 'Zelfreparatie',
       self_repair_desc: 'Station zelfreparatie diagnose uitvoeren',
       repair_now: 'Repareren',
+      scraper_frequency: 'Schraperfrequentie',
+      scraper_frequency_desc: 'Hoe vaak de rubberen schraper reinigen',
     },
     ai_detection: {
       title: 'AI & Detectie',

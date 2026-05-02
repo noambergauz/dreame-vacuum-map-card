@@ -133,6 +133,20 @@ export const he: Translation = {
     water_high: 'גבוה',
     mop_washing_frequency_title: 'תדירות שטיפת סמרטוט',
     route_title: 'מסלול',
+    mop_pressure_title: 'לחץ סמרטוט',
+    mop_temperature_title: 'טמפרטורת מים',
+  },
+
+  // רמות לחץ סמרטוט
+  mop_pressure: {
+    light: 'קל',
+    normal: 'רגיל',
+  },
+
+  // רמות טמפרטורת מים
+  mop_temperature: {
+    normal: 'רגיל',
+    warm: 'חם',
   },
 
   // מצב התאמה אישית
@@ -322,6 +336,8 @@ export const he: Translation = {
       large_particles_boost_desc: 'הגבר שאיבה לפסולת גדולה',
       pet_focused_cleaning: 'ניקוי ממוקד חיות מחמד',
       pet_focused_cleaning_desc: 'ניקוי נוסף באזורי חיות מחמד',
+      low_lying_area_frequency: 'תדירות אזורים נמוכים',
+      low_lying_area_frequency_desc: 'באיזו תדירות לנקות אזורים נמוכים מתחת לרהיטים',
     },
     edge_corner: {
       title: 'קצוות ופינות',
@@ -397,6 +413,8 @@ export const he: Translation = {
       self_repair: 'תיקון עצמי',
       self_repair_desc: 'הפעל אבחון תיקון עצמי של התחנה',
       repair_now: 'תקן',
+      scraper_frequency: 'תדירות מגרד',
+      scraper_frequency_desc: 'באיזו תדירות לנקות את המגרד הגומי',
     },
     ai_detection: {
       title: 'בינה מלאכותית וזיהוי',

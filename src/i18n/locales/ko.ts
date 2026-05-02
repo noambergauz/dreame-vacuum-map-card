@@ -133,6 +133,20 @@ export const ko: Translation = {
     water_high: '높음',
     mop_washing_frequency_title: '물걸레 세척 빈도',
     route_title: '경로',
+    mop_pressure_title: '물걸레 압력',
+    mop_temperature_title: '물 온도',
+  },
+
+  // 물걸레 압력 레벨
+  mop_pressure: {
+    light: '약하게',
+    normal: '보통',
+  },
+
+  // 물 온도 레벨
+  mop_temperature: {
+    normal: '상온',
+    warm: '따뜻하게',
   },
 
   // Customize Cleaning Mode
@@ -322,6 +336,8 @@ export const ko: Translation = {
       large_particles_boost_desc: '큰 이물질에 대한 흡입력 증가',
       pet_focused_cleaning: '반려동물 구역 청소',
       pet_focused_cleaning_desc: '반려동물 구역에서 추가 청소',
+      low_lying_area_frequency: '낮은 구역 청소 빈도',
+      low_lying_area_frequency_desc: '가구 아래 낮은 구역을 얼마나 자주 청소할지',
     },
     edge_corner: {
       title: '가장자리 & 모서리',
@@ -397,6 +413,8 @@ export const ko: Translation = {
       self_repair: '자가 수리',
       self_repair_desc: '스테이션 자가 진단 실행',
       repair_now: '수리',
+      scraper_frequency: '스크레이퍼 청소 빈도',
+      scraper_frequency_desc: '고무 스크레이퍼를 얼마나 자주 청소할지',
     },
     ai_detection: {
       title: 'AI 및 감지',

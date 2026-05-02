@@ -14,6 +14,7 @@ import {
   DREAME_SEGMENT_SELECTS,
   DREAME_SEGMENT_NUMBERS,
 } from '@/constants';
+import { Gauge, Thermometer } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { RoomSetting } from '@/hooks';
 import './CustomizeMode.scss';
@@ -30,6 +31,18 @@ const SUCTION_ICONS: Record<string, ReactNode> = {
   strong: SUCTION_STRONG_ICON_SVG,
   turbo: SUCTION_TURBO_ICON_SVG,
   max: SUCTION_TURBO_ICON_SVG,
+};
+
+// Map mop pressure names to icons
+const MOP_PRESSURE_ICONS: Record<string, ReactNode> = {
+  light: <Gauge size={18} strokeWidth={1.5} />,
+  normal: <Gauge size={18} strokeWidth={2.5} />,
+};
+
+// Map mop temperature names to icons
+const MOP_TEMPERATURE_ICONS: Record<string, ReactNode> = {
+  normal: <Thermometer size={18} strokeWidth={1.5} />,
+  warm: <Thermometer size={18} strokeWidth={2.5} />,
 };
 
 // Short labels for suction levels
@@ -155,10 +168,14 @@ interface RoomSettingsContentProps {
   setSuctionLevel: (roomId: number, value: string) => void;
   setWetnessLevel: (roomId: number, value: number) => void;
   setCleaningTimes: (roomId: number, value: string) => void;
+  setMopPressure: (roomId: number, value: string) => void;
+  setMopTemperature: (roomId: number, value: string) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
   suctionDisabled?: boolean;
   wetnessDisabled?: boolean;
   cleaningTimesDisabled?: boolean;
+  mopPressureDisabled?: boolean;
+  mopTemperatureDisabled?: boolean;
 }
 
 function RoomSettingsContent({
@@ -166,10 +183,14 @@ function RoomSettingsContent({
   setSuctionLevel,
   setWetnessLevel,
   setCleaningTimes,
+  setMopPressure,
+  setMopTemperature,
   t,
   suctionDisabled = false,
   wetnessDisabled = false,
   cleaningTimesDisabled = false,
+  mopPressureDisabled = false,
+  mopTemperatureDisabled = false,
 }: RoomSettingsContentProps) {
   return (
     <div className="customize-mode__room-settings-content">
@@ -208,6 +229,50 @@ function RoomSettingsContent({
             wetLabel={t('custom_mode.wet')}
             disabled={wetnessDisabled}
           />
+        </div>
+      )}
+
+      {/* Mop Pressure */}
+      {setting.mopPressureOptions.length > 0 && (
+        <div className="customize-mode__setting-group">
+          <span className="customize-mode__setting-label">{t('custom_mode.mop_pressure_title')}</span>
+          <div className={`customize-mode__options ${mopPressureDisabled ? 'customize-mode__options--disabled' : ''}`}>
+            {setting.mopPressureOptions.map((pressure: string) => (
+              <div key={pressure} className="customize-mode__option">
+                <CircularButton
+                  size="small"
+                  selected={setting.mopPressure === pressure}
+                  onClick={() => !mopPressureDisabled && setMopPressure(setting.roomId, pressure)}
+                  icon={MOP_PRESSURE_ICONS[pressure.toLowerCase()] || <Gauge size={18} />}
+                  disabled={mopPressureDisabled}
+                />
+                <span className="customize-mode__option-label">{t(`mop_pressure.${pressure.toLowerCase()}`)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Mop Temperature */}
+      {setting.mopTemperatureOptions.length > 0 && (
+        <div className="customize-mode__setting-group">
+          <span className="customize-mode__setting-label">{t('custom_mode.mop_temperature_title')}</span>
+          <div
+            className={`customize-mode__options ${mopTemperatureDisabled ? 'customize-mode__options--disabled' : ''}`}
+          >
+            {setting.mopTemperatureOptions.map((temp: string) => (
+              <div key={temp} className="customize-mode__option">
+                <CircularButton
+                  size="small"
+                  selected={setting.mopTemperature === temp}
+                  onClick={() => !mopTemperatureDisabled && setMopTemperature(setting.roomId, temp)}
+                  icon={MOP_TEMPERATURE_ICONS[temp.toLowerCase()] || <Thermometer size={18} />}
+                  disabled={mopTemperatureDisabled}
+                />
+                <span className="customize-mode__option-label">{t(`mop_temperature.${temp.toLowerCase()}`)}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -250,11 +315,12 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
   const rooms = parseRoomsFromCamera(hass, mapEntityId);
 
   // Use room settings hook to read/write HA entities
-  const { roomSettings, setSuctionLevel, setWetnessLevel, setCleaningTimes } = useRoomSettings({
-    hass,
-    baseEntityId,
-    rooms: rooms.map((r) => ({ id: r.id, name: r.name })),
-  });
+  const { roomSettings, setSuctionLevel, setWetnessLevel, setCleaningTimes, setMopPressure, setMopTemperature } =
+    useRoomSettings({
+      hass,
+      baseEntityId,
+      rooms: rooms.map((r) => ({ id: r.id, name: r.name })),
+    });
 
   // If no rooms found, show message
   if (rooms.length === 0) {
@@ -309,10 +375,24 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
             room.id,
             DREAME_SEGMENT_SELECTS.CLEANING_TIMES.key
           );
+          const mopPressureEntityId = buildSegmentEntityId(
+            'select',
+            baseEntityId,
+            room.id,
+            DREAME_SEGMENT_SELECTS.MOP_PRESSURE.key
+          );
+          const mopTemperatureEntityId = buildSegmentEntityId(
+            'select',
+            baseEntityId,
+            room.id,
+            DREAME_SEGMENT_SELECTS.MOP_TEMPERATURE.key
+          );
 
           const suctionState = getEntityState(hass, suctionEntityId);
           const wetnessState = getEntityState(hass, wetnessEntityId);
           const cleaningTimesState = getEntityState(hass, cleaningTimesEntityId);
+          const mopPressureState = getEntityState(hass, mopPressureEntityId);
+          const mopTemperatureState = getEntityState(hass, mopTemperatureEntityId);
 
           // Build summary badges for accordion title
           const badges: string[] = [];
@@ -341,10 +421,14 @@ export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
                 setSuctionLevel={setSuctionLevel}
                 setWetnessLevel={setWetnessLevel}
                 setCleaningTimes={setCleaningTimes}
+                setMopPressure={setMopPressure}
+                setMopTemperature={setMopTemperature}
                 t={t}
                 suctionDisabled={suctionState.unavailable}
                 wetnessDisabled={wetnessState.unavailable}
                 cleaningTimesDisabled={cleaningTimesState.unavailable}
+                mopPressureDisabled={mopPressureState.unavailable}
+                mopTemperatureDisabled={mopTemperatureState.unavailable}
               />
             </Accordion>
           );

@@ -134,6 +134,20 @@ export const es: Translation = {
     water_high: 'Alto',
     mop_washing_frequency_title: 'Frecuencia de lavado de mopa',
     route_title: 'Ruta',
+    mop_pressure_title: 'Presión de la mopa',
+    mop_temperature_title: 'Temperatura del agua',
+  },
+
+  // Mop pressure levels
+  mop_pressure: {
+    light: 'Ligera',
+    normal: 'Normal',
+  },
+
+  // Mop temperature levels
+  mop_temperature: {
+    normal: 'Normal',
+    warm: 'Templada',
   },
 
   // Customize Cleaning Mode
@@ -323,6 +337,8 @@ export const es: Translation = {
       large_particles_boost_desc: 'Aumentar succión para residuos grandes',
       pet_focused_cleaning: 'Limpieza enfocada en mascotas',
       pet_focused_cleaning_desc: 'Limpieza extra en áreas de mascotas',
+      low_lying_area_frequency: 'Frecuencia de zonas bajas',
+      low_lying_area_frequency_desc: 'Con qué frecuencia limpiar zonas bajas bajo los muebles',
     },
     edge_corner: {
       title: 'Bordes y Esquinas',
@@ -398,6 +414,8 @@ export const es: Translation = {
       self_repair: 'Auto-reparación',
       self_repair_desc: 'Ejecutar diagnóstico de auto-reparación de la estación',
       repair_now: 'Reparar',
+      scraper_frequency: 'Frecuencia del raspador',
+      scraper_frequency_desc: 'Con qué frecuencia limpiar el raspador de goma',
     },
     ai_detection: {
       title: 'IA y detección',
