@@ -223,6 +223,7 @@ export const FLOOR_SETTINGS_SECTION: SectionDefinition = {
     sw('OBSTACLE_AVOIDANCE', 'settings.floor.obstacle_avoidance', 'settings.floor.obstacle_avoidance_desc'),
     sw('COLLISION_AVOIDANCE', 'settings.floor.collision_avoidance', 'settings.floor.collision_avoidance_desc'),
     sw('AUTO_MOUNT_MOP', 'settings.floor.auto_mount_mop', 'settings.floor.auto_mount_mop_desc'),
+    sw('TIGHT_MOPPING', 'settings.floor.tight_mopping', 'settings.floor.tight_mopping_desc'),
     sw('STAIN_AVOIDANCE', 'settings.floor.stain_avoidance', 'settings.floor.stain_avoidance_desc'),
     sw(
       'FLOOR_DIRECTION_CLEANING',

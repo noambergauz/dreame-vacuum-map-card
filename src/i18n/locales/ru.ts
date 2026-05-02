@@ -309,6 +309,8 @@ export const ru: Translation = {
       recleaning_in_all_modes: 'Во всех режимах',
       stain_avoidance: 'Избегание пятен',
       stain_avoidance_desc: 'Обходить обнаруженные пятна',
+      tight_mopping: 'Тщательная мойка',
+      tight_mopping_desc: 'Мыть ближе к стенам и краям',
       floor_direction_cleaning: 'Уборка по направлению пола',
       floor_direction_cleaning_desc: 'Убирать вдоль направления волокон пола',
       large_particles_boost: 'Усиление для крупных частиц',

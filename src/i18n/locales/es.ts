@@ -309,6 +309,8 @@ export const es: Translation = {
       recleaning_in_all_modes: 'En todos los modos',
       stain_avoidance: 'Evitación de manchas',
       stain_avoidance_desc: 'Evitar manchas detectadas',
+      tight_mopping: 'Fregado minucioso',
+      tight_mopping_desc: 'Fregar más cerca de paredes y bordes',
       floor_direction_cleaning: 'Limpieza según dirección del suelo',
       floor_direction_cleaning_desc: 'Limpiar siguiendo la veta del suelo',
       large_particles_boost: 'Potencia para partículas grandes',

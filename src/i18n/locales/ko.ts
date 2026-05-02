@@ -308,6 +308,8 @@ export const ko: Translation = {
       recleaning_in_all_modes: '모든 모드에서',
       stain_avoidance: '얼룩 회피',
       stain_avoidance_desc: '감지된 얼룩을 피합니다',
+      tight_mopping: '꼼꼼한 물걸레질',
+      tight_mopping_desc: '벽과 가장자리에 더 가깝게 닦습니다',
       floor_direction_cleaning: '바닥 방향 청소',
       floor_direction_cleaning_desc: '바닥 결 방향에 따라 청소',
       large_particles_boost: '대형 입자 부스트',

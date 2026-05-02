@@ -308,6 +308,8 @@ export const he: Translation = {
       recleaning_in_all_modes: 'בכל המצבים',
       stain_avoidance: 'הימנעות מכתמים',
       stain_avoidance_desc: 'הימנעות מכתמים שזוהו',
+      tight_mopping: 'שטיפה יסודית',
+      tight_mopping_desc: 'שטיפה קרובה יותר לקירות ולקצוות',
       floor_direction_cleaning: 'ניקוי בכיוון הרצפה',
       floor_direction_cleaning_desc: 'נקה לאורך כיוון סיבי הרצפה',
       large_particles_boost: 'הגברה לחלקיקים גדולים',

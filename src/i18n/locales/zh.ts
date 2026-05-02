@@ -308,6 +308,8 @@ export const zh: Translation = {
       recleaning_in_all_modes: '所有模式',
       stain_avoidance: '污渍躲避',
       stain_avoidance_desc: '自动避开识别到的顽固污渍',
+      tight_mopping: '精细拖地',
+      tight_mopping_desc: '更贴近墙壁和边缘拖地',
       floor_direction_cleaning: '顺向清洁',
       floor_direction_cleaning_desc: '沿地板纹理方向清洁',
       large_particles_boost: '大颗粒增压',

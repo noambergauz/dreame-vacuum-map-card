@@ -310,6 +310,8 @@ export const de: Translation = {
       recleaning_in_all_modes: 'In allen Modi',
       stain_avoidance: 'Fleckenvermeidung',
       stain_avoidance_desc: 'Erkannte Flecken vermeiden',
+      tight_mopping: 'Gründliches Wischen',
+      tight_mopping_desc: 'Näher an Wänden und Kanten wischen',
       floor_direction_cleaning: 'Bodenrichtungsreinigung',
       floor_direction_cleaning_desc: 'Entlang der Bodenmaserung reinigen',
       large_particles_boost: 'Großpartikel-Boost',

@@ -308,6 +308,8 @@ export const nl: Translation = {
       recleaning_in_all_modes: 'In alle modi',
       stain_avoidance: 'Vlekvermijding',
       stain_avoidance_desc: 'Gedetecteerde vlekken vermijden',
+      tight_mopping: 'Grondig dweilen',
+      tight_mopping_desc: 'Dweilen dichter bij muren en randen',
       floor_direction_cleaning: 'Vloerichting reiniging',
       floor_direction_cleaning_desc: 'Reinigen langs de vloernerf',
       large_particles_boost: 'Grote deeltjes boost',

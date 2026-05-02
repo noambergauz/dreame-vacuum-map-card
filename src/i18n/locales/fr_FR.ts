@@ -308,6 +308,8 @@ export const fr_FR: Translation = {
       recleaning_in_all_modes: 'Dans tous les modes',
       stain_avoidance: 'Évitement des taches',
       stain_avoidance_desc: 'Éviter les taches détectées',
+      tight_mopping: 'Lavage minutieux',
+      tight_mopping_desc: 'Laver plus près des murs et des bords',
       floor_direction_cleaning: 'Nettoyage directionnel',
       floor_direction_cleaning_desc: 'Nettoyer dans le sens du grain du sol',
       large_particles_boost: 'Boost grosses particules',

@@ -306,6 +306,8 @@ export const en = {
       recleaning_in_all_modes: 'In All Modes',
       stain_avoidance: 'Stain Avoidance',
       stain_avoidance_desc: 'Avoid detected stains',
+      tight_mopping: 'Tight Mopping',
+      tight_mopping_desc: 'Mop closer to walls and edges',
       floor_direction_cleaning: 'Floor Direction Cleaning',
       floor_direction_cleaning_desc: 'Clean along the floor grain direction',
       large_particles_boost: 'Large Particles Boost',

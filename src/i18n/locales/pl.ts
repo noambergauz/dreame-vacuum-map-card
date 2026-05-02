@@ -308,6 +308,8 @@ export const pl: Translation = {
       recleaning_in_all_modes: 'We wszystkich trybach',
       stain_avoidance: 'Omijanie plam',
       stain_avoidance_desc: 'Omijaj wykryte plamy',
+      tight_mopping: 'Dokładne mopowanie',
+      tight_mopping_desc: 'Mopuj bliżej ścian i krawędzi',
       floor_direction_cleaning: 'Czyszczenie wzdłuż podłogi',
       floor_direction_cleaning_desc: 'Sprzątaj wzdłuż kierunku słojów podłogi',
       large_particles_boost: 'Wzmocnienie dla dużych cząstek',
