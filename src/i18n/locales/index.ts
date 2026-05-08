@@ -2,6 +2,7 @@ import { en } from './en';
 import { de } from './de';
 import { ru } from './ru';
 import { zh } from './zh';
+import { zh_TW } from './zh_TW';
 import { es } from './es';
 import { nl } from './nl';
 import { it } from './it';
@@ -15,6 +16,7 @@ export const locales = {
   de,
   ru,
   zh,
+  zh_TW,
   es,
   nl,
   it,
