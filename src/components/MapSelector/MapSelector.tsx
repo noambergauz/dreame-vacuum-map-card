@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { ChevronDown, Check, Map } from 'lucide-react';
 import { useTranslation, getSelectState } from '@/hooks';
-import { useEntity, useHass, useConfig, useMachineState } from '@/contexts';
+import { useEntity, useHass, useConfig } from '@/contexts';
 import { buildEntityId, DREAME_SELECTS } from '@/constants';
 import './MapSelector.scss';
 
@@ -20,14 +20,10 @@ export function MapSelector() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const attributes = entity.attributes;
-  const { phase } = useMachineState();
 
   // Get available maps from entity attributes
   const maps = useMemo(() => (attributes.maps as MapInfo[] | undefined) ?? [], [attributes.maps]);
   const selectedMapId = attributes.selected_map_id ?? attributes.selected_map;
-
-  // Check if vacuum is busy (can't change maps unless idle)
-  const isBusy = phase !== 'idle';
 
   // Derive the select entity ID for map selection
   const entityName = config.entity?.split('.')[1] ?? '';
@@ -36,9 +32,8 @@ export function MapSelector() {
   // Check select entity availability
   const selectState = getSelectState(hass, entityName, 'selected_map');
 
-  // Combine busy check with entity availability
   // Only disable if entity exists but is unavailable, not if it doesn't exist
-  const isDisabled = isBusy || selectState.unavailable;
+  const isDisabled = selectState.unavailable;
 
   // Get the currently selected map
   const selectedMap = useMemo(() => maps.find((m) => m.id === selectedMapId), [maps, selectedMapId]);
