@@ -27,6 +27,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Mock server data
-mock-data.json

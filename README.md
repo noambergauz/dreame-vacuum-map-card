@@ -273,46 +273,6 @@ export const fr_FR: Translation = {
 npm install
 ```
 
-### Development Mode
-
-Run the development server with mock data:
-
-```bash
-npm run dev
-```
-
-The app will start at http://localhost:5173 with mock vacuum data automatically loaded.
-
-#### Development with Mock API Server
-
-If you need to test API endpoints, run the mock server separately:
-
-**Terminal 1 - Mock Server:**
-
-```bash
-npm run mock
-```
-
-**Terminal 2 - Dev Server:**
-
-```bash
-npm run dev
-```
-
-Or run both together:
-
-```bash
-npm run dev:mock
-```
-
-#### Environment Configuration
-
-Copy `.env.example` to `.env` and customize as needed:
-
-```bash
-cp .env.example .env
-```
-
 ### Build
 
 ```bash
