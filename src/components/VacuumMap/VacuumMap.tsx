@@ -137,6 +137,9 @@ export function VacuumMap({
   );
   const calibrationPoints = (mapEntity?.attributes?.calibration_points as CalibrationPoint[] | undefined) ?? [];
 
+  // Extract map rotation from camera entity (0, 90, 180, or 270 degrees)
+  const mapRotation = (mapEntity?.attributes?.rotation as 0 | 90 | 180 | 270 | undefined) ?? 0;
+
   // Extract vacuum and charger positions from map entity attributes
   const vacuumPosition = mapEntity?.attributes?.vacuum_position as VacuumPosition | undefined;
   const chargerPosition = mapEntity?.attributes?.charger_position as VacuumPosition | undefined;
@@ -263,6 +266,7 @@ export function VacuumMap({
                     calibrationPoints={calibrationPoints}
                     imageWidth={imageDimensions.width}
                     imageHeight={imageDimensions.height}
+                    rotation={mapRotation}
                   />
                 )}
 
