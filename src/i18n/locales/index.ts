@@ -8,6 +8,7 @@ import { it } from './it';
 import { pl } from './pl';
 import { fr_FR } from './fr_FR';
 import { he } from './he';
+import { hu_HU } from './hu_HU';
 import { ko } from './ko';
 
 export const locales = {
@@ -21,6 +22,7 @@ export const locales = {
   pl,
   fr_FR,
   he,
+  hu_HU,
   ko,
 };
 

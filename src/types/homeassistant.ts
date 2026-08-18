@@ -59,7 +59,7 @@ export interface HassConfig {
   type: string;
   theme?: 'light' | 'dark' | 'custom';
   custom_theme?: CustomThemeConfig;
-  language?: 'en' | 'de' | 'ru' | 'pl' | 'it' | 'nl' | 'es' | 'zh' | 'he' | 'fr_FR' | 'ko';
+  language?: 'en' | 'de' | 'ru' | 'pl' | 'it' | 'nl' | 'es' | 'zh' | 'he' | 'hu_HU' | 'fr_FR' | 'ko';
   default_mode?: CleaningSelectionMode;
   default_room_view?: RoomViewMode;
   buttons?: ButtonConfig[];
