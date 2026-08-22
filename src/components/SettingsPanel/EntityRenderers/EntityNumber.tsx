@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation, getNumberState } from '@/hooks';
 import { useEntity, useHass } from '@/contexts';
 import type { EntityDefinition } from '@/config/entity-ui-mapping';
@@ -21,15 +21,25 @@ export function EntityNumber({ definition, isChild = false }: EntityNumberProps)
   const max = definition.max ?? (numberState.attributes.max as number) ?? 100;
   const step = definition.step ?? (numberState.attributes.step as number) ?? 1;
 
-  const handleChange = useCallback(
-    (value: number) => {
-      hass.callService('number', 'set_value', {
-        entity_id: numberState.entityId,
-        value,
-      });
-    },
-    [hass, numberState.entityId]
-  );
+  const [localValue, setLocalValue] = useState(numberState.numericValue);
+  const [syncedValue, setSyncedValue] = useState(numberState.numericValue);
+
+  // Adjust state during render when the entity value changes upstream, rather
+  // than syncing in an effect. See https://react.dev/learn/you-might-not-need-an-effect
+  if (numberState.numericValue !== syncedValue) {
+    setSyncedValue(numberState.numericValue);
+    setLocalValue(numberState.numericValue);
+  }
+
+  // Commit on release only: dragging a range input fires onChange for every
+  // intermediate step, which would send one service call per step.
+  const handleCommit = useCallback(() => {
+    if (localValue === numberState.numericValue) return;
+    hass.callService('number', 'set_value', {
+      entity_id: numberState.entityId,
+      value: localValue,
+    });
+  }, [hass, numberState.entityId, numberState.numericValue, localValue]);
 
   if (numberState.disabled) return null;
 
@@ -54,12 +64,16 @@ export function EntityNumber({ definition, isChild = false }: EntityNumberProps)
           min={min}
           max={max}
           step={step}
-          value={numberState.numericValue}
+          value={localValue}
           disabled={numberState.unavailable}
-          onChange={(e) => handleChange(Number(e.target.value))}
+          onChange={(e) => setLocalValue(Number(e.target.value))}
+          onMouseUp={handleCommit}
+          onTouchEnd={handleCommit}
+          onKeyUp={handleCommit}
+          onBlur={handleCommit}
         />
         <span className="entity-item__slider-value">
-          {Math.round(numberState.numericValue)}
+          {Math.round(localValue)}
           {renderHint === 'volume' || renderHint === 'brightness' ? '%' : ''}
         </span>
       </div>
