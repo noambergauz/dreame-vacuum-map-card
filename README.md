@@ -223,6 +223,7 @@ The card supports multiple languages. Currently available:
 - **French (fr_FR)** - Français
 - **Korean (ko)** - 한국인
 - **Hebrew (he)** - עברית (RTL supported)
+- **Slovak (sk)** - Slovenčina
 
 Set the language in your configuration:
 

@@ -9,6 +9,7 @@ import { pl } from './pl';
 import { fr_FR } from './fr_FR';
 import { he } from './he';
 import { ko } from './ko';
+import { sk } from './sk';
 
 export const locales = {
   en,
@@ -22,6 +23,7 @@ export const locales = {
   fr_FR,
   he,
   ko,
+  sk,
 };
 
 export type SupportedLanguage = keyof typeof locales;
