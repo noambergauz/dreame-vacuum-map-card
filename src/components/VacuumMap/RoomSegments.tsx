@@ -1,5 +1,5 @@
 import { useMemo, memo, useRef } from 'react';
-import { useDrag } from '@use-gesture/react';
+
 import type { Room } from '@/types/homeassistant';
 import { useMachineState } from '@/contexts';
 import { createRoomPath, type MapRotation } from '@/utils/roomParser';
@@ -27,20 +27,31 @@ const DRAG_THRESHOLD = 10;
 
 function RoomPath({ room, path, isSelected, isBusy, onRoomToggle }: RoomPathProps) {
   const pathRef = useRef<SVGPathElement>(null);
+  const pointerDownRef = useRef<{ x: number; y: number } | null>(null);
 
-  useDrag(
-    (state) => {
-      if (state.tap) {
-        logger.debug('RoomSegments', 'Tap on room:', room.id, room.name);
-        onRoomToggle(room.id, room.name);
-      }
-    },
-    {
-      target: pathRef,
-      filterTaps: true,
-      tapsThreshold: DRAG_THRESHOLD,
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.stopPropagation(); // Stop early interception
+    pointerDownRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    if (!pointerDownRef.current) return;
+
+    const dx = Math.abs(e.clientX - pointerDownRef.current.x);
+    const dy = Math.abs(e.clientY - pointerDownRef.current.y);
+
+    // If movement is very small (under 10px), treat as a tap
+    if (dx < DRAG_THRESHOLD && dy < DRAG_THRESHOLD) {
+      logger.debug('RoomSegments', 'Tap on room:', room.id, room.name);
+      onRoomToggle(room.id, room.name);
     }
-  );
+    pointerDownRef.current = null;
+  };
+
+  const handlePointerCancel = () => {
+    pointerDownRef.current = null;
+  };
 
   return (
     <path
@@ -53,6 +64,9 @@ function RoomPath({ room, path, isSelected, isBusy, onRoomToggle }: RoomPathProp
       style={{ cursor: 'pointer', transition: 'all 0.2s ease', touchAction: 'none' }}
       data-room-id={room.id}
       data-room-name={room.name}
+      onPointerDown={handlePointerDown}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerCancel}
     >
       <title>{room.name}</title>
     </path>

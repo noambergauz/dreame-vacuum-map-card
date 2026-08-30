@@ -25,8 +25,8 @@ interface VacuumMapProps {
   selectedMode: CleaningSelectionMode;
   selectedRooms: Map<number, string>;
   onRoomToggle: (roomId: number, roomName: string) => void;
-  zone: Zone | null;
-  onZoneChange: (zone: Zone | null) => void;
+  zones: Zone[];
+  onZonesChange: (zones: Zone[]) => void;
   onImageDimensionsChange?: (width: number, height: number) => void;
   defaultRoomView?: RoomViewMode;
 }
@@ -35,8 +35,10 @@ interface VacuumMapProps {
 interface MapControlsWrapperProps {
   showViewToggle: boolean;
   showZoomControls: boolean;
+  showAddZoneControl: boolean;
   viewMode: RoomViewMode;
   onViewToggle: () => void;
+  onAddZone: () => void;
   isMapLocked: boolean;
   onToggleLock: () => void;
   onResetTransformReady: (resetFn: () => void) => void;
@@ -45,8 +47,10 @@ interface MapControlsWrapperProps {
 function MapControlsWrapper({
   showViewToggle,
   showZoomControls,
+  showAddZoneControl,
   viewMode,
   onViewToggle,
+  onAddZone,
   isMapLocked,
   onToggleLock,
   onResetTransformReady,
@@ -62,8 +66,10 @@ function MapControlsWrapper({
     <MapControls
       showViewToggle={showViewToggle}
       showZoomControls={showZoomControls}
+      showAddZoneControl={showAddZoneControl}
       viewMode={viewMode}
       onViewToggle={onViewToggle}
+      onAddZone={onAddZone}
       onZoomIn={() => zoomIn()}
       onZoomOut={() => zoomOut()}
       onZoomReset={() => resetTransform()}
@@ -78,8 +84,8 @@ export function VacuumMap({
   selectedMode,
   selectedRooms,
   onRoomToggle,
-  zone,
-  onZoneChange,
+  zones,
+  onZonesChange,
   onImageDimensionsChange,
   defaultRoomView = 'map',
 }: VacuumMapProps) {
@@ -125,6 +131,17 @@ export function VacuumMap({
       // localStorage not available
     }
   }, [isMapLocked]);
+
+  const handleAddZone = useCallback(() => {
+    const size = 15;
+    const newZone: Zone = {
+      x1: 50 - size / 2,
+      y1: 50 - size / 2,
+      x2: 50 + size / 2,
+      y2: 50 + size / 2,
+    };
+    onZonesChange([...zones, newZone]);
+  }, [zones, onZonesChange]);
 
   // Effective view mode: use user selection only in room mode, otherwise default
   const effectiveRoomViewMode = selectedMode === 'room' ? roomViewMode : defaultRoomView;
@@ -198,8 +215,10 @@ export function VacuumMap({
           <MapControlsWrapper
             showViewToggle={selectedMode === 'room'}
             showZoomControls={selectedMode !== 'room' || effectiveRoomViewMode === 'map'}
+            showAddZoneControl={selectedMode === 'zone'}
             viewMode={effectiveRoomViewMode}
             onViewToggle={() => setRoomViewMode((v) => (v === 'map' ? 'list' : 'map'))}
+            onAddZone={handleAddZone}
             isMapLocked={isMapLocked}
             onToggleLock={handleToggleLock}
             onResetTransformReady={handleResetTransformReady}
@@ -272,8 +291,8 @@ export function VacuumMap({
 
               {selectedMode === 'zone' && (
                 <ZoneOverlay
-                  zone={zone}
-                  onZoneChange={onZoneChange}
+                  zones={zones}
+                  onZonesChange={onZonesChange}
                   clearZoneLabel={t('vacuum_map.clear_zone')}
                   contentRef={contentRef}
                 />
@@ -303,7 +322,7 @@ export function VacuumMap({
 
       {selectedMode === 'zone' && (
         <div className="vacuum-map__overlay">
-          {zone ? t('vacuum_map.zone_overlay_resize') : t('vacuum_map.zone_overlay_create')}
+          {zones.length > 0 ? t('vacuum_map.zone_overlay_resize') : t('vacuum_map.zone_overlay_create')}
         </div>
       )}
     </div>

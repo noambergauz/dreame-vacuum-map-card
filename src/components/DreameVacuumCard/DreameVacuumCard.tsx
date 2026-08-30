@@ -50,14 +50,14 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const {
     selectedMode,
     selectedRooms,
-    selectedZone,
+    selectedZones,
     modalOpened,
     shortcutsModalOpened,
     settingsPanelOpened,
     repeatCount,
     setSelectedMode,
     setSelectedRooms,
-    setSelectedZone,
+    setSelectedZones,
     setModalOpened,
     setShortcutsModalOpened,
     setSettingsPanelOpened,
@@ -138,12 +138,12 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     handleClean(
       selectedMode,
       selectedRooms,
-      selectedZone,
+      selectedZones,
       imageDimensions?.width,
       imageDimensions?.height,
       repeatCount
     );
-  }, [selectedMode, selectedRooms, selectedZone, imageDimensions, repeatCount, handleClean]);
+  }, [selectedMode, selectedRooms, selectedZones, imageDimensions, repeatCount, handleClean]);
 
   // Handle resume (just calls start)
   const handleResume = useCallback(() => {
@@ -210,8 +210,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             selectedMode={selectedMode}
             selectedRooms={selectedRooms}
             onRoomToggle={handleRoomToggleWithToast}
-            zone={selectedZone}
-            onZoneChange={setSelectedZone}
+            zones={selectedZones}
+            onZonesChange={setSelectedZones}
             onImageDimensionsChange={handleImageDimensionsChange}
             defaultRoomView={config.default_room_view}
           />

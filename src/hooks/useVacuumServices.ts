@@ -3,6 +3,8 @@ import type { Hass, CleaningSelectionMode, Zone, StopAction } from '@/types/home
 import type { RoomCleaningConfig } from '@/types/vacuum';
 import { useTranslation } from './useTranslation';
 import { convertUIZoneToVacuumZone } from '@/utils/zoneConverter';
+import { parseRoomsFromCamera } from '@/utils/roomParser';
+import type { MapRotation } from '@/utils/roomParser';
 import { logger } from '@/utils/logger';
 
 interface VacuumServicesParams {
@@ -190,22 +192,28 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, onEr
   );
 
   const handleCleanZone = useCallback(
-    async (zone: Zone, imageWidth: number, imageHeight: number, repeats: number = 1) => {
+    async (zones: Zone[], imageWidth: number, imageHeight: number, repeats: number = 1) => {
       const mapEntity = hass.states[mapEntityId];
+      const rooms = parseRoomsFromCamera(hass, mapEntityId);
+      const rotation = (mapEntity?.attributes?.rotation as MapRotation | undefined) ?? 0;
 
       logger.debug('Vacuum', 'Clean zone - input:', {
-        uiZone: zone,
+        uiZones: zones,
         imageWidth,
         imageHeight,
         mapEntityId,
+        rotation,
         repeats,
         calibrationPoints: mapEntity?.attributes?.calibration_points,
       });
 
-      // Convert UI zone (percentage) to vacuum coordinates
-      const vacuumZone = convertUIZoneToVacuumZone(zone, mapEntity, imageWidth, imageHeight);
+      // Convert UI zones (percentages) to vacuum coordinates
+      const zoneData = zones.map((zone) => {
+        const vacuumZone = convertUIZoneToVacuumZone(zone, mapEntity, imageWidth, imageHeight, rooms, rotation);
+        return [vacuumZone.x1, vacuumZone.y1, vacuumZone.x2, vacuumZone.y2];
+      });
 
-      logger.debug('Vacuum', 'Clean zone - converted:', vacuumZone);
+      logger.debug('Vacuum', 'Clean zone - converted:', zoneData);
 
       const success = await safeCallService(
         hass,
@@ -213,7 +221,7 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, onEr
         'vacuum_clean_zone',
         {
           entity_id: entityId,
-          zone: [vacuumZone.x1, vacuumZone.y1, vacuumZone.x2, vacuumZone.y2],
+          zone: zoneData,
           repeats,
         },
         onError,
@@ -230,7 +238,7 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, onEr
     (
       mode: CleaningSelectionMode,
       selectedRooms: Map<number, string>,
-      selectedZone: Zone | null,
+      selectedZones: Zone[],
       imageWidth?: number,
       imageHeight?: number,
       repeats: number = 1,
@@ -239,7 +247,7 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, onEr
       logger.debug('Vacuum', 'Handle clean', {
         mode,
         selectedRooms: Array.from(selectedRooms.entries()),
-        selectedZone,
+        selectedZones,
         imageWidth,
         imageHeight,
         repeats,
@@ -276,9 +284,9 @@ export function useVacuumServices({ hass, entityId, mapEntityId, onSuccess, onEr
           }
           break;
         case 'zone':
-          if (selectedZone && imageWidth && imageHeight) {
-            handleCleanZone(selectedZone, imageWidth, imageHeight, repeats);
-          } else if (selectedZone) {
+          if (selectedZones && selectedZones.length > 0 && imageWidth && imageHeight) {
+            handleCleanZone(selectedZones, imageWidth, imageHeight, repeats);
+          } else if (selectedZones && selectedZones.length > 0) {
             logger.debug('Vacuum', 'Zone selected but no image dimensions');
             onSuccess?.(t('toast.cannot_determine_map'));
           } else {

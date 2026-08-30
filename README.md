@@ -10,6 +10,7 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 
 - (Almost) complete feature parity with the original Dreame application
 - Support for **Room**, **All**, and **Zone** cleaning modes
+- **Enhanced Zone Cleaning**: Add multiple zone boxes simultaneously, with intuitive drag-to-move and resize support
 - Interactive map with room and zone selection
 - CleanGenius and Custom cleaning mode configuration
 - **Per-room customized cleaning**: Configure suction level, wetness, and cleaning cycles for each room individually
@@ -306,6 +307,7 @@ For details on how this works and how to add support for missing capabilities, s
 
 ## Credits
 
+- **Original Creator**: Massive thanks to [Noam Bergauz](https://github.com/noambergauz/dreame-vacuum-map-card) for creating this amazing card. This repository is a fork building upon their incredible foundational work.
 - Original inspiration from [xiaomi-vacuum-map-card](https://github.com/PiotrMachowski/lovelace-xiaomi-vacuum-map-card)
 - [Dreame Vacuum](https://github.com/Tasshack/dreame-vacuum) integration by Tasshack
 

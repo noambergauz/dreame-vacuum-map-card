@@ -2,10 +2,14 @@ import type { Hass, Room } from '@/types/homeassistant';
 import { logger } from './logger';
 
 interface CameraRoomData {
-  x0: number;
-  y0: number;
-  x1: number;
-  y1: number;
+  x0?: number;
+  y0?: number;
+  x1?: number;
+  y1?: number;
+  x2?: number;
+  y2?: number;
+  outline?: [number, number][];
+  outlines?: [number, number][][];
   room_id: number;
   name: string;
   icon?: string;
@@ -26,29 +30,57 @@ const VACUUM_COORD_OFFSET = 10000;
 
 type MapRotation = 0 | 90 | 180 | 270;
 
-function autoCalibrateFromRooms(
+export function autoCalibrateFromRooms(
   rooms: Room[],
   imageWidth: number,
   imageHeight: number,
   rotation: MapRotation = 0
 ): CalibrationPoint[] {
   const validRooms = rooms.filter(
-    (r) => r.x0 !== undefined && r.y0 !== undefined && r.x1 !== undefined && r.y1 !== undefined
+    (r) =>
+      (r.x0 !== undefined && r.y0 !== undefined && r.x1 !== undefined && r.y1 !== undefined) ||
+      (r.outline && r.outline.length > 0) ||
+      (r.outlines && r.outlines.length > 0)
   );
 
   if (validRooms.length === 0) {
     return [];
   }
 
-  const allX = validRooms.flatMap((r) => [r.x0!, r.x1!]);
-  const allY = validRooms.flatMap((r) => [r.y0!, r.y1!]);
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
 
-  const minX = Math.min(...allX);
-  const maxX = Math.max(...allX);
-  const minY = Math.min(...allY);
-  const maxY = Math.max(...allY);
+  for (const room of validRooms) {
+    if (room.x0 !== undefined && room.x0 !== null && room.x1 !== undefined && room.x1 !== null) {
+      minX = Math.min(minX, room.x0, room.x1);
+      maxX = Math.max(maxX, room.x0, room.x1);
+    }
+    if (room.y0 !== undefined && room.y0 !== null && room.y1 !== undefined && room.y1 !== null) {
+      minY = Math.min(minY, room.y0, room.y1);
+      maxY = Math.max(maxY, room.y0, room.y1);
+    }
+    if (room.outlines && room.outlines.length > 0) {
+      for (const outline of room.outlines) {
+        for (const point of outline) {
+          minX = Math.min(minX, point[0]);
+          maxX = Math.max(maxX, point[0]);
+          minY = Math.min(minY, point[1]);
+          maxY = Math.max(maxY, point[1]);
+        }
+      }
+    } else if (room.outline && room.outline.length > 0) {
+      for (const point of room.outline) {
+        minX = Math.min(minX, point[0]);
+        maxX = Math.max(maxX, point[0]);
+        minY = Math.min(minY, point[1]);
+        maxY = Math.max(maxY, point[1]);
+      }
+    }
+  }
 
-  if (minX === maxX || minY === maxY) {
+  if (minX === Infinity || minY === Infinity || maxX === -Infinity || maxY === -Infinity) {
     logger.warn('RoomParser', 'Degenerate room bounds, cannot auto-calibrate');
     return [];
   }
@@ -109,18 +141,29 @@ export function parseRoomsFromCamera(hass: Hass, cameraEntityId: string): Room[]
 
   const roomsData = cameraEntity.attributes.rooms as unknown as Record<string, CameraRoomData>;
 
-  return Object.values(roomsData).map((room) => ({
-    id: room.room_id,
-    name: room.name,
-    icon: room.icon,
-    visibility: room.visibility,
-    x0: room.x0,
-    y0: room.y0,
-    x1: room.x1,
-    y1: room.y1,
-    x: room.x,
-    y: room.y,
-  }));
+  return Object.values(roomsData).map((room) => {
+    // Normalize coordinates to always output x0, y0, x1, y1
+    // L50 uses x0, y0, x1, y1. X40 uses x1, y1, x2, y2.
+    const startX = room.x0 !== undefined ? room.x0 : room.x1;
+    const startY = room.y0 !== undefined ? room.y0 : room.y1;
+    const endX = room.x0 !== undefined ? room.x1 : room.x2;
+    const endY = room.y0 !== undefined ? room.y1 : room.y2;
+
+    return {
+      id: room.room_id,
+      name: room.name,
+      icon: room.icon,
+      visibility: room.visibility,
+      x0: startX,
+      y0: startY,
+      x1: endX,
+      y1: endY,
+      outline: room.outline,
+      outlines: room.outlines,
+      x: room.x,
+      y: room.y,
+    };
+  });
 }
 
 /**
@@ -157,11 +200,32 @@ export function vacuumToMapCoordinates(
   const p2 = effectiveCalibration[1];
   const p3 = effectiveCalibration[2];
 
-  const scaleX = (p2.map.x - p1.map.x) / (p2.vacuum.x - p1.vacuum.x || 1);
-  const scaleY = (p3.map.y - p1.map.y) / (p3.vacuum.y - p1.vacuum.y || 1);
+  // Use affine transformation to handle rotation, scaling, and translation
+  const det =
+    (p2.vacuum.x - p1.vacuum.x) * (p3.vacuum.y - p1.vacuum.y) -
+    (p3.vacuum.x - p1.vacuum.x) * (p2.vacuum.y - p1.vacuum.y);
 
-  const x = p1.map.x + (vacuumX - p1.vacuum.x) * scaleX;
-  const y = p1.map.y + (vacuumY - p1.vacuum.y) * scaleY;
+  if (det === 0) {
+    logger.warn('Invalid calibration points (collinear)');
+    return { x: 0, y: 0 };
+  }
+
+  // Calculate transformation matrix coefficients
+  const A =
+    ((p2.map.x - p1.map.x) * (p3.vacuum.y - p1.vacuum.y) - (p3.map.x - p1.map.x) * (p2.vacuum.y - p1.vacuum.y)) / det;
+  const B =
+    ((p3.map.x - p1.map.x) * (p2.vacuum.x - p1.vacuum.x) - (p2.map.x - p1.map.x) * (p3.vacuum.x - p1.vacuum.x)) / det;
+  const C = p1.map.x - A * p1.vacuum.x - B * p1.vacuum.y;
+
+  const D =
+    ((p2.map.y - p1.map.y) * (p3.vacuum.y - p1.vacuum.y) - (p3.map.y - p1.map.y) * (p2.vacuum.y - p1.vacuum.y)) / det;
+  const E =
+    ((p3.map.y - p1.map.y) * (p2.vacuum.x - p1.vacuum.x) - (p2.map.y - p1.map.y) * (p3.vacuum.x - p1.vacuum.x)) / det;
+  const F = p1.map.y - D * p1.vacuum.x - E * p1.vacuum.y;
+
+  // Apply transformation
+  const x = A * vacuumX + B * vacuumY + C;
+  const y = D * vacuumX + E * vacuumY + F;
 
   return { x, y };
 }
@@ -174,7 +238,72 @@ export function createRoomPath(
   allRooms?: Room[],
   rotation: MapRotation = 0
 ): string {
-  if (room.x0 === undefined || room.y0 === undefined || room.x1 === undefined || room.y1 === undefined) {
+  if (room.outlines && room.outlines.length > 0) {
+    let path = '';
+    for (const outline of room.outlines) {
+      if (outline.length > 0) {
+        const start = vacuumToMapCoordinates(
+          outline[0][0],
+          outline[0][1],
+          calibrationPoints,
+          imageWidth,
+          imageHeight,
+          allRooms,
+          rotation
+        );
+        path += `M ${start.x} ${start.y} `;
+        for (let i = 1; i < outline.length; i++) {
+          const point = vacuumToMapCoordinates(
+            outline[i][0],
+            outline[i][1],
+            calibrationPoints,
+            imageWidth,
+            imageHeight,
+            allRooms,
+            rotation
+          );
+          path += `L ${point.x} ${point.y} `;
+        }
+        path += 'Z ';
+      }
+    }
+    return path;
+  }
+
+  if (room.outline && room.outline.length > 0) {
+    const start = vacuumToMapCoordinates(
+      room.outline[0][0],
+      room.outline[0][1],
+      calibrationPoints,
+      imageWidth,
+      imageHeight,
+      allRooms,
+      rotation
+    );
+    let path = `M ${start.x} ${start.y} `;
+    for (let i = 1; i < room.outline.length; i++) {
+      const point = vacuumToMapCoordinates(
+        room.outline[i][0],
+        room.outline[i][1],
+        calibrationPoints,
+        imageWidth,
+        imageHeight,
+        allRooms,
+        rotation
+      );
+      path += `L ${point.x} ${point.y} `;
+    }
+    path += 'Z';
+    return path;
+  }
+
+  if (
+    room.x0 === undefined ||
+    room.y0 === undefined ||
+    room.x1 === undefined ||
+    room.y1 === undefined ||
+    room.x0 === null
+  ) {
     logger.warn('Room missing coordinates:', room);
     return '';
   }

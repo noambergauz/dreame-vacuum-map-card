@@ -6,11 +6,13 @@ import './MapControls.scss';
 interface MapControlsProps {
   viewMode?: RoomViewMode;
   onViewToggle?: () => void;
+  onAddZone?: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomReset: () => void;
   showViewToggle?: boolean;
   showZoomControls?: boolean;
+  showAddZoneControl?: boolean;
   isMapLocked: boolean;
   onToggleLock: () => void;
 }
@@ -18,11 +20,13 @@ interface MapControlsProps {
 export function MapControls({
   viewMode,
   onViewToggle,
+  onAddZone,
   onZoomIn,
   onZoomOut,
   onZoomReset,
   showViewToggle = false,
   showZoomControls = true,
+  showAddZoneControl = false,
   isMapLocked,
   onToggleLock,
 }: MapControlsProps) {
@@ -39,6 +43,16 @@ export function MapControls({
       {showViewToggle && onViewToggle && (
         <button className="map-controls__button" onClick={onViewToggle} aria-label={viewLabel} title={viewLabel}>
           <ViewIcon size={18} />
+        </button>
+      )}
+      {showAddZoneControl && onAddZone && (
+        <button
+          className="map-controls__button map-controls__button--text"
+          onClick={onAddZone}
+          aria-label="Add Zone"
+          title="Add Zone"
+        >
+          Z+
         </button>
       )}
       {showZoomControls && !isMapLocked && !isListView && (

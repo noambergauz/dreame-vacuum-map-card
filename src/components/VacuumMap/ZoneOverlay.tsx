@@ -5,24 +5,25 @@ import { useMachineState } from '@/contexts';
 import { logger } from '@/utils/logger';
 
 interface ZoneOverlayProps {
-  zone: Zone | null;
-  onZoneChange: (zone: Zone | null) => void;
+  zones: Zone[];
+  onZonesChange: (zones: Zone[]) => void;
   clearZoneLabel: string;
   contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
-type ResizeHandle = 'top' | 'right' | 'bottom' | 'left' | null;
+type ResizeHandle = 'top' | 'right' | 'bottom' | 'left' | 'move' | null;
 
 /**
  * Zone selection overlay that works inside TransformComponent.
- * Handles zone creation (click) and resizing (drag edge handles).
- * The zone rectangle pans/zooms with the map content.
+ * Handles zone creation (click) and resizing/moving (drag edge handles/body).
+ * The zone rectangles pan/zoom with the map content.
  */
-export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: ZoneOverlayProps) {
+export function ZoneOverlay({ zones, onZonesChange, clearZoneLabel, contentRef }: ZoneOverlayProps) {
   const transformContext = useTransformContext();
   const { phase } = useMachineState();
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const [resizingHandle, setResizingHandle] = useState<ResizeHandle>(null);
+  const [activeZoneIndex, setActiveZoneIndex] = useState<number | null>(null);
 
   // Track scale reactively to counter-scale handles for consistent visual size
   const [scale, setScale] = useState(transformContext.state.scale);
@@ -33,6 +34,7 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
   );
   const handleScale = 1 / scale;
   const [resizeStartZone, setResizeStartZone] = useState<Zone | null>(null);
+  const [dragStartCoord, setDragStartCoord] = useState<{ x: number; y: number } | null>(null);
 
   const getContentCoordinates = useCallback(
     (clientX: number, clientY: number): { x: number; y: number } | null => {
@@ -75,19 +77,10 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
       };
 
       logger.debug('Zone', 'Created at click:', coords, newZone);
-      onZoneChange(newZone);
+      onZonesChange([...zones, newZone]);
     },
-    [getContentCoordinates, onZoneChange, resizingHandle]
+    [getContentCoordinates, onZonesChange, resizingHandle, zones]
   );
-
-  const handleResizeStart = (e: React.MouseEvent | React.TouchEvent, handle: ResizeHandle) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (!zone) return;
-
-    setResizingHandle(handle);
-    setResizeStartZone(zone);
-  };
 
   const getClientPosition = (e: React.MouseEvent | React.TouchEvent) => {
     if ('touches' in e && e.touches.length > 0) {
@@ -96,9 +89,27 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
     return { clientX: (e as React.MouseEvent).clientX, clientY: (e as React.MouseEvent).clientY };
   };
 
+  const handleResizeStart = (e: React.MouseEvent | React.TouchEvent, index: number, handle: ResizeHandle) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!zones[index]) return;
+
+    setResizingHandle(handle);
+    setActiveZoneIndex(index);
+    setResizeStartZone(zones[index]);
+
+    if (handle === 'move') {
+      const { clientX, clientY } = getClientPosition(e);
+      const coords = getContentCoordinates(clientX, clientY);
+      setDragStartCoord(coords);
+    } else {
+      setDragStartCoord(null);
+    }
+  };
+
   const handleResizeMove = useCallback(
     (e: React.MouseEvent | React.TouchEvent) => {
-      if (!resizingHandle || !resizeStartZone) return;
+      if (!resizingHandle || resizeStartZone === null || activeZoneIndex === null) return;
 
       const { clientX, clientY } = getClientPosition(e);
       const coords = getContentCoordinates(clientX, clientY);
@@ -120,23 +131,66 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
         case 'right':
           newZone.x2 = Math.max(coords.x, resizeStartZone.x1 + minSize);
           break;
+        case 'move': {
+          if (!dragStartCoord) return;
+          const dx = coords.x - dragStartCoord.x;
+          const dy = coords.y - dragStartCoord.y;
+          const width = resizeStartZone.x2 - resizeStartZone.x1;
+          const height = resizeStartZone.y2 - resizeStartZone.y1;
+
+          let newX1 = resizeStartZone.x1 + dx;
+          let newY1 = resizeStartZone.y1 + dy;
+          let newX2 = resizeStartZone.x2 + dx;
+          let newY2 = resizeStartZone.y2 + dy;
+
+          if (newX1 < 0) {
+            newX1 = 0;
+            newX2 = width;
+          }
+          if (newY1 < 0) {
+            newY1 = 0;
+            newY2 = height;
+          }
+          if (newX2 > 100) {
+            newX2 = 100;
+            newX1 = 100 - width;
+          }
+          if (newY2 > 100) {
+            newY2 = 100;
+            newY1 = 100 - height;
+          }
+
+          newZone.x1 = newX1;
+          newZone.y1 = newY1;
+          newZone.x2 = newX2;
+          newZone.y2 = newY2;
+          break;
+        }
       }
 
-      onZoneChange(newZone);
+      const newZones = [...zones];
+      newZones[activeZoneIndex] = newZone;
+      onZonesChange(newZones);
     },
-    [resizingHandle, resizeStartZone, getContentCoordinates, onZoneChange]
+    [resizingHandle, resizeStartZone, activeZoneIndex, dragStartCoord, getContentCoordinates, onZonesChange, zones]
   );
 
   const handleResizeEnd = useCallback(() => {
     setResizingHandle(null);
     setResizeStartZone(null);
+    setActiveZoneIndex(null);
+    setDragStartCoord(null);
   }, []);
 
-  const handleClearZone = (e: React.MouseEvent) => {
+  const handleClearZone = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
-    onZoneChange(null);
+    const newZones = [...zones];
+    newZones.splice(index, 1);
+    onZonesChange(newZones);
     setResizingHandle(null);
     setResizeStartZone(null);
+    setActiveZoneIndex(null);
+    setDragStartCoord(null);
   };
 
   return (
@@ -150,51 +204,61 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
       onTouchEnd={handleResizeEnd}
       onTouchCancel={handleResizeEnd}
     >
-      {zone && (
+      {zones.map((zone, index) => (
         <div
+          key={index}
           className="vacuum-map__zone"
           style={{
             left: `${zone.x1}%`,
             top: `${zone.y1}%`,
             width: `${zone.x2 - zone.x1}%`,
             height: `${zone.y2 - zone.y1}%`,
+            cursor: resizingHandle ? 'inherit' : 'move',
           }}
           onClick={(e) => e.stopPropagation()}
+          onMouseDown={(e) => {
+            if (!isInCleaningSession) handleResizeStart(e, index, 'move');
+          }}
+          onTouchStart={(e) => {
+            if (!isInCleaningSession) handleResizeStart(e, index, 'move');
+          }}
         >
           {!isInCleaningSession && (
             <>
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--top"
                 style={{ transform: `translateX(-50%) scale(${handleScale})` }}
-                onMouseDown={(e) => handleResizeStart(e, 'top')}
-                onTouchStart={(e) => handleResizeStart(e, 'top')}
+                onMouseDown={(e) => handleResizeStart(e, index, 'top')}
+                onTouchStart={(e) => handleResizeStart(e, index, 'top')}
                 title="Resize"
               />
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--right"
                 style={{ transform: `translateY(-50%) scale(${handleScale})` }}
-                onMouseDown={(e) => handleResizeStart(e, 'right')}
-                onTouchStart={(e) => handleResizeStart(e, 'right')}
+                onMouseDown={(e) => handleResizeStart(e, index, 'right')}
+                onTouchStart={(e) => handleResizeStart(e, index, 'right')}
                 title="Resize"
               />
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--bottom"
                 style={{ transform: `translateX(-50%) scale(${handleScale})` }}
-                onMouseDown={(e) => handleResizeStart(e, 'bottom')}
-                onTouchStart={(e) => handleResizeStart(e, 'bottom')}
+                onMouseDown={(e) => handleResizeStart(e, index, 'bottom')}
+                onTouchStart={(e) => handleResizeStart(e, index, 'bottom')}
                 title="Resize"
               />
               <div
                 className="vacuum-map__zone-handle vacuum-map__zone-handle--left"
                 style={{ transform: `translateY(-50%) scale(${handleScale})` }}
-                onMouseDown={(e) => handleResizeStart(e, 'left')}
-                onTouchStart={(e) => handleResizeStart(e, 'left')}
+                onMouseDown={(e) => handleResizeStart(e, index, 'left')}
+                onTouchStart={(e) => handleResizeStart(e, index, 'left')}
                 title="Resize"
               />
               <button
                 className="vacuum-map__zone-clear"
                 style={{ transform: `scale(${handleScale})` }}
-                onClick={handleClearZone}
+                onClick={(e) => handleClearZone(e, index)}
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
                 title={clearZoneLabel}
               >
                 ×
@@ -202,7 +266,7 @@ export function ZoneOverlay({ zone, onZoneChange, clearZoneLabel, contentRef }: 
             </>
           )}
         </div>
-      )}
+      ))}
     </div>
   );
 }

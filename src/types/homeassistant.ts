@@ -34,6 +34,8 @@ export interface Room {
   y0?: number;
   x1?: number;
   y1?: number;
+  outline?: [number, number][];
+  outlines?: [number, number][][];
   room_id?: number;
   order?: number;
   cleaning_times?: number;

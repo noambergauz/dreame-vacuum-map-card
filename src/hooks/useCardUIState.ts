@@ -45,7 +45,7 @@ interface UseCardUIStateOptions {
 export function useCardUIState({ defaultMode = DEFAULTS.MODE }: UseCardUIStateOptions = {}) {
   const [selectedMode, setSelectedMode] = useState<CleaningSelectionMode>(defaultMode);
   const [selectedRooms, setSelectedRooms] = useState<Map<number, string>>(new Map());
-  const [selectedZone, setSelectedZone] = useState<Zone | null>(null);
+  const [selectedZones, setSelectedZones] = useState<Zone[]>([]);
   const [modalOpened, setModalOpened] = useState(false);
   const [shortcutsModalOpened, setShortcutsModalOpened] = useState(false);
   const [settingsPanelOpened, setSettingsPanelOpened] = useState(false);
@@ -55,7 +55,7 @@ export function useCardUIState({ defaultMode = DEFAULTS.MODE }: UseCardUIStateOp
     logger.debug('UI', 'Mode changed:', mode);
     setSelectedMode(mode);
     setSelectedRooms(new Map());
-    setSelectedZone(null);
+    setSelectedZones([]);
   }, []);
 
   const handleRoomToggle = useCallback((roomId: number, roomName: string): void => {
@@ -87,9 +87,9 @@ export function useCardUIState({ defaultMode = DEFAULTS.MODE }: UseCardUIStateOp
     setSettingsPanelOpened(opened);
   }, []);
 
-  const handleZoneChange = useCallback((zone: Zone | null) => {
-    logger.debug('UI', 'Zone changed:', zone);
-    setSelectedZone(zone);
+  const handleZonesChange = useCallback((zones: Zone[]) => {
+    logger.debug('UI', 'Zones changed:', zones);
+    setSelectedZones(zones);
   }, []);
 
   const cycleRepeatCount = useCallback(() => {
@@ -110,14 +110,14 @@ export function useCardUIState({ defaultMode = DEFAULTS.MODE }: UseCardUIStateOp
   return {
     selectedMode,
     selectedRooms,
-    selectedZone,
+    selectedZones,
     modalOpened,
     shortcutsModalOpened,
     settingsPanelOpened,
     repeatCount,
     setSelectedMode,
     setSelectedRooms,
-    setSelectedZone: handleZoneChange,
+    setSelectedZones: handleZonesChange,
     setModalOpened: handleModalOpen,
     setShortcutsModalOpened: handleShortcutsModalOpen,
     setSettingsPanelOpened: handleSettingsPanelOpen,
