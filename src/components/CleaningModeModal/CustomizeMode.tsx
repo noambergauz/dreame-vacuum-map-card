@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CircularButton, Accordion } from '@/components/common';
 import { useTranslation, useRoomSettings, getEntityState } from '@/hooks';
-import { useHass, useIsRtl } from '@/contexts';
+import { useHass, useIsRtl, useConfig } from '@/contexts';
 import { parseRoomsFromCamera } from '@/utils/roomParser';
 import {
   SUCTION_QUIET_ICON_SVG,
@@ -309,10 +309,11 @@ function RoomSettingsContent({
 export function CustomizeMode({ baseEntityId }: CustomizeModeProps) {
   const { t } = useTranslation();
   const hass = useHass();
+  const config = useConfig();
 
   // Get map entity ID and parse rooms
   const mapEntityId = buildEntityId('camera', baseEntityId, DREAME_CAMERAS.MAP.key);
-  const rooms = parseRoomsFromCamera(hass, mapEntityId);
+  const rooms = parseRoomsFromCamera(hass, mapEntityId, config.room_names);
 
   // Use room settings hook to read/write HA entities
   const { roomSettings, setSuctionLevel, setWetnessLevel, setCleaningTimes, setMopPressure, setMopTemperature } =

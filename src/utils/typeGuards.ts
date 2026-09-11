@@ -100,6 +100,10 @@ export const configSchema = z.object({
   default_mode: z.enum(['room', 'all', 'zone']).optional(),
   default_room_view: z.enum(['map', 'list']).optional(),
   buttons: z.array(buttonConfigSchema).optional(),
+  map_overlays: z.array(z.enum(['vacuum', 'charger', 'room_labels'])).optional(),
+  room_names: z.record(z.string(), z.string()).optional(),
+  room_label_scale: z.number().positive().optional(),
+  map_height: z.string().optional(),
 });
 
 export type ValidatedConfig = z.infer<typeof configSchema>;

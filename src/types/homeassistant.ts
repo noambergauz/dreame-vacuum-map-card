@@ -64,6 +64,12 @@ export interface HassConfig {
   default_room_view?: RoomViewMode;
   buttons?: ButtonConfig[];
   map_overlays?: MapOverlay[];
+  /** Display-name overrides for rooms, keyed by segment id or by the device-provided name. */
+  room_names?: Record<string, string>;
+  /** Scale factor for the room labels drawn on the map (1 = unchanged). */
+  room_label_scale?: number;
+  /** Maximum height of the map area as a CSS length, e.g. '520px' or '60vh'. */
+  map_height?: string;
 }
 
 export interface HassUnitSystem {

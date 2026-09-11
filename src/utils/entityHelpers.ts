@@ -1,5 +1,6 @@
 import type { HassEntity, HassConfig, RoomPosition, CleaningSelectionMode, Hass, Room } from '@/types/homeassistant';
 import { getAttr } from './typeGuards';
+import { resolveRoomName } from './roomParser';
 
 export function resolveMapEntityId(hass: Hass, vacuumEntityId: string, configMapEntity?: string): string {
   if (configMapEntity) {
@@ -87,7 +88,12 @@ export function getEffectiveCleaningMode(
  * Get active segments from vacuum entity when segment cleaning is in progress.
  * Returns a Map of roomId -> roomName for the currently cleaning segments.
  */
-export function getActiveSegments(hass: Hass, vacuumEntityId: string, cameraEntityId: string): Map<number, string> {
+export function getActiveSegments(
+  hass: Hass,
+  vacuumEntityId: string,
+  cameraEntityId: string,
+  roomNames?: Record<string, string>
+): Map<number, string> {
   const vacuumEntity = hass.states[vacuumEntityId];
   const cameraEntity = hass.states[cameraEntityId];
   const result = new Map<number, string>();
@@ -107,7 +113,7 @@ export function getActiveSegments(hass: Hass, vacuumEntityId: string, cameraEnti
 
   if (roomsData) {
     Object.values(roomsData).forEach((room) => {
-      roomNameById.set(room.room_id, room.name);
+      roomNameById.set(room.room_id, resolveRoomName(room.room_id, room.name, roomNames));
     });
   }
 

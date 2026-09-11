@@ -17,6 +17,7 @@ import { CAPABILITY } from '@/constants';
 import type { Hass, HassConfig } from '@/types/homeassistant';
 import type { SupportedLanguage } from '@/i18n/locales';
 import { useState, useRef, useEffect, useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import { logger } from '@/utils/logger';
 import './DreameVacuumCard.scss';
 
@@ -79,7 +80,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   useEffect(() => {
     if (!isSegmentCleaning) return;
 
-    const activeSegments = getActiveSegments(hass, config.entity, mapEntityId);
+    const activeSegments = getActiveSegments(hass, config.entity, mapEntityId, config.room_names);
     if (activeSegments.size > 0) {
       // Only update if different from current selection
       const currentIds = Array.from(selectedRooms.keys()).sort();
@@ -92,7 +93,16 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         setSelectedMode('room');
       }
     }
-  }, [isSegmentCleaning, hass, config.entity, mapEntityId, selectedRooms, setSelectedRooms, setSelectedMode]);
+  }, [
+    isSegmentCleaning,
+    hass,
+    config.entity,
+    config.room_names,
+    mapEntityId,
+    selectedRooms,
+    setSelectedRooms,
+    setSelectedMode,
+  ]);
 
   // Reset repeat count when vacuum stops cleaning
   useEffect(() => {
@@ -199,6 +209,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         ref={containerRef}
         className={`dreame-vacuum-card dreame-vacuum-card--${theme.name}`}
         dir={isRtl ? 'rtl' : 'ltr'}
+        style={config.map_height ? ({ '--map-max-height': config.map_height } as CSSProperties) : undefined}
       >
         <div className="dreame-vacuum-card__container">
           <Header deviceName={deviceName} onSettingsClick={handleSettingsOpen} />

@@ -8,10 +8,18 @@ interface RoomLabelsProps {
   calibrationPoints: CalibrationPoint[];
   imageWidth: number;
   imageHeight: number;
+  /** Scale factor for the label size, 1 = default. Clamped to a sane range. */
+  scale?: number;
 }
 
-export function RoomLabels({ rooms, calibrationPoints, imageWidth, imageHeight }: RoomLabelsProps) {
-  const fontSize = Math.max(imageWidth, imageHeight) * 0.025;
+// Label height as a fraction of the map's longer edge at scale 1.
+const BASE_FONT_RATIO = 0.025;
+const MIN_SCALE = 0.2;
+const MAX_SCALE = 3;
+
+export function RoomLabels({ rooms, calibrationPoints, imageWidth, imageHeight, scale = 1 }: RoomLabelsProps) {
+  const safeScale = Number.isFinite(scale) ? Math.min(Math.max(scale, MIN_SCALE), MAX_SCALE) : 1;
+  const fontSize = Math.max(imageWidth, imageHeight) * BASE_FONT_RATIO * safeScale;
   const paddingX = fontSize * 0.6;
   const paddingY = fontSize * 0.4;
   const borderRadius = fontSize * 0.5;

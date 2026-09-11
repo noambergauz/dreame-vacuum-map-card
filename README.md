@@ -96,10 +96,24 @@ map_overlays: # Experimental Optional, list of overlays to show on the map
   - room_labels # Show room names
   - vacuum # Show vacuum position marker
   - charger # Show charger position marker
+map_height: 520px # Optional, cap the map height (any CSS length). The map is scaled to fit, never cropped.
+room_label_scale: 0.6 # Optional, 1 = default label size. Useful when the labels cover the rooms.
+room_names: # Optional, override the room names shown by the card
+  1: Bedroom # Key: segment id from the map camera's `rooms` attribute …
+  Kitchen: Kitchenette # … or the name the device reports
 buttons: # Optional
   - type: stop # Only stop button is supported
     action: stop # 'stop' (default), 'stop_and_dock'
 ```
+
+### Renaming rooms
+
+Dreame devices only report room names from a fixed catalogue, and that catalogue is
+English-only regardless of the `language` setting. `room_names` overrides the display
+name everywhere the card shows it — map labels, room list, selection summary, per-room
+settings and toasts. Keys are looked up as segment id first, then as the device-provided
+name; anything not listed keeps its original name. Cleaning commands always use the
+segment id, so renaming is purely cosmetic.
 
 ## Theming
 

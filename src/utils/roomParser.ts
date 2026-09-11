@@ -100,7 +100,19 @@ function autoCalibrateFromRooms(
   }
 }
 
-export function parseRoomsFromCamera(hass: Hass, cameraEntityId: string): Room[] {
+/**
+ * Resolve the display name of a room.
+ *
+ * Dreame devices only expose room names from a fixed English catalogue, so the card
+ * lets users override them via the `room_names` config option. Lookup order:
+ * segment id first (stable across renames), then the device-provided name.
+ */
+export function resolveRoomName(roomId: number, deviceName: string, roomNames?: Record<string, string>): string {
+  if (!roomNames) return deviceName;
+  return roomNames[String(roomId)] ?? roomNames[deviceName] ?? deviceName;
+}
+
+export function parseRoomsFromCamera(hass: Hass, cameraEntityId: string, roomNames?: Record<string, string>): Room[] {
   const cameraEntity = hass.states[cameraEntityId];
   if (!cameraEntity?.attributes?.rooms) {
     logger.debug('RoomParser', 'No rooms found in camera entity:', cameraEntityId);
@@ -111,7 +123,7 @@ export function parseRoomsFromCamera(hass: Hass, cameraEntityId: string): Room[]
 
   return Object.values(roomsData).map((room) => ({
     id: room.room_id,
-    name: room.name,
+    name: resolveRoomName(room.room_id, room.name, roomNames),
     icon: room.icon,
     visibility: room.visibility,
     x0: room.x0,

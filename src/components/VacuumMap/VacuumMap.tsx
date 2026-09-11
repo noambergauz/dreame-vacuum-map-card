@@ -131,9 +131,9 @@ export function VacuumMap({
 
   // Memoize parsed rooms to avoid recalculation on every render
   const parsedRooms = useMemo(
-    () => parseRoomsFromCamera(hass, mapEntityId),
+    () => parseRoomsFromCamera(hass, mapEntityId, config.room_names),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [hass.states[mapEntityId]?.attributes?.rooms, mapEntityId]
+    [hass.states[mapEntityId]?.attributes?.rooms, mapEntityId, config.room_names]
   );
   const calibrationPoints = (mapEntity?.attributes?.calibration_points as CalibrationPoint[] | undefined) ?? [];
 
@@ -251,6 +251,7 @@ export function VacuumMap({
                   calibrationPoints={calibrationPoints}
                   imageWidth={imageDimensions.width}
                   imageHeight={imageDimensions.height}
+                  scale={config.room_label_scale}
                 />
               )}
 

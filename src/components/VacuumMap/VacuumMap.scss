@@ -9,13 +9,24 @@
   box-shadow: 0 0.25rem 0.9375rem var(--card-shadow, rgba(0, 0, 0, 0.1));
   min-height: 18.75rem;
 
+  // Height budget for the map picture. The cap used to sit on this container while
+  // the image kept its width-driven height, so a tall map was simply cut off by
+  // `overflow: hidden`. It now caps the image instead (see `&__image`), which scales
+  // the whole map down to fit rather than cropping it.
+  --map-max-height-fallback: none;
+
   // Landscape orientation: constrain map height to fit within viewport
   // This prevents scrolling on tablets/displays in landscape mode
   // 280px accounts for: header (~80px) + controls (~150px) + padding (~50px)
   @media (orientation: landscape) {
-    max-height: calc(100vh - 280px);
-    max-height: calc(100dvh - 280px); // Use dynamic viewport height where supported
+    --map-max-height-fallback: calc(100vh - 280px);
+
     min-height: min(18.75rem, calc(100vh - 280px)); // Don't enforce min-height larger than available space
+
+    // Use dynamic viewport height where supported
+    @supports (height: 100dvh) {
+      --map-max-height-fallback: calc(100dvh - 280px);
+    }
   }
 
   // Locked state: allow page scrolling through the map
@@ -33,10 +44,18 @@
     height: 100%;
   }
 
+  // `object-fit: contain` letterboxes the picture inside the capped box. The overlay
+  // SVGs (room labels, segments, vacuum/charger markers) use viewBox +
+  // `preserveAspectRatio="xMidYMid meet"` on the same box, which letterboxes the same
+  // way — so they stay pixel-aligned with the map at any cap.
+  // `--map-max-height` comes from the card's `map_height` option and wins over the
+  // viewport-derived fallback.
   &__image {
     display: block;
     width: 100%;
     height: auto;
+    max-height: var(--map-max-height, var(--map-max-height-fallback, none));
+    object-fit: contain;
     border-radius: 0.9375rem;
     user-select: none;
     -webkit-user-drag: none;
