@@ -14,7 +14,7 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 - CleanGenius and Custom cleaning mode configuration
 - **Per-room customized cleaning**: Configure suction level, wetness, and cleaning cycles for each room individually
 - Real-time vacuum status and battery level
-- **Customizable Theming**: Light, dark, and fully customizable themes
+- **Customizable Theming**: Auto light/dark (follows your Home Assistant theme), plus fully customizable themes
 - **Internationalization (i18n)**: Multiple language support (English, German, Russian, Polish, Italian, Dutch, Spanish, Chinese, Hebrew) with RTL support
 
 <div style="display: flex; gap: 10px;">
@@ -88,7 +88,7 @@ type: custom:dreame-vacuum-map-card
 entity: vacuum.dreame_vacuum_entity
 title: Dreame Vacuum
 map_entity: camera.dreame_vacuum_entity # Optional, defaults to camera.${ENTITY_NAME}_map
-theme: light # Optional, 'light' (default), 'dark', or 'custom'
+theme: auto # Optional, 'auto' (default, follows Home Assistant's light/dark mode), 'light', 'dark', or 'custom'
 language: en # Optional, 'en' (default) or 'de'
 default_mode: all # Optional, 'all' (default), 'room', or 'zone'
 default_room_view: map # Optional, 'map' (default) or 'list'
@@ -121,7 +121,17 @@ The card features a comprehensive theming system with built-in and custom theme 
 
 ### Built-in Themes
 
-#### Light Theme (Default)
+#### Auto (Default)
+
+Automatically follows Home Assistant's active light/dark mode, so the card switches theme whenever your dashboard does (e.g. a day/night schedule).
+
+```yaml
+type: custom:dreame-vacuum-map-card
+entity: vacuum.dreame_vacuum_entity
+theme: auto
+```
+
+#### Light Theme
 
 ```yaml
 type: custom:dreame-vacuum-map-card

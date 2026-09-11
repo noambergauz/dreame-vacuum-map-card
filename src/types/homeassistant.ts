@@ -57,7 +57,7 @@ export interface HassConfig {
   map_entity?: string;
   title?: string;
   type: string;
-  theme?: 'light' | 'dark' | 'custom';
+  theme?: 'auto' | 'light' | 'dark' | 'custom';
   custom_theme?: CustomThemeConfig;
   language?: 'en' | 'de' | 'ru' | 'pl' | 'it' | 'nl' | 'es' | 'zh' | 'he' | 'fr_FR' | 'ko';
   default_mode?: CleaningSelectionMode;
@@ -89,6 +89,9 @@ export interface Hass {
   hassUrl: (path: string) => string;
   config?: {
     unit_system?: HassUnitSystem;
+  };
+  themes?: {
+    darkMode?: boolean;
   };
 }
 

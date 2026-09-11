@@ -29,7 +29,10 @@ interface DreameVacuumCardProps {
 export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const entity = hass.states[config.entity];
   logger.debug('DreameVacuumCard', 'Loaded entity', entity);
-  const themeType = config.theme || 'light';
+  // Default to 'auto': follow Home Assistant's active light/dark mode.
+  // Users can still force 'light' | 'dark' | 'custom' via config.
+  const configuredTheme = config.theme || 'auto';
+  const themeType = configuredTheme === 'auto' ? (hass.themes?.darkMode ? 'dark' : 'light') : configuredTheme;
   const language = config.language || 'en';
   const isRtl = isRtlLanguage(language as SupportedLanguage);
   const { t } = useTranslation(language);

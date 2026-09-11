@@ -94,7 +94,7 @@ export const configSchema = z.object({
   entity: vacuumEntitySchema,
   map_entity: cameraEntitySchema.optional(),
   title: z.string().optional(),
-  theme: z.enum(['light', 'dark', 'custom']).optional(),
+  theme: z.enum(['auto', 'light', 'dark', 'custom']).optional(),
   custom_theme: customThemeSchema,
   language: z.enum(['en', 'de', 'ru', 'pl', 'it', 'nl', 'es', 'zh', 'he', 'fr_FR', 'ko']).optional(),
   default_mode: z.enum(['room', 'all', 'zone']).optional(),
