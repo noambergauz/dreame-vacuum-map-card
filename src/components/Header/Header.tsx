@@ -22,7 +22,11 @@ export function Header({ deviceName, onSettingsClick }: HeaderProps) {
   const areaUnit = useAreaUnit();
   const entity = useEntity();
   const { rawState } = useMachineState();
-  const statusText = rawState.charAt(0).toUpperCase() + rawState.slice(1).replace(/_/g, ' ');
+  // Translate the vacuum state via i18n; fall back to the previous
+  // "Capitalized with spaces" format for states missing from the locale.
+  const fallbackStatusText = rawState.charAt(0).toUpperCase() + rawState.slice(1).replace(/_/g, ' ');
+  const translatedState = rawState ? t(`states.${rawState}`) : '';
+  const statusText = translatedState && translatedState !== `states.${rawState}` ? translatedState : fallbackStatusText;
   const cleanedArea = getAttr(entity.attributes.cleaned_area, 0);
   const cleaningTime = getAttr(entity.attributes.cleaning_time, 0);
   const batteryLevel = getAttr(entity.attributes.battery, 0);
