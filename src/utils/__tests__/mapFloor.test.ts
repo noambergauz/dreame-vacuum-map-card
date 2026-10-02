@@ -22,6 +22,22 @@ describe('readLiveMapFloor', () => {
     });
   });
 
+  it('accepts a live map whose saved_map_id matches the selection even when map_id differs', () => {
+    expect(readLiveMapFloor(19, { map_id: 1, saved_map_id: 19, entity_picture: '/map?v=1' }, '/map?v=1')).toMatchObject(
+      {
+        floorId: 19,
+        floorReady: true,
+        imageReady: true,
+      }
+    );
+  });
+
+  it('still waits when neither the live nor the saved map id matches the selection', () => {
+    expect(
+      readLiveMapFloor(19, { map_id: 1, saved_map_id: 20, entity_picture: '/map?v=1' }, '/map?v=1').floorReady
+    ).toBe(false);
+  });
+
   it('marks the image stale when the camera picture token changes', () => {
     const current = readLiveMapFloor(1, { map_id: 1, entity_picture: '/map?v=2' }, '/map?v=1');
 

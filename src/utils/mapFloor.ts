@@ -1,7 +1,11 @@
 export interface LiveMapFloor {
   /** Vacuum `selected_map_id` when it is a finite number. */
   floorId: number | null;
-  /** Camera attributes describe the selected floor. A missing selection is a single-floor device. */
+  /**
+   * Camera attributes describe the selected floor. A missing selection is a single-floor device.
+   * The live map carries its own `map_id` and points at the saved map it was built from through
+   * `saved_map_id`; the vacuum's `selected_map_id` is that saved map id, so either may match.
+   */
   floorReady: boolean;
   /** Camera `entity_picture`, including its cache-busting query. */
   imageToken: string | null;
@@ -15,17 +19,18 @@ function finiteMapId(value: unknown): number | null {
 
 export function readLiveMapFloor(
   selectedMapId: unknown,
-  cameraAttributes: { map_id?: unknown; entity_picture?: unknown } | undefined,
+  cameraAttributes: { map_id?: unknown; saved_map_id?: unknown; entity_picture?: unknown } | undefined,
   loadedImageToken: string | null = null
 ): LiveMapFloor {
   const selected = finiteMapId(selectedMapId);
   const cameraMapId = finiteMapId(cameraAttributes?.map_id);
+  const cameraSavedMapId = finiteMapId(cameraAttributes?.saved_map_id);
   const picture = cameraAttributes?.entity_picture;
   const imageToken = typeof picture === 'string' && picture.length > 0 ? picture : null;
 
   return {
     floorId: selected,
-    floorReady: selected === null || cameraMapId === selected,
+    floorReady: selected === null || cameraSavedMapId === selected || cameraMapId === selected,
     imageToken,
     imageReady: imageToken !== null && imageToken === loadedImageToken,
   };
