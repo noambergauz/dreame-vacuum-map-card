@@ -2,7 +2,7 @@
  * Translation Validation Script
  *
  * Validates that all translation files have the same keys as the English reference file.
- * Run with: npx tsx scripts/validate-translations.ts
+ * Run with: tsx --tsconfig tsconfig.app.json scripts/validate-translations.ts
  */
 
 import { locales, type SupportedLanguage } from '../src/i18n/locales';

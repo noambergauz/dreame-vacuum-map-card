@@ -15,7 +15,7 @@
     "lint:scss": "stylelint \"src/**/*.scss\"",
     "format": "prettier --write \"src/**/*.{ts,tsx,scss}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,scss}\"",
-    "validate:translations": "npx tsx scripts/validate-translations.ts",
+    "validate:translations": "tsx --tsconfig tsconfig.app.json scripts/validate-translations.ts",
     "test": "vitest",
     "test:run": "vitest run",
     "preview": "vite preview",
