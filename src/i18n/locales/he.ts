@@ -34,6 +34,10 @@ export const he: Translation = {
     zone_overlay_create: 'לחץ על המפה כדי להוסיף אזור ניקוי',
     zone_overlay_resize: 'גררו את הקצוות לשינוי גודל. לחצו על המפה כדי להוסיף אזור נוסף.',
     clear_zone: 'נקה אזור',
+    spot_overlay_create: 'הקש על המפה כדי להציב נקודת ניקוי',
+    spot_overlay_add: 'הקש על המפה כדי להוסיף נקודה. הקש על סמן כדי להסיר אותו.',
+    clear_spots: 'נקה את כל הנקודות',
+    remove_spot: 'הסר נקודה',
     switch_to_list: 'עבור לתצוגת רשימה',
     switch_to_map: 'עבור לתצוגת מפה',
     room_list_overlay: 'לחץ על חדרים כדי לבחור לניקוי',
@@ -50,6 +54,7 @@ export const he: Translation = {
     room: 'חדר',
     all: 'הכל',
     zone: 'אזור',
+    spot: 'נקודה',
   },
 
   // כפתורי פעולה
@@ -60,6 +65,7 @@ export const he: Translation = {
     clean_rooms_plural: 'נקה {{count}} חדרים',
     select_rooms: 'בחר חדרים',
     zone_clean: 'ניקוי אזור',
+    spot_clean: 'ניקוי נקודתי',
     pause: 'השהה',
     resume: 'המשך',
     stop: 'עצור',
@@ -84,9 +90,11 @@ export const he: Translation = {
     starting_room_clean: 'מתחיל ניקוי עבור חדר {{count}} שנבחר',
     starting_room_clean_plural: 'מתחיל ניקוי עבור {{count}} חדרים שנבחרו',
     starting_zone_clean: 'מתחיל ניקוי אזור',
+    starting_spot_clean: 'מתחיל ניקוי נקודתי',
     select_rooms_first: 'אנא בחר חדרים לניקוי תחילה',
     cannot_determine_map: 'לא ניתן לקבוע את מידות המפה',
     select_zone_first: 'אנא בחר אזור על המפה',
+    select_spot_first: 'יש לבחור נקודה במפה',
   },
 
   // תצוגת בחירת חדרים

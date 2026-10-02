@@ -170,6 +170,7 @@ export const UI = {
 export const STORAGE_KEY = {
   MAP_LOCKED: 'dreame-vacuum-map-locked',
   CUSTOMIZE_CONFIG: 'dreame-vacuum-card:customize_config',
+  AREA_SELECTION_MODE: 'dreame-vacuum-card:area_selection_mode',
 } as const;
 
 // Customize cleaning mode constants

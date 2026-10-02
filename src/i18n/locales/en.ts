@@ -32,6 +32,10 @@ export const en = {
     zone_overlay_create: 'Click on the map to place a cleaning zone',
     zone_overlay_resize: 'Drag edges to resize. Click the map to add another zone.',
     clear_zone: 'Clear zone',
+    spot_overlay_create: 'Tap the map to place a cleaning spot',
+    spot_overlay_add: 'Tap the map to add another spot. Tap a marker to remove it.',
+    clear_spots: 'Clear all spots',
+    remove_spot: 'Remove spot',
     switch_to_list: 'Switch to list view',
     switch_to_map: 'Switch to map view',
     room_list_overlay: 'Tap rooms to select for cleaning',
@@ -48,6 +52,7 @@ export const en = {
     room: 'Room',
     all: 'All',
     zone: 'Zone',
+    spot: 'Spot',
   },
 
   // Action Buttons
@@ -58,6 +63,7 @@ export const en = {
     clean_rooms_plural: 'Clean {{count}} Rooms',
     select_rooms: 'Select Rooms',
     zone_clean: 'Zone Clean',
+    spot_clean: 'Spot Clean',
     pause: 'Pause',
     resume: 'Resume',
     stop: 'Stop',
@@ -82,9 +88,11 @@ export const en = {
     starting_room_clean: 'Starting cleaning for {{count}} selected room',
     starting_room_clean_plural: 'Starting cleaning for {{count}} selected rooms',
     starting_zone_clean: 'Starting zone cleaning',
+    starting_spot_clean: 'Starting spot cleaning',
     select_rooms_first: 'Please select rooms to clean first',
     cannot_determine_map: 'Cannot determine map dimensions',
     select_zone_first: 'Please select a zone on the map',
+    select_spot_first: 'Please select a spot on the map',
   },
 
   // Room Selection Display

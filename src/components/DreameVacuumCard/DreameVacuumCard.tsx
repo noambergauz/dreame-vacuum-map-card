@@ -69,8 +69,10 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   // State management
   const {
     selectedMode,
+    areaSelectionMode,
     selectedRooms,
     selectedZones,
+    selectedSpots,
     modalOpened,
     shortcutsModalOpened,
     settingsPanelOpened,
@@ -78,10 +80,12 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     setSelectedMode,
     setSelectedRooms,
     setSelectedZones,
+    setSelectedSpots,
     setModalOpened,
     setShortcutsModalOpened,
     setSettingsPanelOpened,
     handleModeChange,
+    handleAreaSelectionModeChange,
     handleRoomToggle,
     cycleRepeatCount,
     resetRepeatCount,
@@ -124,7 +128,10 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
       activeSegments,
     });
 
-    if (update.clearZone) setSelectedZones([]);
+    if (update.clearZone) {
+      setSelectedZones([]);
+      setSelectedSpots([]);
+    }
     if (update.rooms) {
       logger.debug('DreameVacuumCard', 'Updating room selection for the current floor', [...update.rooms.keys()]);
       setSelectedRooms(update.rooms);
@@ -141,6 +148,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     selectedRooms,
     setSelectedRooms,
     setSelectedZones,
+    setSelectedSpots,
     setSelectedMode,
   ]);
 
@@ -163,7 +171,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   );
 
   // Vacuum services
-  const { handlePause, handleStop, handleDock, handleClean } = useVacuumServices({
+  const { handlePause, handleStop, handleDock, handleClean, handleCleanSpots } = useVacuumServices({
     hass,
     entityId: config.entity,
     mapEntityId,
@@ -185,7 +193,18 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   );
 
   // Handle clean action
-  const handleCleanAction = useCallback(() => {
+  const handleCleanAction = useCallback(async () => {
+    if (selectedMode === 'zone' && areaSelectionMode === 'spot') {
+      const success = await handleCleanSpots(
+        selectedSpots,
+        imageDimensions?.width ?? 0,
+        imageDimensions?.height ?? 0,
+        repeatCount
+      );
+      if (success) setSelectedSpots([]);
+      return;
+    }
+
     handleClean(
       selectedMode,
       selectedRooms,
@@ -194,7 +213,18 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
       imageDimensions?.height,
       repeatCount
     );
-  }, [selectedMode, selectedRooms, selectedZones, imageDimensions, repeatCount, handleClean]);
+  }, [
+    selectedMode,
+    areaSelectionMode,
+    selectedRooms,
+    selectedZones,
+    selectedSpots,
+    imageDimensions,
+    repeatCount,
+    handleClean,
+    handleCleanSpots,
+    setSelectedSpots,
+  ]);
 
   // Handle resume (just calls start)
   const handleResume = useCallback(() => {
@@ -268,10 +298,13 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
             mapEntityId={mapEntityId}
             geometry={displayedGeometry}
             selectedMode={selectedMode}
+            areaSelectionMode={areaSelectionMode}
             selectedRooms={selectedRooms}
             onRoomToggle={handleRoomToggleWithToast}
             zone={mapReady ? selectedZones : []}
             onZoneChange={setSelectedZones}
+            spots={mapReady ? selectedSpots : []}
+            onSpotsChange={setSelectedSpots}
             onImageDimensionsChange={handleImageDimensionsChange}
             defaultRoomView={config.default_room_view}
           />
@@ -289,11 +322,18 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           <div className="dreame-vacuum-card__controls">
             {selectedMode === 'room' && <RoomSelectionDisplay selectedRooms={selectedRooms} />}
 
-            <ModeTabs selectedMode={effectiveMode} onModeChange={handleModeChange} />
+            <ModeTabs
+              selectedMode={effectiveMode}
+              areaSelectionMode={areaSelectionMode}
+              onModeChange={handleModeChange}
+              onAreaSelectionModeChange={handleAreaSelectionModeChange}
+            />
 
             <ActionButtons
               selectedMode={selectedMode}
+              areaSelectionMode={areaSelectionMode}
               selectedRoomsCount={selectedRooms.size}
+              selectedSpotsCount={selectedSpots.length}
               onClean={handleCleanAction}
               onPause={handlePause}
               onResume={handleResume}

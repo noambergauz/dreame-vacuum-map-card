@@ -1,3 +1,4 @@
+import type { Spot } from '@/types/homeassistant';
 import type { MapTransform } from './mapTransform';
 
 /**
@@ -86,4 +87,46 @@ export function buildCleanZonePayload(
     payload.push([converted.zone.x1, converted.zone.y1, converted.zone.x2, converted.zone.y2]);
   }
   return { ok: true, zones: payload };
+}
+
+export type CleanSpotPayload =
+  | { ok: true; points: number[][] }
+  | { ok: false; reason: Exclude<ZoneConversionFailure, 'unsafe_zone'> };
+
+export function buildCleanSpotPayload(
+  spots: Spot[],
+  transform: MapTransform | null,
+  imageWidth: number,
+  imageHeight: number
+): CleanSpotPayload {
+  if (!transform) return { ok: false, reason: 'no_transform' };
+  if (!transform.commandSafe) return { ok: false, reason: 'estimated_transform' };
+  if (!Number.isFinite(imageWidth) || !Number.isFinite(imageHeight) || imageWidth <= 0 || imageHeight <= 0) {
+    return { ok: false, reason: 'invalid_coordinates' };
+  }
+
+  const points: number[][] = [];
+  for (const spot of spots) {
+    if (
+      !Number.isFinite(spot.x) ||
+      !Number.isFinite(spot.y) ||
+      spot.x < 0 ||
+      spot.x > 100 ||
+      spot.y < 0 ||
+      spot.y > 100
+    ) {
+      return { ok: false, reason: 'invalid_coordinates' };
+    }
+
+    const point = transform.mapToVacuum({
+      x: (spot.x / 100) * imageWidth,
+      y: (spot.y / 100) * imageHeight,
+    });
+    if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) {
+      return { ok: false, reason: 'invalid_coordinates' };
+    }
+    points.push([Math.round(point.x), Math.round(point.y)]);
+  }
+
+  return { ok: true, points };
 }

@@ -9,7 +9,7 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 ## Features
 
 - (Almost) complete feature parity with the original Dreame application
-- Support for **Room**, **All**, and **Zone** cleaning modes, including several zones at once
+- Support for **Room**, **All**, **Zone**, and **Spot** cleaning modes, including multiple zones or spots
 - Interactive map with room and zone selection
 - CleanGenius and Custom cleaning mode configuration
 - **Per-room customized cleaning**: Configure suction level, wetness, and cleaning cycles for each room individually

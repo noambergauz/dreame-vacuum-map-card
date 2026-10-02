@@ -34,6 +34,10 @@ export const ko: Translation = {
     zone_overlay_create: '맵을 클릭하여 청소 구역을 지정하세요',
     zone_overlay_resize: '가장자리를 끌어 크기를 조절하세요. 지도를 눌러 구역을 추가하세요.',
     clear_zone: '구역 지우기',
+    spot_overlay_create: '지도를 탭하여 청소 지점을 배치하세요',
+    spot_overlay_add: '지도를 탭하여 지점을 추가하세요. 마커를 탭하면 제거됩니다.',
+    clear_spots: '모든 지점 지우기',
+    remove_spot: '지점 제거',
     switch_to_list: '목록 보기로 전환',
     switch_to_map: '맵 보기로 전환',
     room_list_overlay: '청소할 방을 탭하여 선택하세요',
@@ -50,6 +54,7 @@ export const ko: Translation = {
     room: '방',
     all: '전체',
     zone: '구역',
+    spot: '지점',
   },
 
   // Action Buttons
@@ -60,6 +65,7 @@ export const ko: Translation = {
     clean_rooms_plural: '{{count}}개 방 청소',
     select_rooms: '방 선택',
     zone_clean: '구역 청소',
+    spot_clean: '지점 청소',
     pause: '일시 정지',
     resume: '재개',
     stop: '중지',
@@ -84,9 +90,11 @@ export const ko: Translation = {
     starting_room_clean: '선택한 {{count}}개 방 청소를 시작합니다',
     starting_room_clean_plural: '선택한 {{count}}개 방 청소를 시작합니다',
     starting_zone_clean: '구역 청소를 시작합니다',
+    starting_spot_clean: '지점 청소 시작 중',
     select_rooms_first: '먼저 청소할 방을 선택해 주세요',
     cannot_determine_map: '맵 크기를 확인할 수 없습니다',
     select_zone_first: '먼저 맵에서 구역을 선택해 주세요',
+    select_spot_first: '지도에서 지점을 선택하세요',
   },
 
   // Room Selection Display

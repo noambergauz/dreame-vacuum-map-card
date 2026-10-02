@@ -34,6 +34,10 @@ export const pl: Translation = {
     zone_overlay_create: 'Kliknij na mapie, aby umieścić strefę sprzątania',
     zone_overlay_resize: 'Przeciągnij krawędzie, aby zmienić rozmiar. Kliknij mapę, aby dodać kolejną strefę.',
     clear_zone: 'Wyczyść strefę',
+    spot_overlay_create: 'Dotknij mapy, aby umieścić punkt sprzątania',
+    spot_overlay_add: 'Dotknij mapy, aby dodać kolejny punkt. Dotknij znacznika, aby go usunąć.',
+    clear_spots: 'Wyczyść wszystkie punkty',
+    remove_spot: 'Usuń punkt',
     switch_to_list: 'Przełącz na widok listy',
     switch_to_map: 'Przełącz na widok mapy',
     room_list_overlay: 'Dotknij pokoje, aby wybrać do sprzątania',
@@ -50,6 +54,7 @@ export const pl: Translation = {
     room: 'Pokój',
     all: 'Wszystko',
     zone: 'Strefa',
+    spot: 'Punkt',
   },
 
   // Action Buttons
@@ -60,6 +65,7 @@ export const pl: Translation = {
     clean_rooms_plural: 'Sprzątaj {{count}} pokoje/pokoi',
     select_rooms: 'Wybierz pokoje',
     zone_clean: 'Sprzątanie strefowe',
+    spot_clean: 'Sprzątanie punktowe',
     pause: 'Pauza',
     resume: 'Wznów',
     stop: 'Zatrzymaj',
@@ -84,9 +90,11 @@ export const pl: Translation = {
     starting_room_clean: 'Rozpoczynanie sprzątania {{count}} wybranego pokoju',
     starting_room_clean_plural: 'Rozpoczynanie sprzątania {{count}} wybranych pokojów',
     starting_zone_clean: 'Rozpoczynanie sprzątania strefowego',
+    starting_spot_clean: 'Uruchamianie sprzątania punktowego',
     select_rooms_first: 'Najpierw wybierz pokoje do sprzątania',
     cannot_determine_map: 'Nie można określić wymiarów mapy',
     select_zone_first: 'Najpierw wybierz strefę na mapie',
+    select_spot_first: 'Wybierz punkt na mapie',
   },
 
   // Room Selection Display

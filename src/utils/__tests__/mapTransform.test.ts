@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CalibrationPoint, Room } from '@/types/homeassistant';
 import { fitAffine, resolveMapTransform, type MapDimensions, type MapRotation } from '../mapTransform';
-import { convertUIZoneToVacuumZone, buildCleanZonePayload } from '../zoneConverter';
+import { buildCleanSpotPayload, buildCleanZonePayload, convertUIZoneToVacuumZone } from '../zoneConverter';
 
 function calibrationForRotation(rotation: MapRotation): CalibrationPoint[] {
   const mapPoints: Record<MapRotation, Array<{ x: number; y: number }>> = {
@@ -256,5 +256,71 @@ describe('convertUIZoneToVacuumZone', () => {
         100
       )
     ).toEqual({ ok: false, reason: 'unsafe_zone' });
+  });
+});
+
+describe('buildCleanSpotPayload', () => {
+  it.each([0, 90, 180, 270] as const)('converts multiple points at %s degrees', (rotation) => {
+    const transform = fitAffine(calibrationForRotation(rotation));
+    const result = buildCleanSpotPayload(
+      [
+        { x: 10, y: 10 },
+        { x: 90, y: 90 },
+      ],
+      transform,
+      100,
+      100
+    );
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.points).toHaveLength(2);
+    expect(result.points.flat().every(Number.isInteger)).toBe(true);
+  });
+
+  it('uses the full affine inverse and preserves point order', () => {
+    const transform = fitAffine(calibrationForRotation(90));
+
+    expect(
+      buildCleanSpotPayload(
+        [
+          { x: 20, y: 30 },
+          { x: 60, y: 70 },
+        ],
+        transform,
+        100,
+        100
+      )
+    ).toEqual({
+      ok: true,
+      points: [
+        [250, 125],
+        [750, 625],
+      ],
+    });
+  });
+
+  it('fails closed for unsafe transforms and coordinates', () => {
+    const estimatedTransform = resolveMapTransform({
+      calibrationPoints: null,
+      dimensions: null,
+      rooms: [{ id: 1, name: 'Room', x0: 0, y0: 0, x1: 1000, y1: 1000 }],
+      rotation: 0,
+      imageWidth: 100,
+      imageHeight: 100,
+    });
+
+    expect(buildCleanSpotPayload([{ x: 50, y: 50 }], estimatedTransform, 100, 100)).toEqual({
+      ok: false,
+      reason: 'estimated_transform',
+    });
+    expect(buildCleanSpotPayload([{ x: -1, y: 50 }], fitAffine(calibrationForRotation(0)), 100, 100)).toEqual({
+      ok: false,
+      reason: 'invalid_coordinates',
+    });
+    expect(buildCleanSpotPayload([{ x: 50, y: 50 }], fitAffine(calibrationForRotation(0)), 0, 100)).toEqual({
+      ok: false,
+      reason: 'invalid_coordinates',
+    });
   });
 });

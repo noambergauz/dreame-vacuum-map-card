@@ -34,6 +34,10 @@ export const nl: Translation = {
     zone_overlay_create: 'Klik op de kaart om een schoonmaakzone te plaatsen',
     zone_overlay_resize: 'Sleep de randen om de grootte te wijzigen. Klik op de kaart om nog een zone toe te voegen.',
     clear_zone: 'Zone wissen',
+    spot_overlay_create: 'Tik op de kaart om een reinigingspunt te plaatsen',
+    spot_overlay_add: 'Tik op de kaart om nog een punt toe te voegen. Tik op een markering om deze te verwijderen.',
+    clear_spots: 'Alle punten wissen',
+    remove_spot: 'Punt verwijderen',
     switch_to_list: 'Naar lijstweergave',
     switch_to_map: 'Naar kaartweergave',
     room_list_overlay: 'Tik op kamers om te selecteren voor reiniging',
@@ -50,6 +54,7 @@ export const nl: Translation = {
     room: 'Kamer',
     all: 'Alles',
     zone: 'Zone',
+    spot: 'Punt',
   },
 
   // Actieknoppen
@@ -60,6 +65,7 @@ export const nl: Translation = {
     clean_rooms_plural: 'Schoonmaken ({{count}} kamers)',
     select_rooms: 'Kamers Selecteren',
     zone_clean: 'Zone Reinigen',
+    spot_clean: 'Punten reinigen',
     pause: 'Pauze',
     resume: 'Hervatten',
     stop: 'Stop',
@@ -84,9 +90,11 @@ export const nl: Translation = {
     starting_room_clean: 'Start reinigen van {{count}} geselecteerde kamer',
     starting_room_clean_plural: 'Start reinigen van {{count}} geselecteerde kamers',
     starting_zone_clean: 'Zone-reiniging gestart',
+    starting_spot_clean: 'Puntreiniging starten',
     select_rooms_first: 'Selecteer eerst de kamers die je wilt schoonmaken',
     cannot_determine_map: 'Kan afmetingen van de kaart niet bepalen',
     select_zone_first: 'Selecteer eerst een zone op de kaart',
+    select_spot_first: 'Selecteer een punt op de kaart',
   },
 
   // Kamer Selectie Weergave

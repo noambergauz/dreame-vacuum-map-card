@@ -104,6 +104,7 @@ export interface Hass {
 }
 
 export type CleaningSelectionMode = 'room' | 'all' | 'zone';
+export type AreaSelectionMode = 'zone' | 'spot';
 export type CleaningStrategy = 'CleanGenius' | 'Custom';
 export type RoomViewMode = 'map' | 'list';
 
@@ -129,6 +130,11 @@ export interface Zone {
   y1: number;
   x2: number;
   y2: number;
+}
+
+export interface Spot {
+  x: number;
+  y: number;
 }
 
 export interface CalibrationPoint {

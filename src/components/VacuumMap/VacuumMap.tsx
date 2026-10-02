@@ -1,6 +1,13 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { TransformWrapper, TransformComponent, useControls } from 'react-zoom-pan-pinch';
-import type { CleaningSelectionMode, Zone, RoomViewMode, VacuumPosition } from '@/types/homeassistant';
+import type {
+  AreaSelectionMode,
+  CleaningSelectionMode,
+  Spot,
+  Zone,
+  RoomViewMode,
+  VacuumPosition,
+} from '@/types/homeassistant';
 import { useTranslation, type MapGeometry } from '@/hooks';
 import { useHass, useMachineState, useConfig } from '@/contexts';
 import { STORAGE_KEY } from '@/constants';
@@ -8,6 +15,7 @@ import { RoomSegments } from './RoomSegments';
 import { MapControls } from './MapControls';
 import { RoomListView } from './RoomListView';
 import { ZoneOverlay } from './ZoneOverlay';
+import { SpotOverlay } from './SpotOverlay';
 import { VacuumPositionMarker } from './VacuumPositionMarker';
 import { ChargerMarker } from './ChargerMarker';
 import { RoomLabels } from './RoomLabels';
@@ -17,10 +25,13 @@ interface VacuumMapProps {
   mapEntityId: string;
   geometry: MapGeometry;
   selectedMode: CleaningSelectionMode;
+  areaSelectionMode: AreaSelectionMode;
   selectedRooms: Map<number, string>;
   onRoomToggle: (roomId: number, roomName: string) => void;
   zone: Zone[];
   onZoneChange: (zones: Zone[]) => void;
+  spots: Spot[];
+  onSpotsChange: (spots: Spot[]) => void;
   onImageDimensionsChange?: (width: number, height: number, imageToken: string) => void;
   defaultRoomView?: RoomViewMode;
 }
@@ -71,10 +82,13 @@ export function VacuumMap({
   mapEntityId,
   geometry,
   selectedMode,
+  areaSelectionMode,
   selectedRooms,
   onRoomToggle,
   zone,
   onZoneChange,
+  spots,
+  onSpotsChange,
   onImageDimensionsChange,
   defaultRoomView = 'map',
 }: VacuumMapProps) {
@@ -261,11 +275,21 @@ export function VacuumMap({
                   />
                 )}
 
-              {selectedMode === 'zone' && (
+              {selectedMode === 'zone' && areaSelectionMode === 'zone' && (
                 <ZoneOverlay
                   zones={zone}
                   onZonesChange={onZoneChange}
                   clearZoneLabel={t('vacuum_map.clear_zone')}
+                  contentRef={contentRef}
+                />
+              )}
+
+              {selectedMode === 'zone' && areaSelectionMode === 'spot' && (
+                <SpotOverlay
+                  spots={spots}
+                  onSpotsChange={onSpotsChange}
+                  clearAllLabel={t('vacuum_map.clear_spots')}
+                  removeSpotLabel={t('vacuum_map.remove_spot')}
                   contentRef={contentRef}
                 />
               )}
@@ -292,9 +316,15 @@ export function VacuumMap({
         </>
       )}
 
-      {selectedMode === 'zone' && (
+      {selectedMode === 'zone' && areaSelectionMode === 'zone' && (
         <div className="vacuum-map__overlay">
           {zone.length > 0 ? t('vacuum_map.zone_overlay_resize') : t('vacuum_map.zone_overlay_create')}
+        </div>
+      )}
+
+      {selectedMode === 'zone' && areaSelectionMode === 'spot' && (
+        <div className="vacuum-map__overlay">
+          {spots.length > 0 ? t('vacuum_map.spot_overlay_add') : t('vacuum_map.spot_overlay_create')}
         </div>
       )}
     </div>

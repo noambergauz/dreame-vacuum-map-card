@@ -34,6 +34,10 @@ export const zh: Translation = {
     zone_overlay_create: '点击地图添加划区清洁区域',
     zone_overlay_resize: '拖动边缘调整大小，点击地图添加另一个区域',
     clear_zone: '清除选区',
+    spot_overlay_create: '点击地图放置清洁点',
+    spot_overlay_add: '点击地图添加清洁点，点击标记可将其移除。',
+    clear_spots: '清除所有清洁点',
+    remove_spot: '移除清洁点',
     switch_to_list: '切换到列表视图',
     switch_to_map: '切换到地图视图',
     room_list_overlay: '点击房间进行选择',
@@ -50,6 +54,7 @@ export const zh: Translation = {
     room: '选区', // 对应选定房间
     all: '全局', // 对应全屋
     zone: '划区', // 对应自定义区域
+    spot: '定点',
   },
 
   // Action Buttons (操作按钮)
@@ -60,6 +65,7 @@ export const zh: Translation = {
     clean_rooms_plural: '清洁 {{count}} 个房间',
     select_rooms: '选择房间',
     zone_clean: '划区清洁',
+    spot_clean: '定点清洁',
     pause: '暂停',
     resume: '继续',
     stop: '停止',
@@ -84,9 +90,11 @@ export const zh: Translation = {
     starting_room_clean: '开始清洁选中的 {{count}} 个房间',
     starting_room_clean_plural: '开始清洁选中的 {{count}} 个房间',
     starting_zone_clean: '开始划区清洁',
+    starting_spot_clean: '正在开始定点清洁',
     select_rooms_first: '请先选择要清洁的房间',
     cannot_determine_map: '无法获取地图尺寸',
     select_zone_first: '请先在地图上划定一个区域',
+    select_spot_first: '请在地图上选择清洁点',
   },
 
   // Room Selection Display (房间选择显示)

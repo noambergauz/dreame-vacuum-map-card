@@ -227,6 +227,54 @@
     }
   }
 
+  &__spot-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: auto;
+  }
+
+  &__spot {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 0.125rem solid white;
+    border-radius: 50%;
+    background: #007aff;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 122, 255, 0.45);
+    transform-origin: center;
+    z-index: 10;
+
+    &:hover:not(:disabled) {
+      background: #0051d5;
+    }
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  &__spot-clear {
+    position: absolute;
+    top: 0.75rem;
+
+    @include position-end(0.75rem);
+
+    padding: 0.4rem 0.7rem;
+    border: 0;
+    border-radius: 0.5rem;
+    background: rgba(0, 0, 0, 0.72);
+    color: white;
+    font: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transform-origin: top right;
+    z-index: 11;
+  }
+
   &__room-segments {
     position: absolute;
     top: 0;

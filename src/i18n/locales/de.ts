@@ -35,6 +35,11 @@ export const de: Translation = {
     zone_overlay_resize:
       'Kanten ziehen zum Ändern der Größe. Auf die Karte klicken, um eine weitere Zone hinzuzufügen.',
     clear_zone: 'Zone löschen',
+    spot_overlay_create: 'Tippe auf die Karte, um einen Reinigungspunkt zu setzen',
+    spot_overlay_add:
+      'Tippe auf die Karte, um einen weiteren Punkt hinzuzufügen. Tippe auf eine Markierung, um sie zu entfernen.',
+    clear_spots: 'Alle Punkte löschen',
+    remove_spot: 'Reinigungspunkt entfernen',
     switch_to_list: 'Zur Listenansicht wechseln',
     switch_to_map: 'Zur Kartenansicht wechseln',
     room_list_overlay: 'Räume antippen, um sie für die Reinigung auszuwählen',
@@ -51,6 +56,7 @@ export const de: Translation = {
     room: 'Raum',
     all: 'Alle',
     zone: 'Zone',
+    spot: 'Punkt',
   },
 
   // Action Buttons
@@ -61,6 +67,7 @@ export const de: Translation = {
     clean_rooms_plural: '{{count}} Räume reinigen',
     select_rooms: 'Räume auswählen',
     zone_clean: 'Zone reinigen',
+    spot_clean: 'Punktreinigung',
     pause: 'Pause',
     resume: 'Fortsetzen',
     stop: 'Stopp',
@@ -85,9 +92,11 @@ export const de: Translation = {
     starting_room_clean: 'Reinigung für {{count}} ausgewählten Raum wird gestartet',
     starting_room_clean_plural: 'Reinigung für {{count}} ausgewählte Räume wird gestartet',
     starting_zone_clean: 'Zonenreinigung wird gestartet',
+    starting_spot_clean: 'Punktreinigung wird gestartet',
     select_rooms_first: 'Bitte wählen Sie zuerst Räume zum Reinigen aus',
     cannot_determine_map: 'Kartenabmessungen können nicht ermittelt werden',
     select_zone_first: 'Bitte wählen Sie zuerst eine Zone auf der Karte aus',
+    select_spot_first: 'Bitte wähle einen Punkt auf der Karte aus',
   },
 
   // Room Selection Display

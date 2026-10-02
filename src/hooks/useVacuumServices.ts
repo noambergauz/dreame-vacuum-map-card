@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import type { Hass, CleaningSelectionMode, Zone, StopAction } from '@/types/homeassistant';
+import type { Hass, CleaningSelectionMode, Spot, Zone, StopAction } from '@/types/homeassistant';
 import type { RoomCleaningConfig } from '@/types/vacuum';
 import type { MapTransform } from '@/utils/mapTransform';
 import { useTranslation } from './useTranslation';
-import { buildCleanZonePayload } from '@/utils/zoneConverter';
+import { buildCleanSpotPayload, buildCleanZonePayload } from '@/utils/zoneConverter';
 import { logger } from '@/utils/logger';
 
 interface VacuumServicesParams {
@@ -241,6 +241,44 @@ export function useVacuumServices({
     [hass, entityId, mapEntityId, mapTransform, onSuccess, onError, t]
   );
 
+  const handleCleanSpots = useCallback(
+    async (spots: Spot[], imageWidth: number, imageHeight: number, repeats: number = 1): Promise<boolean> => {
+      if (spots.length === 0) {
+        onError?.(t('toast.select_spot_first'));
+        return false;
+      }
+
+      const conversion = buildCleanSpotPayload(spots, mapTransform, imageWidth, imageHeight);
+      if (!conversion.ok) {
+        logger.warn('Vacuum', 'Spot conversion blocked', {
+          reason: conversion.reason,
+          mapEntityId,
+          transformSource: mapTransform?.source,
+        });
+        onError?.(t('errors.map_transform_unavailable'));
+        return false;
+      }
+
+      const success = await safeCallService(
+        hass,
+        'dreame_vacuum',
+        'vacuum_clean_spot',
+        {
+          entity_id: entityId,
+          points: conversion.points,
+          repeats,
+        },
+        onError,
+        t('errors.service_call_failed')
+      );
+      if (success) {
+        onSuccess?.(t('toast.starting_spot_clean'));
+      }
+      return success;
+    },
+    [hass, entityId, mapEntityId, mapTransform, onSuccess, onError, t]
+  );
+
   const handleClean = useCallback(
     (
       mode: CleaningSelectionMode,
@@ -314,6 +352,7 @@ export function useVacuumServices({
     handleCleanSegments,
     handleCleanSegmentsCustomized,
     handleCleanZone,
+    handleCleanSpots,
     handleClean,
   };
 }

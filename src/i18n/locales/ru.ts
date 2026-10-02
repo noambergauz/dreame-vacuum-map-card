@@ -34,6 +34,10 @@ export const ru: Translation = {
     zone_overlay_create: 'Кликните на карту для добавления зоны уборки',
     zone_overlay_resize: 'Потяните за края, чтобы изменить размер. Нажмите на карту, чтобы добавить ещё зону.',
     clear_zone: 'Уборка зоны',
+    spot_overlay_create: 'Нажмите на карту, чтобы добавить точку уборки',
+    spot_overlay_add: 'Нажмите на карту, чтобы добавить точку. Нажмите на маркер, чтобы удалить его.',
+    clear_spots: 'Очистить все точки',
+    remove_spot: 'Удалить точку',
     switch_to_list: 'Переключить на список',
     switch_to_map: 'Переключить на карту',
     room_list_overlay: 'Нажмите на комнаты для выбора уборки',
@@ -50,6 +54,7 @@ export const ru: Translation = {
     room: 'Комната',
     all: 'Всё',
     zone: 'Зона',
+    spot: 'Точка',
   },
 
   // Action Buttons
@@ -60,6 +65,7 @@ export const ru: Translation = {
     clean_rooms_plural: 'Очистка {{count}} комнат',
     select_rooms: 'Выбор комнат',
     zone_clean: 'Уборка зоны',
+    spot_clean: 'Уборка точек',
     pause: 'Пауза',
     resume: 'Продолжить',
     stop: 'Стоп',
@@ -84,9 +90,11 @@ export const ru: Translation = {
     starting_room_clean: 'Начало уборки {{count}} выбранной комнаты',
     starting_room_clean_plural: 'Начало уборки {{count}} выбранных комнат',
     starting_zone_clean: 'Начало зональной уборки',
+    starting_spot_clean: 'Запуск точечной уборки',
     select_rooms_first: 'Пожалуйста, сначала выберите комнаты с которых начать',
     cannot_determine_map: 'Не удаётся распознать размеры карты',
     select_zone_first: 'Пожалуйста, выберите зону на карте',
+    select_spot_first: 'Выберите точку на карте',
   },
 
   // Room Selection Display

@@ -34,6 +34,10 @@ export const fr_FR: Translation = {
     zone_overlay_create: 'Cliquez sur la carte pour placer une zone de nettoyage',
     zone_overlay_resize: 'Faites glisser les bords pour redimensionner. Cliquez sur la carte pour ajouter une zone.',
     clear_zone: 'Effacer la zone',
+    spot_overlay_create: 'Touchez la carte pour placer un point de nettoyage',
+    spot_overlay_add: 'Touchez la carte pour ajouter un point. Touchez un marqueur pour le supprimer.',
+    clear_spots: 'Effacer tous les points',
+    remove_spot: 'Supprimer le point',
     switch_to_list: 'Passer à la vue liste',
     switch_to_map: 'Passer à la vue carte',
     room_list_overlay: 'Appuyez sur les pièces pour les sélectionner',
@@ -50,6 +54,7 @@ export const fr_FR: Translation = {
     room: 'Pièce',
     all: 'Tout',
     zone: 'Zone',
+    spot: 'Point',
   },
 
   // Action buttons
@@ -60,6 +65,7 @@ export const fr_FR: Translation = {
     clean_rooms_plural: 'Nettoyer {{count}} pièces',
     select_rooms: 'Sélectionner des pièces',
     zone_clean: 'Nettoyage de zone',
+    spot_clean: 'Nettoyer les points',
     pause: 'Pause',
     resume: 'Reprendre',
     stop: 'Arrêter',
@@ -84,9 +90,11 @@ export const fr_FR: Translation = {
     starting_room_clean: 'Démarrage du nettoyage de la pièce sélectionnée',
     starting_room_clean_plural: 'Démarrage du nettoyage des {{count}} pièces sélectionnées',
     starting_zone_clean: 'Démarrage du nettoyage de zone',
+    starting_spot_clean: 'Démarrage du nettoyage des points',
     select_rooms_first: "Veuillez d'abord sélectionner des pièces",
     cannot_determine_map: 'Impossible de déterminer les dimensions de la carte',
     select_zone_first: 'Veuillez sélectionner une zone sur la carte',
+    select_spot_first: 'Sélectionnez un point sur la carte',
   },
 
   // Room selection display

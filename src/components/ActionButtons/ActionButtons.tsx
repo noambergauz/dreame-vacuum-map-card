@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { CleaningSelectionMode, StopAction } from '@/types/homeassistant';
+import type { AreaSelectionMode, CleaningSelectionMode, StopAction } from '@/types/homeassistant';
 import { useTranslation, useButtonConfig } from '@/hooks';
 import { useMachineState } from '@/contexts';
 import { DockPopup } from '@/components/DockPopup';
@@ -9,7 +9,9 @@ import './ActionButtons.scss';
 
 interface ActionButtonsProps {
   selectedMode: CleaningSelectionMode;
+  areaSelectionMode: AreaSelectionMode;
   selectedRoomsCount: number;
+  selectedSpotsCount: number;
   onClean: () => void;
   onPause: () => void;
   onResume: () => void;
@@ -19,7 +21,9 @@ interface ActionButtonsProps {
 
 export function ActionButtons({
   selectedMode,
+  areaSelectionMode,
   selectedRoomsCount,
+  selectedSpotsCount,
   onClean,
   onPause,
   onResume,
@@ -41,13 +45,14 @@ export function ActionButtons({
       case 'all':
         return t('actions.clean_all');
       case 'zone':
-        return t('actions.zone_clean');
+        return t(areaSelectionMode === 'spot' ? 'actions.spot_clean' : 'actions.zone_clean');
       default:
         return t('actions.clean');
     }
   };
 
   const handleStop = () => onStop(stopAction);
+  const hasRequiredSelection = selectedMode !== 'zone' || areaSelectionMode !== 'spot' || selectedSpotsCount > 0;
   const handleDockClick = (): void => {
     if (opensDockPopup) {
       setDockPopupOpened(true);
@@ -77,7 +82,11 @@ export function ActionButtons({
   return (
     <>
       <div className="action-buttons">
-        <CleanButton onClick={onClean} text={getCleanButtonText()} disabled={!controls.canStartCleaning} />
+        <CleanButton
+          onClick={onClean}
+          text={getCleanButtonText()}
+          disabled={!controls.canStartCleaning || !hasRequiredSelection}
+        />
         <DockButton onClick={handleDockClick} disabled={!controls.canDock && !opensDockPopup} />
       </div>
       <DockPopup opened={dockPopupOpened} onClose={() => setDockPopupOpened(false)} />
