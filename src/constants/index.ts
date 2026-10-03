@@ -104,6 +104,11 @@ export const SERVICE_VALUE = {
     BY_TIME: 'by_time',
     BY_ROOM: 'by_room',
   },
+  MOP_PAD_HUMIDITY: {
+    SLIGHTLY_DRY: 'slightly_dry',
+    MOIST: 'moist',
+    WET: 'wet',
+  },
 } as const;
 
 // Self clean frequency types

@@ -1,5 +1,18 @@
-import { SERVICE_VALUE, CLEANING_MODE, CLEANGENIUS_MODE, CLEANGENIUS_STATE, SELF_CLEAN_FREQUENCY } from '@/constants';
-import type { VacuumCleaningMode, CleanGeniusMode, CleanGeniusState, SelfCleanFrequency } from '@/types/vacuum';
+import {
+  SERVICE_VALUE,
+  CLEANING_MODE,
+  CLEANGENIUS_MODE,
+  CLEANGENIUS_STATE,
+  SELF_CLEAN_FREQUENCY,
+  MOP_PAD_HUMIDITY,
+} from '@/constants';
+import type {
+  VacuumCleaningMode,
+  CleanGeniusMode,
+  CleanGeniusState,
+  SelfCleanFrequency,
+  MopPadHumidity,
+} from '@/types/vacuum';
 
 export function convertCleaningModeToService(mode: VacuumCleaningMode): string {
   switch (mode) {
@@ -52,6 +65,19 @@ export function convertSelfCleanFrequencyToService(frequency: SelfCleanFrequency
       return SERVICE_VALUE.SELF_CLEAN_FREQUENCY.BY_ROOM;
     default:
       return frequency;
+  }
+}
+
+export function convertMopPadHumidityToService(humidity: MopPadHumidity): string {
+  switch (humidity) {
+    case MOP_PAD_HUMIDITY.SLIGHTLY_DRY:
+      return SERVICE_VALUE.MOP_PAD_HUMIDITY.SLIGHTLY_DRY;
+    case MOP_PAD_HUMIDITY.MOIST:
+      return SERVICE_VALUE.MOP_PAD_HUMIDITY.MOIST;
+    case MOP_PAD_HUMIDITY.WET:
+      return SERVICE_VALUE.MOP_PAD_HUMIDITY.WET;
+    default:
+      return humidity;
   }
 }
 

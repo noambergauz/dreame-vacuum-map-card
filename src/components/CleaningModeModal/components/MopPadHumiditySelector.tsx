@@ -1,6 +1,6 @@
 import { CircularButton } from '@/components/common';
 import type { MopPadHumidity } from '@/types/vacuum';
-import { getMopPadHumidityIcon, getMopPadHumidityFriendlyName, convertToLowerCase } from '@/utils';
+import { convertMopPadHumidityToService, getMopPadHumidityFriendlyName, getMopPadHumidityIcon } from '@/utils';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
@@ -27,20 +27,21 @@ export function MopPadHumiditySelector({
 
   return (
     <div className={`cleaning-mode-modal__power-grid ${disabled ? 'cleaning-mode-modal__power-grid--disabled' : ''}`}>
-      {displayList.map((level, idx) => (
-        <div key={idx} className="cleaning-mode-modal__power-option">
-          <CircularButton
-            size="small"
-            selected={level === mopPadHumidity}
-            onClick={() => !disabled && onSelect(entityId, convertToLowerCase(level))}
-            icon={getMopPadHumidityIcon(level as MopPadHumidity)}
-            disabled={disabled}
-          />
-          <span className="cleaning-mode-modal__power-label">
-            {getMopPadHumidityFriendlyName(level as MopPadHumidity, t)}
-          </span>
-        </div>
-      ))}
+      {displayList.map((level) => {
+        const humidity = level as MopPadHumidity;
+        return (
+          <div key={level} className="cleaning-mode-modal__power-option">
+            <CircularButton
+              size="small"
+              selected={level === mopPadHumidity}
+              onClick={() => !disabled && onSelect(entityId, convertMopPadHumidityToService(humidity))}
+              icon={getMopPadHumidityIcon(humidity)}
+              disabled={disabled}
+            />
+            <span className="cleaning-mode-modal__power-label">{getMopPadHumidityFriendlyName(humidity, t)}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
