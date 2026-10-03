@@ -118,6 +118,13 @@ export const VACUUM_STATE_TO_PHASE: Record<string, VacuumPhase> = {
  */
 export const DEFAULT_PHASE: VacuumPhase = 'idle';
 
+const ACTIVE_VACUUM_STATES = new Set(['cleaning', 'paused', 'returning']);
+
+export function isRobotBusy(phase: VacuumPhase, vacuumState: string | undefined): boolean {
+  if (phase !== 'idle') return true;
+  return ACTIVE_VACUUM_STATES.has(vacuumState ?? '');
+}
+
 /**
  * Default task when not cleaning
  */

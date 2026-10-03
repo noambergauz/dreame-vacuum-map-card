@@ -51,7 +51,7 @@ function RoomPath({ room, path, isSelected, isBusy, onRoomToggle }: RoomPathProp
 
     const isTap = Math.hypot(event.clientX - start.x, event.clientY - start.y) < DRAG_THRESHOLD;
     clearPointer(event.currentTarget, event.pointerId);
-    if (isTap) {
+    if (isTap && !isBusy) {
       logger.debug('RoomSegments', 'Tap on room:', room.id, room.name);
       onRoomToggle(room.id, room.name);
     }
@@ -78,7 +78,7 @@ function RoomPath({ room, path, isSelected, isBusy, onRoomToggle }: RoomPathProp
       clipRule="evenodd"
       stroke={!isBusy && isSelected ? 'var(--accent-color, #D4AF37)' : 'rgba(255, 255, 255, 0.2)'}
       strokeWidth="2"
-      style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+      style={{ cursor: isBusy ? 'default' : 'pointer', pointerEvents: isBusy ? 'none' : 'auto' }}
       data-room-id={room.id}
       data-room-name={room.name}
       onPointerDown={handlePointerDown}

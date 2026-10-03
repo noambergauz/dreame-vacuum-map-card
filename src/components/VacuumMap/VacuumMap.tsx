@@ -9,8 +9,8 @@ import type {
   VacuumPosition,
 } from '@/types/homeassistant';
 import { useTranslation, type MapGeometry } from '@/hooks';
-import { useHass, useMachineState, useConfig } from '@/contexts';
-import { STORAGE_KEY } from '@/constants';
+import { useHass, useMachineState, useConfig, useEntity } from '@/contexts';
+import { STORAGE_KEY, isRobotBusy } from '@/constants';
 import { RoomSegments } from './RoomSegments';
 import { MapControls } from './MapControls';
 import { RoomListView } from './RoomListView';
@@ -96,7 +96,8 @@ export function VacuumMap({
   const hass = useHass();
   const config = useConfig();
   const { phase } = useMachineState();
-  const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
+  const entity = useEntity();
+  const roomSelectionEnabled = !isRobotBusy(phase, entity.state);
   const mapEntity = hass.states[mapEntityId];
   const entityPicture = mapEntity?.attributes?.entity_picture;
   const mapUrl = typeof entityPicture === 'string' ? entityPicture : undefined;
@@ -261,7 +262,7 @@ export function VacuumMap({
 
               {selectedMode === 'room' &&
                 effectiveRoomViewMode === 'map' &&
-                !isInCleaningSession &&
+                roomSelectionEnabled &&
                 imageDimensions.width > 0 &&
                 imageDimensions.height > 0 &&
                 transform && (
@@ -306,11 +307,11 @@ export function VacuumMap({
 
       {selectedMode === 'room' && (
         <>
-          {effectiveRoomViewMode === 'map' && !isInCleaningSession && (
+          {effectiveRoomViewMode === 'map' && roomSelectionEnabled && (
             <div className="vacuum-map__overlay">{t('vacuum_map.room_overlay')}</div>
           )}
 
-          {effectiveRoomViewMode === 'list' && (
+          {effectiveRoomViewMode === 'list' && roomSelectionEnabled && (
             <RoomListView rooms={parsedRooms} selectedRooms={selectedRooms} onRoomToggle={onRoomToggle} />
           )}
         </>

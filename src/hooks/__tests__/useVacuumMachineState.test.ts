@@ -1,5 +1,21 @@
 import { describe, expect, it } from 'vitest';
+import { isRobotBusy } from '@/constants';
 import { deriveControls, resolveCleaningMode } from '../useVacuumMachineState';
+
+describe('isRobotBusy', () => {
+  it('keeps room selection hidden through an active job', () => {
+    expect(isRobotBusy('cleaning', 'cleaning')).toBe(true);
+    expect(isRobotBusy('paused', 'paused')).toBe(true);
+    expect(isRobotBusy('returning', 'returning')).toBe(true);
+    expect(isRobotBusy('maintenance', 'cleaning')).toBe(true);
+    expect(isRobotBusy('idle', 'cleaning')).toBe(true);
+  });
+
+  it('allows room selection when the robot is idle', () => {
+    expect(isRobotBusy('idle', 'docked')).toBe(false);
+    expect(isRobotBusy('idle', 'idle')).toBe(false);
+  });
+});
 
 describe('resolveCleaningMode', () => {
   it('uses the select when it has a value', () => {
