@@ -14,6 +14,8 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 - CleanGenius and Custom cleaning mode configuration
 - **Per-room customized cleaning**: Configure suction level, wetness, and cleaning cycles for each room individually
 - **Dock popup**: station status and dock tasks while the robot is docked
+- **Shortcuts**: start, rename, and delete the shortcuts saved in the Dreame app
+- **Landscape layout**: controls beside the map on wide dashboards, mirrored for RTL languages
 - Real-time vacuum status and battery level
 - **Theming**: follows the active Home Assistant theme, including custom themes and dark mode
 - **Internationalization**: follows the Home Assistant language, with explicit language packs and RTL support for Hebrew
@@ -24,8 +26,8 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 </div>
 
 <div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/landscape-light.png" alt="CleanGenius Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/landscape-dark.png" alt="CleanGenius Dark" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/landscape-light.png" alt="Landscape Light" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/landscape-dark.png" alt="Landscape Dark" style="width: 33%;">
 </div>
 
 ## Installation
@@ -89,6 +91,19 @@ name everywhere the card shows it — map labels, room list, selection summary, 
 settings and toasts. Keys are looked up as segment id first, then as the device-provided
 name; anything not listed keeps its original name. Cleaning commands always use the
 segment id, so renaming is purely cosmetic.
+
+### Landscape layout
+
+There is no option to set. When the card is at least 48rem (768px) wide, the controls move into a side column and the map fills the rest. The column is on the left for left-to-right languages and on the right for right-to-left languages such as Hebrew.
+
+To get a wide card, use a panel view. In a sections view, give the section a `column_span` wide enough for 768px and set the card to span the full section:
+
+```yaml
+grid_options:
+  columns: full
+```
+
+In landscape, the card fits within the screen height. `map_height` can make the map smaller, but not taller than the screen.
 
 ## Theming
 
