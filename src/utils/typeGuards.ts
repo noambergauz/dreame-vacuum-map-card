@@ -75,16 +75,7 @@ const buttonConfigSchema = z.object({
   action: z.enum(['stop', 'stop_and_dock']),
 });
 
-const customThemeSchema = z
-  .object({
-    primary: z.string().optional(),
-    accent: z.string().optional(),
-    background: z.string().optional(),
-    surface: z.string().optional(),
-    text: z.string().optional(),
-    textSecondary: z.string().optional(),
-  })
-  .optional();
+const IGNORED_THEME_KEYS = ['theme', 'custom_theme'] as const;
 
 /**
  * Zod schema for card configuration validation.
@@ -95,8 +86,6 @@ export const configSchema = z
     entity: vacuumEntitySchema,
     map_entity: cameraEntitySchema.optional(),
     title: z.string().optional(),
-    theme: z.enum(['light', 'dark', 'custom', 'auto']).optional(),
-    custom_theme: customThemeSchema,
     language: z.string().optional(),
     default_mode: z.enum(['room', 'all', 'zone']).optional(),
     default_room_view: z.enum(['map', 'list']).optional(),
@@ -128,7 +117,9 @@ export function validateConfig(config: unknown): ConfigValidationResult {
     return {
       valid: true,
       errors: [],
-      warnings: [],
+      warnings: IGNORED_THEME_KEYS.filter((key) => key in result.data).map(
+        (key) => `${key} is ignored; the card follows the active Home Assistant theme`
+      ),
       data: result.data,
     };
   }

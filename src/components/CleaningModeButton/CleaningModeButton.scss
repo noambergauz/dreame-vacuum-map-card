@@ -8,7 +8,7 @@
 
   &__repeats {
     background: var(--accent-color, #007aff);
-    color: white;
+    color: var(--text-primary-invert);
     border: none;
     border-radius: 50%;
     width: 3rem;
@@ -43,7 +43,7 @@
 
   &__shortcuts {
     background: var(--accent-color, #007aff);
-    color: white;
+    color: var(--text-primary-invert);
     border: none;
     border-radius: 50%;
     width: 3rem;

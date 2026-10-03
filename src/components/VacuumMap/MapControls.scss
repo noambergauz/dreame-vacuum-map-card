@@ -43,13 +43,13 @@
     }
 
     &--locked {
-      background: var(--accent-color, #007aff);
-      border-color: var(--accent-color, #007aff);
-      color: #fff;
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      color: var(--text-primary-invert);
 
       &:hover {
-        background: var(--accent-hover, #0066d6);
-        border-color: var(--accent-hover, #0066d6);
+        background: var(--accent-color-hover);
+        border-color: var(--accent-color-hover);
       }
     }
   }

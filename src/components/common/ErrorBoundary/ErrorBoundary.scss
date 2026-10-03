@@ -17,7 +17,7 @@
     height: 48px;
     margin: 0 auto 1rem;
     background: var(--error-color, #ff3b30);
-    color: white;
+    color: var(--text-primary-invert, #fff);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -43,7 +43,7 @@
   &__retry {
     padding: 0.5rem 1rem;
     background: var(--accent-color, #007aff);
-    color: white;
+    color: var(--text-primary-invert, #fff);
     border: none;
     border-radius: 0.5rem;
     font-size: 0.875rem;

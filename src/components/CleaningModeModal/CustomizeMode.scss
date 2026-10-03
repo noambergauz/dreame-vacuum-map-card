@@ -113,8 +113,7 @@
     &--selected {
       border-color: var(--accent-color);
       background: var(--accent-color);
-      color: var(--accent-bg-secondary);
-      color: white;
+      color: var(--text-primary-invert);
     }
 
     &--cycle {

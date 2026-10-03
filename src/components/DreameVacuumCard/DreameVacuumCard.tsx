@@ -14,7 +14,6 @@ import {
   useVacuumServices,
   useToast,
   useTranslation,
-  useTheme,
   useMapGeometry,
   useLoadDeviceEntities,
 } from '@/hooks';
@@ -29,7 +28,6 @@ import {
   mapDiagnostic,
 } from '@/utils';
 import { isRtlLanguage, resolveChromeLanguage } from '@/i18n';
-import { resolveThemeType } from '@/themes/utils';
 import { VacuumCardProvider } from '@/contexts';
 import { CAPABILITY } from '@/constants';
 import type { Hass, HassConfig } from '@/types/homeassistant';
@@ -47,20 +45,9 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   const entity = hass.states[config.entity];
   const deviceEntities = useLoadDeviceEntities(hass, config.entity);
   logger.debug('DreameVacuumCard', 'Loaded entity', entity);
-  const themeType = resolveThemeType(config.theme, hass.themes?.darkMode);
   const language = resolveChromeLanguage(config.language, hass.language);
   const isRtl = isRtlLanguage(language);
   const { t } = useTranslation(language);
-
-  // Container ref for applying theme
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  // Apply theme
-  const theme = useTheme({
-    themeType,
-    customThemeConfig: config.custom_theme,
-    containerRef,
-  });
 
   // Track map image dimensions and the picture token those dimensions belong to
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number } | null>(null);
@@ -282,8 +269,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
   return (
     <VacuumCardProvider hass={hass} entity={entity} config={config} language={language} deviceEntities={deviceEntities}>
       <div
-        ref={containerRef}
-        className={`dreame-vacuum-card dreame-vacuum-card--${theme.name}`}
+        className="dreame-vacuum-card"
         dir={isRtl ? 'rtl' : 'ltr'}
         style={config.map_height ? ({ '--map-max-height': config.map_height } as CSSProperties) : undefined}
       >

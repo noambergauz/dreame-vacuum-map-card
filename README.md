@@ -15,7 +15,7 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 - **Per-room customized cleaning**: Configure suction level, wetness, and cleaning cycles for each room individually
 - **Dock popup**: station status and dock tasks while the robot is docked
 - Real-time vacuum status and battery level
-- **Theming**: follows Home Assistant dark mode, or an explicit light, dark, or custom theme
+- **Theming**: follows the active Home Assistant theme, including custom themes and dark mode
 - **Internationalization**: follows the Home Assistant language, with explicit language packs and RTL support for Hebrew
 
 <div style="display: flex; gap: 10px;">
@@ -89,7 +89,6 @@ type: custom:dreame-vacuum-map-card
 entity: vacuum.dreame_vacuum_entity
 title: Dreame Vacuum
 map_entity: camera.dreame_vacuum_entity # Optional. Defaults to the live map camera registered for this vacuum
-theme: auto # Optional. 'auto' (default) follows Home Assistant dark mode. Also 'light', 'dark', or 'custom'
 language: auto # Optional. 'auto' (default) follows the Home Assistant language
 default_mode: all # Optional, 'all' (default), 'room', or 'zone'
 default_room_view: map # Optional, 'map' (default) or 'list'
@@ -118,116 +117,17 @@ segment id, so renaming is purely cosmetic.
 
 ## Theming
 
-The card features a comprehensive theming system with built-in and custom theme support.
+The card has no palette of its own. It uses the active Home Assistant theme, including its light and dark modes, so it matches the rest of your dashboard and any theme you install.
 
-### Built-in Themes
+To change the card's colors, change your Home Assistant theme. The card reads the standard theme variables, mainly:
 
-#### Auto (default)
+- `primary-color` for buttons, selections, and the zone and spot overlays
+- `card-background-color` or `ha-card-background`, and `secondary-background-color`, for backgrounds
+- `primary-text-color`, `secondary-text-color`, and `disabled-text-color` for text
+- `divider-color`, `success-color`, `warning-color`, and `error-color`
+- `ha-card-border-radius`, `ha-card-border-color`, `ha-card-border-width`, and `ha-card-box-shadow` for the card frame
 
-When `theme` is omitted or set to `auto`, the card follows Home Assistant's dark mode.
-
-```yaml
-type: custom:dreame-vacuum-map-card
-entity: vacuum.dreame_vacuum_entity
-theme: auto
-```
-
-#### Light Theme
-
-```yaml
-type: custom:dreame-vacuum-map-card
-entity: vacuum.dreame_vacuum_entity
-theme: light
-```
-
-#### Dark Theme
-
-```yaml
-type: custom:dreame-vacuum-map-card
-entity: vacuum.dreame_vacuum_entity
-theme: dark
-```
-
-### Custom Themes
-
-Create fully customized themes by extending either the light or dark theme:
-
-```yaml
-type: custom:dreame-vacuum-map-card
-entity: vacuum.dreame_vacuum_entity
-theme: custom
-custom_theme:
-  base: dark # Extend 'dark' or 'light' theme
-  accentColor: '#ff6b6b'
-  accentColorHover: '#ff5252'
-  accentBg: 'rgba(255, 107, 107, 0.2)'
-```
-
-#### Available Theme Properties
-
-You can customize any of the following colors:
-
-**Background Colors:**
-
-- `cardBg`, `surfaceBg`, `surfaceSecondary`, `surfaceTertiary`, `surfaceBgHover`
-
-**Text Colors:**
-
-- `textPrimary`, `textPrimaryInvert`, `textSecondary`, `textTertiary`
-
-**Accent Colors:**
-
-- `accentColor`, `accentColorHover`, `accentBg`, `accentBgHover`, `accentBgSecondary`, `accentBgSecondaryHover`, `accentBgTransparent`, `accentShadow`, `accentColorShadowColor`
-
-**State Colors:**
-
-- `warningColor`, `warningShadow`, `errorColor`, `errorColorHover`, `errorShadow`
-
-**UI Elements:**
-
-- `borderColor`, `overlayBg`, `cardShadow`, `cardShadowHover`, `handleShadow`, `handleBg`, `backdropBg`
-
-**Toggle Specific:**
-
-- `toggleActive`, `toggleActiveBorder`, `toggleActiveShadowColor`
-
-### Example Custom Themes
-
-#### Ocean Blue
-
-```yaml
-theme: custom
-custom_theme:
-  base: dark
-  cardBg: '#0a1929'
-  surfaceBg: '#132f4c'
-  accentColor: '#29b6f6'
-  toggleActiveBorder: '#29b6f6'
-```
-
-#### Warm Sunset
-
-```yaml
-theme: custom
-custom_theme:
-  base: light
-  cardBg: '#fff8e1'
-  accentColor: '#ff6f00'
-  accentBg: '#ffe0b2'
-```
-
-#### Forest Green
-
-```yaml
-theme: custom
-custom_theme:
-  base: light
-  cardBg: '#f1f8e9'
-  accentColor: '#2e7d32'
-  accentBg: '#c8e6c9'
-```
-
-For more examples and complete theming documentation, see [THEMING.md](THEMING.md).
+The `theme` and `custom_theme` options were removed. Old dashboards that still set them keep working, and the options are ignored.
 
 ## Per-Room Customized Cleaning
 

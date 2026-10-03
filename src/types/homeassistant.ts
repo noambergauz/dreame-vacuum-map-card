@@ -1,5 +1,3 @@
-import type { CustomThemeConfig } from '@/themes';
-
 export interface HassEntity {
   entity_id: string;
   state: string;
@@ -58,8 +56,6 @@ export interface HassConfig {
   map_entity?: string;
   title?: string;
   type: string;
-  theme?: 'light' | 'dark' | 'custom' | 'auto';
-  custom_theme?: CustomThemeConfig;
   language?: string;
   default_mode?: CleaningSelectionMode;
   default_room_view?: RoomViewMode;
@@ -91,9 +87,6 @@ export interface HassConnection {
 export interface Hass {
   states: Record<string, HassEntity>;
   language?: string;
-  themes?: {
-    darkMode?: boolean;
-  };
   callService: (domain: string, service: string, data?: Record<string, unknown>) => Promise<void>;
   callWS: <T>(message: Record<string, unknown>) => Promise<T>;
   connection?: HassConnection;

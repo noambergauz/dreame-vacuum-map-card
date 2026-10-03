@@ -27,16 +27,13 @@
       transform: translateY(-0.125rem);
       border: 0.0625rem solid var(--toggle-active-border); // Your base color as the "frame"
       box-shadow:
-        0 0.625rem 1.25rem rgba(0, 0, 0, 0.4),
-        // Depth shadow
-        0 0 0.75rem rgba(88, 101, 242, 0.25),
-        // Outer indigo aura
-        inset 0 0.0625rem 0.0625rem rgba(255, 255, 255, 0.1) !important; // Top edge highlight
+        0 0.625rem 1.25rem var(--card-shadow-hover),
+        0 0 0.75rem var(--accent-color-shadow-color) !important;
     }
   }
 
   &__clean {
-    color: white;
+    color: var(--text-primary-invert);
     background: var(--accent-color);
   }
   &__pause {
@@ -44,12 +41,12 @@
     border-color: var(--accent-color-hover);
   }
   &__resume {
-    color: #32d74b;
-    border-color: rgba(50, 215, 75, 0.5);
+    color: var(--success-color, #43a047);
+    border-color: color-mix(in srgb, var(--success-color, #43a047) 50%, transparent);
   }
   &__stop {
-    color: #ff453a;
-    border-color: rgba(255, 69, 58, 0.5);
+    color: var(--error-color, #db4437);
+    border-color: color-mix(in srgb, var(--error-color, #db4437) 50%, transparent);
   }
 
   &__dock {

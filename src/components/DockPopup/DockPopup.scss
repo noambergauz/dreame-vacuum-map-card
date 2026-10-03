@@ -34,18 +34,18 @@
     margin-top: 0.25rem;
     border-radius: 50%;
     flex: 0 0 auto;
-    background: #aaa;
+    background: var(--text-tertiary);
 
     &--good {
-      background: #34c759;
+      background: var(--success-color, #43a047);
     }
 
     &--warning {
-      background: #ff9500;
+      background: var(--warning-color, #ffa600);
     }
 
     &--bad {
-      background: #ff3b30;
+      background: var(--error-color, #db4437);
     }
   }
 
@@ -67,15 +67,15 @@
     text-transform: capitalize;
 
     &--good {
-      color: #34c759;
+      color: var(--success-color, #43a047);
     }
 
     &--warning {
-      color: #ff9500;
+      color: var(--warning-color, #ffa600);
     }
 
     &--bad {
-      color: #ff3b30;
+      color: var(--error-color, #db4437);
     }
   }
 

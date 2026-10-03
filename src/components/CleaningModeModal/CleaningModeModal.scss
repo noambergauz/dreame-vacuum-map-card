@@ -150,7 +150,7 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 0.125rem 0.25rem var(--handle-shadow, rgba(0, 0, 0, 0.15));
-    color: white;
+    color: var(--text-primary-invert);
     font-size: 0.875rem;
   }
 
@@ -301,7 +301,7 @@
     top: -0.5rem;
     transform: translateX(-50%);
     background: var(--accent-color, #d4af37);
-    color: white;
+    color: var(--text-primary-invert);
     padding: 0.25rem 0.5rem;
     border-radius: 0.375rem;
     font-size: 0.85rem;
@@ -341,7 +341,7 @@
     justify-content: center;
     font-size: 0.875rem;
     font-weight: 600;
-    color: white;
+    color: var(--text-primary-invert);
     box-shadow: 0 0.125rem 0.5rem var(--accent-color-shadow-color, rgba(88, 101, 242, 0.25));
     pointer-events: none;
   }

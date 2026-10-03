@@ -49,7 +49,7 @@
     &--active {
       background: var(--accent-color, #007aff);
       border-color: var(--accent-color, #007aff);
-      color: white;
+      color: var(--text-primary-invert);
     }
 
     &:disabled {

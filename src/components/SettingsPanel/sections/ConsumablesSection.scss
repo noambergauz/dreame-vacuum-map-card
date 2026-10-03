@@ -53,7 +53,7 @@
 
     &:hover {
       background: var(--accent-color, #007aff);
-      color: white;
+      color: var(--text-primary-invert);
     }
 
     &:active {

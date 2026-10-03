@@ -61,19 +61,14 @@
     -webkit-user-drag: none;
   }
 
-  // Dark mode filter for map image
-  .dreame-vacuum-card--dark & &__image {
-    filter: brightness(0.8) contrast(0.9) saturate(0.85);
-  }
-
   &__placeholder {
-    color: #666;
+    color: var(--text-secondary);
     text-align: center;
     font-size: 0.875rem;
 
     small {
       font-size: 0.75rem;
-      color: #999;
+      color: var(--text-tertiary);
     }
   }
 
@@ -83,13 +78,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--overlay-bg);
     border-radius: 0.9375rem;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.875rem;
-    color: #666;
+    color: var(--text-secondary);
     pointer-events: none;
   }
 
@@ -107,17 +102,17 @@
 
   &__zone {
     position: absolute;
-    border: 0.1875rem solid #007aff;
+    border: 0.1875rem solid var(--accent-color);
     background: repeating-linear-gradient(
       45deg,
-      rgba(0, 122, 255, 0.1),
-      rgba(0, 122, 255, 0.1) 0.625rem,
-      rgba(0, 122, 255, 0.05) 0.625rem,
-      rgba(0, 122, 255, 0.05) 1.25rem
+      var(--accent-bg-secondary),
+      var(--accent-bg-secondary) 0.625rem,
+      color-mix(in srgb, var(--accent-color) 5%, transparent) 0.625rem,
+      color-mix(in srgb, var(--accent-color) 5%, transparent) 1.25rem
     );
     pointer-events: auto;
     border-radius: 0.5rem;
-    box-shadow: 0 0.125rem 0.75rem rgba(0, 122, 255, 0.3);
+    box-shadow: 0 0.125rem 0.75rem var(--accent-shadow);
   }
 
   // Zone container for click handling inside TransformComponent
@@ -132,11 +127,11 @@
 
   &__zone-handle {
     position: absolute;
-    background: #007aff;
-    border: 0.125rem solid white;
+    background: var(--accent-color);
+    border: 0.125rem solid var(--text-primary-invert);
     border-radius: 0.25rem;
     pointer-events: auto;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.125rem 0.25rem var(--handle-shadow);
     transition: background 0.2s ease;
     z-index: 10;
     touch-action: none;
@@ -150,12 +145,9 @@
       bottom: -0.5rem;
     }
 
-    &:hover {
-      background: #0051d5;
-    }
-
+    &:hover,
     &:active {
-      background: #003d99;
+      background: var(--accent-color-hover);
     }
 
     // Horizontal strips (top/bottom edges)
@@ -202,9 +194,9 @@
     width: 1.5rem;
     height: 1.5rem;
     border-radius: 50%;
-    background: #ff3b30;
-    color: white;
-    border: 0.125rem solid white;
+    background: var(--error-color, #db4437);
+    color: var(--text-primary-invert);
+    border: 0.125rem solid var(--text-primary-invert);
     font-size: 1.125rem;
     font-weight: bold;
     cursor: pointer;
@@ -212,18 +204,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0.125rem 0.5rem rgba(255, 59, 48, 0.4);
+    box-shadow: 0 0.125rem 0.5rem var(--error-shadow);
     transition: background 0.2s ease;
     line-height: 1;
     padding: 0;
     z-index: 11;
 
-    &:hover {
-      background: #ff1f0f;
-    }
-
+    &:hover,
     &:active {
-      background: #cc0000;
+      background: var(--error-color-hover);
     }
   }
 
@@ -238,18 +227,18 @@
     width: 2rem;
     height: 2rem;
     padding: 0;
-    border: 0.125rem solid white;
+    border: 0.125rem solid var(--text-primary-invert);
     border-radius: 50%;
-    background: #007aff;
-    color: white;
+    background: var(--accent-color);
+    color: var(--text-primary-invert);
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 0.125rem 0.5rem rgba(0, 122, 255, 0.45);
+    box-shadow: 0 0.125rem 0.5rem var(--accent-shadow);
     transform-origin: center;
     z-index: 10;
 
     &:hover:not(:disabled) {
-      background: #0051d5;
+      background: var(--accent-color-hover);
     }
 
     &:disabled {
@@ -351,8 +340,8 @@
     }
 
     &--selected {
-      background: var(--accent-color, #d4af37);
-      color: white;
+      background: var(--accent-color);
+      color: var(--text-primary-invert);
       border-color: var(--accent-color, #d4af37);
       box-shadow: 0 0.125rem 0.5rem var(--accent-color-shadow-color, rgba(212, 175, 55, 0.4));
 

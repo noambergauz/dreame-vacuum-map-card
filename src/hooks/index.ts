@@ -9,7 +9,6 @@ export { useCardUIState } from './useCardUIState';
 export { useVacuumServices } from './useVacuumServices';
 export { useToast } from './useToast';
 export { useTranslation } from './useTranslation';
-export { useTheme } from './useTheme';
 export { useButtonConfig } from './useButtonConfig';
 export { useRoomSettings } from './useRoomSettings';
 export { getEntityState } from './useEntityState';

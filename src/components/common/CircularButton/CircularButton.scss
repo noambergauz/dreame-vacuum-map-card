@@ -84,7 +84,7 @@
   }
 
   &__circle--selected &__icon--svg {
-    color: white;
+    color: var(--text-primary-invert);
   }
 
   &__label {

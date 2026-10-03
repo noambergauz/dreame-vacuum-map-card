@@ -1,14 +1,49 @@
 .dreame-vacuum-card {
+  // Card tokens resolved from the active Home Assistant theme
+  --card-bg: var(--ha-card-background, var(--card-background-color, #fff));
+  --surface-bg: var(--card-background-color, #fff);
+  --surface-secondary: var(--secondary-background-color, #f0f0f0);
+  --surface-tertiary: var(--secondary-background-color, #e8e8e8);
+  --surface-bg-hover: color-mix(in srgb, var(--primary-text-color, #000) 8%, transparent);
+  --text-primary: var(--primary-text-color, #1a1a1a);
+  --text-primary-invert: var(--text-primary-color, #fff);
+  --text-secondary: var(--secondary-text-color, #666);
+  --text-tertiary: var(--disabled-text-color, #999);
+  --accent-color: var(--primary-color, #03a9f4);
+  --accent-color-hover: color-mix(in srgb, var(--accent-color) 85%, var(--primary-text-color, #000));
+  --accent-bg: color-mix(in srgb, var(--accent-color) 20%, transparent);
+  --accent-bg-hover: color-mix(in srgb, var(--accent-color) 30%, transparent);
+  --accent-bg-secondary: color-mix(in srgb, var(--accent-color) 10%, transparent);
+  --accent-bg-secondary-hover: color-mix(in srgb, var(--accent-color) 20%, transparent);
+  --accent-bg-transparent: color-mix(in srgb, var(--accent-color) 20%, transparent);
+  --accent-shadow: color-mix(in srgb, var(--accent-color) 40%, transparent);
+  --accent-color-shadow-color: color-mix(in srgb, var(--accent-color) 25%, transparent);
+  --warning-shadow: color-mix(in srgb, var(--warning-color, #ffa600) 40%, transparent);
+  --error-color-hover: color-mix(in srgb, var(--error-color, #db4437) 85%, var(--primary-text-color, #000));
+  --error-shadow: color-mix(in srgb, var(--error-color, #db4437) 40%, transparent);
+  --border-color: var(--divider-color, #e0e0e0);
+  --overlay-bg: color-mix(in srgb, var(--primary-text-color, #000) 5%, transparent);
+  --card-shadow: rgba(0, 0, 0, 0.12);
+  --card-shadow-hover: rgba(0, 0, 0, 0.18);
+  --handle-shadow: rgba(0, 0, 0, 0.2);
+  --handle-bg: color-mix(in srgb, var(--primary-text-color, #000) 15%, transparent);
+  --backdrop-bg: rgba(0, 0, 0, 0.5);
+  --toggle-active: color-mix(in srgb, var(--accent-color) 25%, transparent);
+  --toggle-active-border: var(--accent-color);
+  --toggle-active-shadow-color: var(--accent-color-shadow-color);
+
   position: relative;
-  background: var(--card-bg, #f5f5f7);
-  border-radius: 1.25rem;
+  background: var(--card-bg);
+  color: var(--text-primary);
+  border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--border-color));
+  border-radius: var(--ha-card-border-radius, 0.75rem);
   overflow: hidden;
-  box-shadow: 0 0.125rem 1.25rem var(--card-shadow, rgba(0, 0, 0, 0.08));
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-shadow: var(--ha-card-box-shadow, none);
+  font-family: inherit;
 
   &__error {
     padding: 1.25rem;
-    color: var(--error-color, #ff3b30);
+    color: var(--error-color, #db4437);
     text-align: center;
     font-size: 0.875rem;
   }
@@ -17,8 +52,8 @@
     margin: 0 1.25rem;
     padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
-    background: var(--surface-secondary, rgba(0, 0, 0, 0.06));
-    color: var(--text-secondary, #666);
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
     font-size: 0.8125rem;
     text-align: center;
   }
