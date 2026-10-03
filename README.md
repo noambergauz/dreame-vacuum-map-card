@@ -19,38 +19,13 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 - **Internationalization**: follows the Home Assistant language, with explicit language packs and RTL support for Hebrew
 
 <div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/light-main.png" alt="Main Screen Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-main.png" alt="Main Screen Dark" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/light.png" alt="Main Screen Light" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark.png" alt="Main Screen Dark" style="width: 33%;">
 </div>
 
 <div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/light-genius.png" alt="CleanGenius Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-genius.png" alt="CleanGenius Dark" style="width: 33%;">
-</div>
-
-<div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/light-custom.png" alt="Custom Cleaning Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-custom.png" alt="Custom Cleaning Dark" style="width: 33%;">
-</div>
-
-<div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/blob/master/screenshots/customize-cleaning.png" alt="Customzied Cleaning Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-customize-cleaning.png" alt="Customzied Cleaning Dark" style="width: 33%;">
-</div>
-
-<div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/room-cleaning.png" alt="Room Cleaning Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-room-cleaning.png" alt="Room Cleaning Dark" style="width: 33%;">
-</div>
-
-<div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/zone-cleaning.png" alt="Zone Cleaning Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-zone-cleaning.png" alt="Zone Cleaning Dark" style="width: 33%;">
-</div>
-
-<div style="display: flex; gap: 10px;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/light-settings.png" alt="Settings Light" style="width: 33%;">
-    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/dark-settings.png" alt="Settings Dark" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/landscape-light.png" alt="CleanGenius Light" style="width: 33%;">
+    <img src="https://github.com/noambergauz/dreame-vacuum-map-card/raw/master/screenshots/landscape-dark.png" alt="CleanGenius Dark" style="width: 33%;">
 </div>
 
 ## Installation
