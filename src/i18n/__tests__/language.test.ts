@@ -7,6 +7,11 @@ describe('resolveChromeLanguage', () => {
   it('maps Home Assistant codes onto chrome packs', () => {
     expect(normalizeChromeLanguage('de-DE')).toBe('de');
     expect(normalizeChromeLanguage('zh-Hans')).toBe('zh');
+    expect(normalizeChromeLanguage('zh-Hant')).toBe('zh_TW');
+    expect(normalizeChromeLanguage('zh_TW')).toBe('zh_TW');
+    expect(normalizeChromeLanguage('hu')).toBe('hu_HU');
+    expect(normalizeChromeLanguage('uk')).toBe('uk');
+    expect(normalizeChromeLanguage('lt')).toBe('lt');
     expect(normalizeChromeLanguage('fr')).toBe('fr_FR');
     expect(normalizeChromeLanguage('xx')).toBe('en');
   });
@@ -20,6 +25,10 @@ describe('resolveChromeLanguage', () => {
   it('requests the Home Assistant language until the card overrides it', () => {
     expect(resolveBackendLanguage('auto', 'de-DE')).toBe('de-DE');
     expect(resolveBackendLanguage('fr_FR', 'de')).toBe('fr');
+    expect(resolveBackendLanguage('zh_TW', 'en')).toBe('zh-Hant');
+    expect(resolveBackendLanguage('cs', 'en')).toBe('cs');
+    expect(resolveBackendLanguage('sk', 'en')).toBe('sk');
+    expect(resolveBackendLanguage('hu_HU', 'en')).toBe('hu');
   });
 });
 

@@ -5,10 +5,14 @@ const CHROME_PACKS = new Set<string>(Object.keys(locales));
 /** Home Assistant language codes that do not match a chrome pack name directly. */
 const CHROME_ALIASES: Record<string, SupportedLanguage> = {
   'zh-hans': 'zh',
-  'zh-hant': 'zh',
+  'zh-hant': 'zh_TW',
+  'zh-tw': 'zh_TW',
+  'zh-hk': 'zh_TW',
   fr: 'fr_FR',
   'fr-fr': 'fr_FR',
   iw: 'he',
+  hu: 'hu_HU',
+  'hu-hu': 'hu_HU',
 };
 
 /** Chrome pack to the language code dreame_vacuum ships. */
@@ -17,6 +21,7 @@ const BACKEND_LANGUAGE: Record<SupportedLanguage, string> = {
   de: 'de',
   ru: 'ru',
   zh: 'zh-Hans',
+  zh_TW: 'zh-Hant',
   es: 'es',
   nl: 'nl',
   it: 'it',
@@ -24,6 +29,11 @@ const BACKEND_LANGUAGE: Record<SupportedLanguage, string> = {
   fr_FR: 'fr',
   he: 'he',
   ko: 'ko',
+  cs: 'cs',
+  sk: 'sk',
+  hu_HU: 'hu',
+  uk: 'uk',
+  lt: 'lt',
 };
 
 function languageCode(value: string): string {

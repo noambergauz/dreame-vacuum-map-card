@@ -9,12 +9,19 @@ import { pl } from './pl';
 import { fr_FR } from './fr_FR';
 import { he } from './he';
 import { ko } from './ko';
+import { cs } from './cs';
+import { sk } from './sk';
+import { zh_TW } from './zh_TW';
+import { hu_HU } from './hu_HU';
+import { uk } from './uk';
+import { lt } from './lt';
 
 export const locales = {
   en,
   de,
   ru,
   zh,
+  zh_TW,
   es,
   nl,
   it,
@@ -22,6 +29,11 @@ export const locales = {
   fr_FR,
   he,
   ko,
+  cs,
+  sk,
+  hu_HU,
+  uk,
+  lt,
 };
 
 export type SupportedLanguage = keyof typeof locales;

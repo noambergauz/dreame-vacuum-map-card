@@ -139,9 +139,15 @@ Currently available:
 - **Dutch (nl)** - Nederlands
 - **Spanish (es)** - Español
 - **Chinese (zh)** - 中文
+- **Traditional Chinese (zh_TW)** - 繁體中文
 - **French (fr_FR)** - Français
 - **Korean (ko)** - 한국어
 - **Hebrew (he)** - עברית (RTL supported)
+- **Czech (cs)** - Čeština
+- **Slovak (sk)** - Slovenčina
+- **Hungarian (hu_HU)** - Magyar
+- **Ukrainian (uk)** - Українська
+- **Lithuanian (lt)** - Lietuvių
 
 Set the language in your configuration:
 
