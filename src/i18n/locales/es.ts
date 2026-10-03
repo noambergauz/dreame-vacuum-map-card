@@ -128,6 +128,18 @@ export const es: Translation = {
     no_shortcuts: 'No hay accesos directos disponibles',
     create_hint:
       'Cree accesos directos en la aplicación Dreame para iniciar rápidamente sus rutinas de limpieza favoritas',
+    count: '{{count}} accesos directos',
+    start: 'Iniciar',
+    manage: 'Gestionar {{name}}',
+    rename: 'Renombrar',
+    delete: 'Eliminar',
+    name: 'Nombre del acceso directo',
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    working: 'Procesando…',
+    action_failed: 'La acción ha fallado. Inténtelo de nuevo.',
+    delete_confirmation: '¿Eliminar “{{name}}”? Esta acción no se puede deshacer.',
+    unavailable: 'Los accesos directos no están disponibles mientras el robot está desconectado.',
   },
 
   dock_popup: {

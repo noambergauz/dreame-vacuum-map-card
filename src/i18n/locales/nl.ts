@@ -127,6 +127,18 @@ export const nl: Translation = {
     title: 'Snelkoppelingen',
     no_shortcuts: 'Geen snelkoppelingen beschikbaar',
     create_hint: 'Maak snelkoppelingen aan in de Dreame app om snel je favoriete routines te starten',
+    count: '{{count}} snelkoppelingen',
+    start: 'Starten',
+    manage: '{{name}} beheren',
+    rename: 'Hernoemen',
+    delete: 'Verwijderen',
+    name: 'Naam van snelkoppeling',
+    cancel: 'Annuleren',
+    save: 'Opslaan',
+    working: 'Bezig…',
+    action_failed: 'De actie is mislukt. Probeer het opnieuw.',
+    delete_confirmation: '“{{name}}” verwijderen? Dit kan niet ongedaan worden gemaakt.',
+    unavailable: 'Snelkoppelingen zijn niet beschikbaar wanneer de stofzuiger offline is.',
   },
 
   dock_popup: {

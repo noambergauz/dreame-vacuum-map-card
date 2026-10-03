@@ -127,6 +127,18 @@ export const zh: Translation = {
     title: '快捷指令',
     no_shortcuts: '暂无快捷指令',
     create_hint: '请在 Dreame (追觅) App 中创建快捷指令，以便快速启动您常用的清洁任务',
+    count: '{{count}} 个快捷指令',
+    start: '启动',
+    manage: '管理 {{name}}',
+    rename: '重命名',
+    delete: '删除',
+    name: '快捷指令名称',
+    cancel: '取消',
+    save: '保存',
+    working: '处理中…',
+    action_failed: '操作失败，请重试。',
+    delete_confirmation: '删除“{{name}}”？此操作无法撤销。',
+    unavailable: '扫地机器人离线时无法使用快捷指令。',
   },
 
   dock_popup: {

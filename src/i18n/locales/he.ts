@@ -127,6 +127,18 @@ export const he: Translation = {
     title: 'קיצורי דרך',
     no_shortcuts: 'אין קיצורי דרך זמינים',
     create_hint: 'צור קיצורי דרך באפליקציית Dreame כדי להפעיל במהירות את תוכניות הניקוי המועדפות עליך',
+    count: '{{count}} קיצורי דרך',
+    start: 'התחל',
+    manage: 'נהל את {{name}}',
+    rename: 'שינוי שם',
+    delete: 'מחיקה',
+    name: 'שם קיצור הדרך',
+    cancel: 'ביטול',
+    save: 'שמור',
+    working: 'מעבד…',
+    action_failed: 'הפעולה נכשלה. נסה שוב.',
+    delete_confirmation: 'למחוק את „{{name}}”? לא ניתן לבטל פעולה זו.',
+    unavailable: 'קיצורי הדרך אינם זמינים כאשר השואב אינו מחובר.',
   },
 
   dock_popup: {

@@ -19,7 +19,6 @@ import {
   Grid2x2Check,
   Timer,
   Shell,
-  CirclePlay,
   PanelBottomClose,
   BatteryCharging,
   Battery,
@@ -65,8 +64,6 @@ export const DOCK_ICON_SVG = <PanelBottomClose />;
 // Shortcuts
 
 export const SHORTCUTS_ICON_SVG = <Bookmark />;
-
-export const SHORTCUT_START_CLEANING_ICON_SVG = <CirclePlay />;
 
 // Vacuum and mop icons
 export const VACUUM_ICON_SVG = <BrushCleaning />;

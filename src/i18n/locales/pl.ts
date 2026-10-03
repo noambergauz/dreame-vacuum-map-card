@@ -127,6 +127,18 @@ export const pl: Translation = {
     title: 'Skróty',
     no_shortcuts: 'Brak dostępnych skrótów',
     create_hint: 'Utwórz skróty w aplikacji Dreame, aby szybko uruchamiać ulubione procedury sprzątania',
+    count: 'Skróty: {{count}}',
+    start: 'Uruchom',
+    manage: 'Zarządzaj {{name}}',
+    rename: 'Zmień nazwę',
+    delete: 'Usuń',
+    name: 'Nazwa skrótu',
+    cancel: 'Anuluj',
+    save: 'Zapisz',
+    working: 'Przetwarzanie…',
+    action_failed: 'Działanie nie powiodło się. Spróbuj ponownie.',
+    delete_confirmation: 'Usunąć „{{name}}”? Tej operacji nie można cofnąć.',
+    unavailable: 'Skróty są niedostępne, gdy odkurzacz jest offline.',
   },
 
   dock_popup: {

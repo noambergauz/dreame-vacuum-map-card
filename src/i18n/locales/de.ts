@@ -130,6 +130,18 @@ export const de: Translation = {
     no_shortcuts: 'Keine Verknüpfungen verfügbar',
     create_hint:
       'Erstellen Sie Verknüpfungen in der Dreame-App, um Ihre bevorzugten Reinigungsroutinen schnell zu starten',
+    count: '{{count}} Verknüpfungen',
+    start: 'Starten',
+    manage: '{{name}} verwalten',
+    rename: 'Umbenennen',
+    delete: 'Löschen',
+    name: 'Name der Verknüpfung',
+    cancel: 'Abbrechen',
+    save: 'Speichern',
+    working: 'Wird ausgeführt…',
+    action_failed: 'Die Aktion ist fehlgeschlagen. Bitte versuchen Sie es erneut.',
+    delete_confirmation: '„{{name}}“ löschen? Dies kann nicht rückgängig gemacht werden.',
+    unavailable: 'Verknüpfungen sind nicht verfügbar, solange der Staubsauger offline ist.',
   },
 
   dock_popup: {

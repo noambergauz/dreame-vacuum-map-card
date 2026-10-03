@@ -127,6 +127,18 @@ export const fr_FR: Translation = {
     title: 'Raccourcis',
     no_shortcuts: 'Aucun raccourci disponible',
     create_hint: "Créez des raccourcis dans l'application Dreame pour lancer rapidement vos routines préférées",
+    count: '{{count}} raccourcis',
+    start: 'Démarrer',
+    manage: 'Gérer {{name}}',
+    rename: 'Renommer',
+    delete: 'Supprimer',
+    name: 'Nom du raccourci',
+    cancel: 'Annuler',
+    save: 'Enregistrer',
+    working: 'Traitement…',
+    action_failed: "L'action a échoué. Veuillez réessayer.",
+    delete_confirmation: 'Supprimer « {{name}} » ? Cette action est irréversible.',
+    unavailable: "Les raccourcis sont indisponibles lorsque l'aspirateur est hors ligne.",
   },
 
   dock_popup: {

@@ -127,6 +127,18 @@ export const it: Translation = {
     title: 'Scorciatoie',
     no_shortcuts: 'Nessuna scorciatoia disponibile',
     create_hint: "Crea scorciatoie nell'app Dreame per avviare rapidamente le tue routine di pulizia preferite",
+    count: '{{count}} scorciatoie',
+    start: 'Avvia',
+    manage: 'Gestisci {{name}}',
+    rename: 'Rinomina',
+    delete: 'Elimina',
+    name: 'Nome scorciatoia',
+    cancel: 'Annulla',
+    save: 'Salva',
+    working: 'Elaborazione…',
+    action_failed: "L'azione non è riuscita. Riprova.",
+    delete_confirmation: 'Eliminare “{{name}}”? Questa azione non può essere annullata.',
+    unavailable: "Le scorciatoie non sono disponibili quando l'aspirapolvere è offline.",
   },
 
   dock_popup: {

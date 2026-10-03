@@ -127,6 +127,18 @@ export const ko: Translation = {
     title: '단축키',
     no_shortcuts: '사용 가능한 단축키가 없습니다',
     create_hint: 'Dreame 앱에서 단축키를 만들어 자주 사용하는 청소 루틴을 빠르게 시작하세요',
+    count: '단축키 {{count}}개',
+    start: '시작',
+    manage: '{{name}} 관리',
+    rename: '이름 변경',
+    delete: '삭제',
+    name: '단축키 이름',
+    cancel: '취소',
+    save: '저장',
+    working: '처리 중…',
+    action_failed: '작업에 실패했습니다. 다시 시도하세요.',
+    delete_confirmation: '“{{name}}”을(를) 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.',
+    unavailable: '로봇 청소기가 오프라인일 때는 단축키를 사용할 수 없습니다.',
   },
 
   dock_popup: {

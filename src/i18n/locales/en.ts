@@ -125,6 +125,18 @@ export const en = {
     title: 'Shortcuts',
     no_shortcuts: 'No shortcuts available',
     create_hint: 'Create shortcuts in the Dreame app to quickly start your favorite cleaning routines',
+    count: '{{count}} shortcuts',
+    start: 'Start',
+    manage: 'Manage {{name}}',
+    rename: 'Rename',
+    delete: 'Delete',
+    name: 'Shortcut name',
+    cancel: 'Cancel',
+    save: 'Save',
+    working: 'Working…',
+    action_failed: 'The shortcut action failed. Please try again.',
+    delete_confirmation: 'Delete “{{name}}”? This cannot be undone.',
+    unavailable: 'Shortcuts are unavailable while the vacuum is offline.',
   },
 
   dock_popup: {
