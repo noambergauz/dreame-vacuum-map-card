@@ -1,6 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { normalizeChromeLanguage, resolveBackendLanguage, resolveChromeLanguage } from '../language';
-import { resolveEntityLabel, resolveStatusLabel } from '../integrationTranslations';
+import { fetchIntegrationTranslations, resolveEntityLabel, resolveStatusLabel } from '../integrationTranslations';
 import { validateConfig } from '@/utils/typeGuards';
 
 describe('resolveChromeLanguage', () => {
@@ -32,6 +32,22 @@ describe('integration labels', () => {
 
   it('title-cases a status the integration does not translate', () => {
     expect(resolveStatusLabel({}, 'charging_completed')).toBe('Charging completed');
+  });
+
+  it('requests entity translations for the dreame integration', async () => {
+    const callWS = vi
+      .fn()
+      .mockResolvedValue({ resources: { 'component.dreame_vacuum.entity.switch.child_lock.name': 'Kindersicherung' } });
+
+    await expect(fetchIntegrationTranslations(callWS, 'de')).resolves.toEqual({
+      'component.dreame_vacuum.entity.switch.child_lock.name': 'Kindersicherung',
+    });
+    expect(callWS).toHaveBeenCalledWith({
+      type: 'frontend/get_translations',
+      language: 'de',
+      category: 'entity',
+      integration: ['dreame_vacuum'],
+    });
   });
 
   it('falls back to the chrome label when the integration and entity have no name', () => {

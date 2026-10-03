@@ -37,6 +37,7 @@ export function useIntegrationTranslations(): Record<string, string> {
         setResources(loaded);
       })
       .catch(() => {
+        translationCache.set(backendLanguage, {});
         inflight.delete(backendLanguage);
         if (!active) return;
         setLoadedLanguage(backendLanguage);

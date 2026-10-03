@@ -52,7 +52,7 @@ export async function fetchIntegrationTranslations(
     type: 'frontend/get_translations',
     language,
     category: 'entity',
-    integrations: [INTEGRATION],
+    integration: [INTEGRATION],
   });
   return response.resources ?? {};
 }
