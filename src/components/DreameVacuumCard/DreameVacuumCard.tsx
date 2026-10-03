@@ -274,58 +274,64 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
         style={config.map_height ? ({ '--map-max-height': config.map_height } as CSSProperties) : undefined}
       >
         <div className="dreame-vacuum-card__container">
-          <Header deviceName={deviceName} onSettingsClick={handleSettingsOpen} />
+          <div className="dreame-vacuum-card__header">
+            <Header deviceName={deviceName} onSettingsClick={handleSettingsOpen} />
 
-          <MapSelector />
+            <MapSelector />
 
-          {diagnostic && <p className="dreame-vacuum-card__diagnostic">{t(`vacuum_map.diagnostic_${diagnostic}`)}</p>}
+            {diagnostic && <p className="dreame-vacuum-card__diagnostic">{t(`vacuum_map.diagnostic_${diagnostic}`)}</p>}
+          </div>
 
-          <VacuumMap
-            mapEntityId={mapEntityId}
-            geometry={displayedGeometry}
-            selectedMode={selectedMode}
-            areaSelectionMode={areaSelectionMode}
-            selectedRooms={selectedRooms}
-            onRoomToggle={handleRoomToggleWithToast}
-            zone={mapReady ? selectedZones : []}
-            onZoneChange={setSelectedZones}
-            spots={mapReady ? selectedSpots : []}
-            onSpotsChange={setSelectedSpots}
-            onImageDimensionsChange={handleImageDimensionsChange}
-            defaultRoomView={config.default_room_view}
-          />
-
-          <CleaningModeButton
-            cleanGeniusMode={getAttr(entity.attributes.cleangenius_mode, '')}
-            cleaningMode={getAttr(entity.attributes.cleaning_mode, 'Sweeping and mopping')}
-            cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
-            onClick={handleModalOpen}
-            onShortcutsClick={hasShortcuts ? handleShortcutsOpen : undefined}
-            onRepeatClick={cycleRepeatCount}
-            repeatCount={repeatCount}
-          />
-
-          <div className="dreame-vacuum-card__controls">
-            {selectedMode === 'room' && <RoomSelectionDisplay selectedRooms={selectedRooms} />}
-
-            <ModeTabs
-              selectedMode={effectiveMode}
-              areaSelectionMode={areaSelectionMode}
-              onModeChange={handleModeChange}
-              onAreaSelectionModeChange={handleAreaSelectionModeChange}
-            />
-
-            <ActionButtons
+          <div className="dreame-vacuum-card__map">
+            <VacuumMap
+              mapEntityId={mapEntityId}
+              geometry={displayedGeometry}
               selectedMode={selectedMode}
               areaSelectionMode={areaSelectionMode}
-              selectedRoomsCount={selectedRooms.size}
-              selectedSpotsCount={selectedSpots.length}
-              onClean={handleCleanAction}
-              onPause={handlePause}
-              onResume={handleResume}
-              onStop={handleStop}
-              onDock={handleDock}
+              selectedRooms={selectedRooms}
+              onRoomToggle={handleRoomToggleWithToast}
+              zone={mapReady ? selectedZones : []}
+              onZoneChange={setSelectedZones}
+              spots={mapReady ? selectedSpots : []}
+              onSpotsChange={setSelectedSpots}
+              onImageDimensionsChange={handleImageDimensionsChange}
+              defaultRoomView={config.default_room_view}
             />
+          </div>
+
+          <div className="dreame-vacuum-card__footer">
+            <CleaningModeButton
+              cleanGeniusMode={getAttr(entity.attributes.cleangenius_mode, '')}
+              cleaningMode={getAttr(entity.attributes.cleaning_mode, 'Sweeping and mopping')}
+              cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
+              onClick={handleModalOpen}
+              onShortcutsClick={hasShortcuts ? handleShortcutsOpen : undefined}
+              onRepeatClick={cycleRepeatCount}
+              repeatCount={repeatCount}
+            />
+
+            <div className="dreame-vacuum-card__controls">
+              {selectedMode === 'room' && <RoomSelectionDisplay selectedRooms={selectedRooms} />}
+
+              <ModeTabs
+                selectedMode={effectiveMode}
+                areaSelectionMode={areaSelectionMode}
+                onModeChange={handleModeChange}
+                onAreaSelectionModeChange={handleAreaSelectionModeChange}
+              />
+
+              <ActionButtons
+                selectedMode={selectedMode}
+                areaSelectionMode={areaSelectionMode}
+                selectedRoomsCount={selectedRooms.size}
+                selectedSpotsCount={selectedSpots.length}
+                onClean={handleCleanAction}
+                onPause={handlePause}
+                onResume={handleResume}
+                onStop={handleStop}
+                onDock={handleDock}
+              />
+            </div>
           </div>
         </div>
 
