@@ -1,54 +1,55 @@
-import { CLEANGENIUS_MODE, CLEANING_MODE } from '@/constants';
-import type { VacuumCleaningMode, CleanGeniusMode, SuctionLevel } from '@/types/vacuum';
+import { formatSelectOptionLabel, selectOptionKey } from './converters';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
 const CLEANING_MODE_KEYS: Record<string, string> = {
-  [CLEANING_MODE.SWEEPING_AND_MOPPING]: 'cleaning_mode_button.vac_and_mop',
-  [CLEANING_MODE.MOPPING_AFTER_SWEEPING]: 'cleaning_mode_button.mop_after_vac',
-  [CLEANING_MODE.SWEEPING]: 'cleaning_mode_button.vacuum',
-  [CLEANING_MODE.MOPPING]: 'cleaning_mode_button.mop',
-  [CLEANING_MODE.CUSTOMIZE]: 'customize.title',
+  sweeping_and_mopping: 'cleaning_mode_button.vac_and_mop',
+  mopping_after_sweeping: 'cleaning_mode_button.mop_after_vac',
+  sweeping: 'cleaning_mode_button.vacuum',
+  mopping: 'cleaning_mode_button.mop',
+  customize: 'customize.title',
 };
 
 const CLEANING_MODE_FALLBACK: Record<string, string> = {
-  [CLEANING_MODE.SWEEPING_AND_MOPPING]: 'Vac & Mop',
-  [CLEANING_MODE.MOPPING_AFTER_SWEEPING]: 'Mop after Vac',
-  [CLEANING_MODE.SWEEPING]: 'Vac',
-  [CLEANING_MODE.MOPPING]: 'Mop',
-  [CLEANING_MODE.CUSTOMIZE]: 'Customize',
+  sweeping_and_mopping: 'Vac & Mop',
+  mopping_after_sweeping: 'Mop after Vac',
+  sweeping: 'Vac',
+  mopping: 'Mop',
+  customize: 'Customize',
 };
 
-export function getCleaningModeFriendlyName(mode: VacuumCleaningMode, t?: TranslateFunction): string {
-  if (t && CLEANING_MODE_KEYS[mode]) {
-    return t(CLEANING_MODE_KEYS[mode]);
+export function getCleaningModeFriendlyName(mode: string, t?: TranslateFunction): string {
+  const key = selectOptionKey(mode);
+  if (t && CLEANING_MODE_KEYS[key]) {
+    return t(CLEANING_MODE_KEYS[key]);
   }
-  return CLEANING_MODE_FALLBACK[mode] ?? mode;
+  return CLEANING_MODE_FALLBACK[key] ?? formatSelectOptionLabel(mode);
 }
 
 const CLEANGENIUS_MODE_KEYS: Record<string, string> = {
-  [CLEANGENIUS_MODE.VACUUM_AND_MOP]: 'cleaning_mode_button.vac_and_mop',
-  [CLEANGENIUS_MODE.MOP_AFTER_VACUUM]: 'cleaning_mode_button.mop_after_vac',
+  vacuum_and_mop: 'cleaning_mode_button.vac_and_mop',
+  mop_after_vacuum: 'cleaning_mode_button.mop_after_vac',
 };
 
 const CLEANGENIUS_MODE_FALLBACK: Record<string, string> = {
-  [CLEANGENIUS_MODE.VACUUM_AND_MOP]: 'Vac & Mop',
-  [CLEANGENIUS_MODE.MOP_AFTER_VACUUM]: 'Mop after Vac',
+  vacuum_and_mop: 'Vac & Mop',
+  mop_after_vacuum: 'Mop after Vac',
 };
 
-export function getCleanGeniusModeFriendlyName(mode: CleanGeniusMode, t?: TranslateFunction): string {
-  if (t && CLEANGENIUS_MODE_KEYS[mode]) {
-    return t(CLEANGENIUS_MODE_KEYS[mode]);
+export function getCleanGeniusModeFriendlyName(mode: string, t?: TranslateFunction): string {
+  const key = selectOptionKey(mode);
+  if (t && CLEANGENIUS_MODE_KEYS[key]) {
+    return t(CLEANGENIUS_MODE_KEYS[key]);
   }
-  return CLEANGENIUS_MODE_FALLBACK[mode] ?? mode;
+  return CLEANGENIUS_MODE_FALLBACK[key] ?? formatSelectOptionLabel(mode);
 }
 
 /**
  * Get friendly name for suction level
  * Maps: Strong -> Turbo, Turbo -> Max
  */
-export function getSuctionLevelFriendlyName(level: SuctionLevel, t?: TranslateFunction): string {
-  const normalizedLevel = level.toLowerCase();
+export function getSuctionLevelFriendlyName(level: string, t?: TranslateFunction): string {
+  const normalizedLevel = selectOptionKey(level);
 
   if (normalizedLevel.includes('quiet') || normalizedLevel.includes('silent')) {
     return t ? t('suction_levels.quiet') : 'Quiet';
@@ -62,5 +63,5 @@ export function getSuctionLevelFriendlyName(level: SuctionLevel, t?: TranslateFu
   if (normalizedLevel.includes('turbo')) {
     return t ? t('suction_levels.turbo') : 'Max';
   }
-  return level;
+  return formatSelectOptionLabel(level);
 }

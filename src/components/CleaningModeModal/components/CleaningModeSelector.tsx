@@ -1,7 +1,6 @@
 import { CircularButton } from '@/components/common';
-import type { VacuumCleaningMode } from '@/types/vacuum';
-import { getCleaningModeIcon, convertCleaningModeToService, getCleaningModeFriendlyName } from '@/utils';
-import { CLEANING_MODE } from '@/constants';
+import { getCleaningModeFriendlyName, getCleaningModeIcon } from '@/utils';
+import { CUSTOMIZE_MODE_OPTION } from '@/constants';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
@@ -29,33 +28,27 @@ export function CleaningModeSelector({
 }: CleaningModeSelectorProps) {
   // Filter out Customize option if hideCustomize is true
   const filteredModeList = hideCustomize
-    ? cleaningModeList.filter((mode) => mode !== CLEANING_MODE.CUSTOMIZE)
+    ? cleaningModeList.filter((mode) => mode !== CUSTOMIZE_MODE_OPTION)
     : cleaningModeList;
 
   return (
     <div className={`cleaning-mode-modal__power-grid ${disabled ? 'cleaning-mode-modal__power-grid--disabled' : ''}`}>
-      {filteredModeList.map((mode, idx) => {
+      {filteredModeList.map((mode) => {
         const isSelected =
-          mode === CLEANING_MODE.CUSTOMIZE ? customizeSelected : mode === cleaningMode && !customizeSelected;
+          mode === CUSTOMIZE_MODE_OPTION ? customizeSelected : mode === cleaningMode && !customizeSelected;
 
         return (
-          <div key={idx} className="cleaning-mode-modal__mode-option">
+          <div key={mode} className="cleaning-mode-modal__mode-option">
             <CircularButton
               size="small"
               selected={isSelected}
               onClick={() => {
                 if (disabled) return;
-                const value =
-                  mode === CLEANING_MODE.CUSTOMIZE
-                    ? CLEANING_MODE.CUSTOMIZE
-                    : convertCleaningModeToService(mode as VacuumCleaningMode);
-                onSelect(entityId, value);
+                onSelect(entityId, mode);
               }}
-              icon={getCleaningModeIcon(mode as VacuumCleaningMode)}
+              icon={getCleaningModeIcon(mode)}
             />
-            <span className="cleaning-mode-modal__mode-option-label">
-              {getCleaningModeFriendlyName(mode as VacuumCleaningMode, t)}
-            </span>
+            <span className="cleaning-mode-modal__mode-option-label">{getCleaningModeFriendlyName(mode, t)}</span>
           </div>
         );
       })}

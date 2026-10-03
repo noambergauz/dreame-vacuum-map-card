@@ -1,6 +1,5 @@
 import { CircularButton } from '@/components/common';
-import type { CleaningRoute } from '@/types/vacuum';
-import { getCleaningRouteIcon, convertToLowerCase } from '@/utils';
+import { formatSelectOptionLabel, getCleaningRouteIcon, selectOptionKey } from '@/utils';
 import { useTranslation } from '@/hooks';
 
 interface RouteSelectorProps {
@@ -15,10 +14,10 @@ interface RouteSelectorProps {
  * Get translated route label
  */
 function getRouteLabel(route: string, t: (key: string) => string): string {
-  const key = `cleaning_routes.${route.toLowerCase()}`;
+  const key = `cleaning_routes.${selectOptionKey(route)}`;
   const translated = t(key);
   // If translation returns the key itself, fallback to original value
-  return translated === key ? route : translated;
+  return translated === key ? formatSelectOptionLabel(route) : translated;
 }
 
 export function RouteSelector({
@@ -32,13 +31,13 @@ export function RouteSelector({
 
   return (
     <div className={`cleaning-mode-modal__route-grid ${disabled ? 'cleaning-mode-modal__route-grid--disabled' : ''}`}>
-      {cleaningRouteList.map((route, idx) => (
-        <div key={idx} className="cleaning-mode-modal__route-option">
+      {cleaningRouteList.map((route) => (
+        <div key={route} className="cleaning-mode-modal__route-option">
           <CircularButton
             size="small"
             selected={route === cleaningRoute}
-            onClick={() => !disabled && onSelect(entityId, convertToLowerCase(route))}
-            icon={getCleaningRouteIcon(route as CleaningRoute)}
+            onClick={() => !disabled && onSelect(entityId, route)}
+            icon={getCleaningRouteIcon(route)}
             disabled={disabled}
           />
           <span className="cleaning-mode-modal__route-label">{getRouteLabel(route, t)}</span>

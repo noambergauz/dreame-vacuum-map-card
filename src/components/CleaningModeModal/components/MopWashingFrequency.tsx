@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { CircularButton } from '@/components/common';
-import type { SelfCleanFrequency } from '@/types/vacuum';
-import { getSelfCleanFrequencyIcon, convertSelfCleanFrequencyToService } from '@/utils';
+import { formatSelectOptionLabel, getSelfCleanFrequencyIcon, selectOptionKey } from '@/utils';
 import { useAreaUnit, useIsRtl } from '@/contexts';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
@@ -27,15 +26,11 @@ interface MopWashingFrequencyProps {
   timeDisabled?: boolean;
 }
 
-const FREQUENCY_KEYS: Record<string, string> = {
-  'By room': 'mop_washing_frequency.by_room',
-  'By area': 'mop_washing_frequency.by_area',
-  'By time': 'mop_washing_frequency.by_time',
-};
-
 function getFrequencyLabel(freq: string, t?: TranslateFunction): string {
-  if (!t) return freq;
-  return FREQUENCY_KEYS[freq] ? t(FREQUENCY_KEYS[freq]) : freq;
+  if (!t) return formatSelectOptionLabel(freq);
+  const key = `mop_washing_frequency.${selectOptionKey(freq)}`;
+  const translated = t(key);
+  return translated === key ? formatSelectOptionLabel(freq) : translated;
 }
 
 export function MopWashingFrequency({
@@ -72,8 +67,9 @@ export function MopWashingFrequency({
     setLocalTime(selfCleanTime);
   }, [selfCleanTime]);
 
-  const isByArea = selfCleanFrequency === 'By area';
-  const isByTime = selfCleanFrequency === 'By time';
+  const frequencyKey = selectOptionKey(selfCleanFrequency);
+  const isByArea = frequencyKey === 'by_area';
+  const isByTime = frequencyKey === 'by_time';
   const showSlider = isByArea || isByTime;
 
   const currentValue = isByArea ? localArea : localTime;
@@ -113,16 +109,13 @@ export function MopWashingFrequency({
       <div
         className={`cleaning-mode-modal__horizontal-scroll ${frequencyDisabled ? 'cleaning-mode-modal__horizontal-scroll--disabled' : ''}`}
       >
-        {selfCleanFrequencyList.map((freq, idx) => (
-          <div key={idx} className="cleaning-mode-modal__mode-option">
+        {selfCleanFrequencyList.map((freq) => (
+          <div key={freq} className="cleaning-mode-modal__mode-option">
             <CircularButton
               size="small"
               selected={freq === selfCleanFrequency}
-              onClick={() =>
-                !frequencyDisabled &&
-                onSelectFrequency(frequencyEntityId, convertSelfCleanFrequencyToService(freq as SelfCleanFrequency))
-              }
-              icon={getSelfCleanFrequencyIcon(freq as SelfCleanFrequency)}
+              onClick={() => !frequencyDisabled && onSelectFrequency(frequencyEntityId, freq)}
+              icon={getSelfCleanFrequencyIcon(freq)}
               disabled={frequencyDisabled}
             />
             <span className="cleaning-mode-modal__mode-option-label">{getFrequencyLabel(freq, t)}</span>

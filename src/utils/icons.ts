@@ -5,12 +5,6 @@
 
 import type { ReactElement } from 'react';
 import {
-  CLEANGENIUS_MODE,
-  SUCTION_LEVEL,
-  CLEANING_ROUTE,
-  SELF_CLEAN_FREQUENCY,
-  WATER_VOLUME,
-  MOP_PAD_HUMIDITY,
   VACUUM_ICON_SVG,
   MOP_ICON_SVG,
   VACUUM_MOP_ICON_SVG,
@@ -19,7 +13,6 @@ import {
   SUCTION_STANDARD_ICON_SVG,
   SUCTION_STRONG_ICON_SVG,
   SUCTION_TURBO_ICON_SVG,
-  CLEANING_MODE,
   CLEANING_ROUTE_QUICK_ICON_SVG,
   CLEANING_ROUTE_STANDARD_ICON_SVG,
   CLEANING_ROUTE_INTENSIVE_ICON_SVG,
@@ -30,78 +23,74 @@ import {
   CUSTOMIZE_ICON_SVG,
   WATER_VOLUME_ICON_SVG,
 } from '@/constants';
-import type {
-  VacuumCleaningMode,
-  CleanGeniusMode,
-  SuctionLevel,
-  CleaningRoute,
-  SelfCleanFrequency,
-  WaterVolume,
-  MopPadHumidity,
-} from '@/types/vacuum';
+import { formatSelectOptionLabel, selectOptionKey } from './converters';
 
-export function getCleaningModeIcon(mode: VacuumCleaningMode): ReactElement | string {
-  switch (mode) {
-    case CLEANING_MODE.SWEEPING:
+export function getCleaningModeIcon(mode: string): ReactElement | string {
+  switch (selectOptionKey(mode)) {
+    case 'sweeping':
       return VACUUM_ICON_SVG;
-    case CLEANING_MODE.MOPPING:
+    case 'mopping':
       return MOP_ICON_SVG;
-    case CLEANING_MODE.SWEEPING_AND_MOPPING:
+    case 'sweeping_and_mopping':
       return VACUUM_MOP_ICON_SVG;
-    case CLEANING_MODE.MOPPING_AFTER_SWEEPING:
+    case 'mopping_after_sweeping':
       return MOP_AFTER_VACUUM_ICON_SVG;
-    case CLEANING_MODE.CUSTOMIZE:
+    case 'customize':
       return CUSTOMIZE_ICON_SVG;
     default:
       return '';
   }
 }
 
-export function getCleanGeniusModeIcon(mode: CleanGeniusMode): ReactElement | string {
-  switch (mode) {
-    case CLEANGENIUS_MODE.VACUUM_AND_MOP:
+export function getCleanGeniusModeIcon(mode: string): ReactElement | string {
+  switch (selectOptionKey(mode)) {
+    case 'vacuum_and_mop':
       return VACUUM_MOP_ICON_SVG;
-    case CLEANGENIUS_MODE.MOP_AFTER_VACUUM:
+    case 'mop_after_vacuum':
       return MOP_AFTER_VACUUM_ICON_SVG;
     default:
       return '';
   }
 }
 
-export function getSuctionLevelIcon(level: SuctionLevel): ReactElement | string {
-  switch (level) {
-    case SUCTION_LEVEL.QUIET:
-    case SUCTION_LEVEL.SILENT:
+export function getSuctionLevelIcon(level: string): ReactElement | string {
+  switch (selectOptionKey(level)) {
+    case 'quiet':
+    case 'silent':
       return SUCTION_QUIET_ICON_SVG;
-    case SUCTION_LEVEL.STANDARD:
+    case 'standard':
       return SUCTION_STANDARD_ICON_SVG;
-    case SUCTION_LEVEL.STRONG:
+    case 'strong':
       return SUCTION_STRONG_ICON_SVG;
-    case SUCTION_LEVEL.TURBO:
+    case 'turbo':
       return SUCTION_TURBO_ICON_SVG;
+    default:
+      return '';
   }
 }
 
-export function getCleaningRouteIcon(route: CleaningRoute): ReactElement | string {
-  switch (route) {
-    case CLEANING_ROUTE.QUICK:
+export function getCleaningRouteIcon(route: string): ReactElement | string {
+  switch (selectOptionKey(route)) {
+    case 'quick':
       return CLEANING_ROUTE_QUICK_ICON_SVG;
-    case CLEANING_ROUTE.STANDARD:
+    case 'standard':
       return CLEANING_ROUTE_STANDARD_ICON_SVG;
-    case CLEANING_ROUTE.INTENSIVE:
+    case 'intensive':
       return CLEANING_ROUTE_INTENSIVE_ICON_SVG;
-    case CLEANING_ROUTE.DEEP:
+    case 'deep':
       return CLEANING_ROUTE_DEEP_ICON_SVG;
+    default:
+      return '';
   }
 }
 
-export function getSelfCleanFrequencyIcon(frequency: SelfCleanFrequency): ReactElement | string {
-  switch (frequency) {
-    case SELF_CLEAN_FREQUENCY.BY_AREA:
+export function getSelfCleanFrequencyIcon(frequency: string): ReactElement | string {
+  switch (selectOptionKey(frequency)) {
+    case 'by_area':
       return MOP_WASHING_FREQUENCY_BY_AREA_ICON_SVG;
-    case SELF_CLEAN_FREQUENCY.BY_TIME:
+    case 'by_time':
       return MOP_WASHING_FREQUENCY_BY_TIME_ICON_SVG;
-    case SELF_CLEAN_FREQUENCY.BY_ROOM:
+    case 'by_room':
       return MOP_WASHING_FREQUENCY_BY_ROOM_ICON_SVG;
     default:
       return '⚙️';
@@ -109,45 +98,43 @@ export function getSelfCleanFrequencyIcon(frequency: SelfCleanFrequency): ReactE
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getWaterVolumeIcon(_: WaterVolume): ReactElement {
+export function getWaterVolumeIcon(_: string): ReactElement {
   return WATER_VOLUME_ICON_SVG;
 }
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
-export function getWaterVolumeFriendlyName(level: WaterVolume, t?: TranslateFunction): string {
+export function getWaterVolumeFriendlyName(level: string, t?: TranslateFunction): string {
+  const key = selectOptionKey(level);
   if (t) {
-    switch (level) {
-      case WATER_VOLUME.LOW:
+    switch (key) {
+      case 'low':
         return t('custom_mode.water_low');
-      case WATER_VOLUME.MEDIUM:
+      case 'medium':
         return t('custom_mode.water_medium');
-      case WATER_VOLUME.HIGH:
+      case 'high':
         return t('custom_mode.water_high');
-      default:
-        return level;
     }
   }
-  return level;
+  return formatSelectOptionLabel(level);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function getMopPadHumidityIcon(_: MopPadHumidity): ReactElement {
+export function getMopPadHumidityIcon(_: string): ReactElement {
   return WATER_VOLUME_ICON_SVG;
 }
 
-export function getMopPadHumidityFriendlyName(level: MopPadHumidity, t?: TranslateFunction): string {
+export function getMopPadHumidityFriendlyName(level: string, t?: TranslateFunction): string {
+  const key = selectOptionKey(level);
   if (t) {
-    switch (level) {
-      case MOP_PAD_HUMIDITY.SLIGHTLY_DRY:
+    switch (key) {
+      case 'slightly_dry':
         return t('custom_mode.slightly_dry');
-      case MOP_PAD_HUMIDITY.MOIST:
+      case 'moist':
         return t('custom_mode.moist');
-      case MOP_PAD_HUMIDITY.WET:
+      case 'wet':
         return t('custom_mode.wet');
-      default:
-        return level;
     }
   }
-  return level;
+  return formatSelectOptionLabel(level);
 }

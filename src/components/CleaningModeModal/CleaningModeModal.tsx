@@ -2,12 +2,11 @@ import { Modal, SegmentedControl } from '@/components/common';
 import { CleanGeniusMode } from './CleanGeniusMode';
 import { CustomMode } from './CustomMode';
 import { CustomizeMode } from './CustomizeMode';
-import type { CleanGeniusState } from '@/types/vacuum';
-import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
+import { useHomeAssistantServices, useVacuumEntityIds, getEntityState, readSelectEntity } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntity, useHass, useMachineState } from '@/contexts';
-import { convertCleanGeniusStateToService, getAttr } from '@/utils';
-import { CLEANGENIUS_STATE, UI_MODE_TYPE, DEFAULTS, CLEANING_MODE } from '@/constants';
+import { findSelectOption, getAttr, selectOptionKey } from '@/utils';
+import { CUSTOMIZE_MODE_OPTION, UI_MODE_TYPE, DEFAULTS } from '@/constants';
 import { logger } from '@/utils/logger';
 import './CleaningModeModal.scss';
 
@@ -27,35 +26,34 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const customizedCleaningSwitch = entityIds.customizedCleaning;
   const cleangeniusState = getEntityState(hass, entityIds.cleangenius);
+  const selectEntity = (entityId: string | undefined) => readSelectEntity(entityId ? hass.states[entityId] : undefined);
+  const cleaningModeSelect = selectEntity(entityIds.cleaningMode);
+  const cleangeniusModeSelect = selectEntity(entityIds.cleangeniusMode);
+  const cleangeniusSelect = selectEntity(entityIds.cleangenius);
+  const suctionLevelSelect = selectEntity(entityIds.suctionLevel);
+  const waterVolumeSelect = selectEntity(entityIds.waterVolume);
+  const mopPadHumiditySelect = selectEntity(entityIds.mopPadHumidity);
+  const cleaningRouteSelect = selectEntity(entityIds.cleaningRoute);
+  const selfCleanFrequencySelect = selectEntity(entityIds.selfCleanFrequency);
 
-  const getStringArrayAttr = (key: string, defaultValue: string[]): string[] => {
-    const value = entity.attributes[key];
-    return Array.isArray(value) ? (value as string[]) : defaultValue;
-  };
-
-  const cleangeniusEntityState = cleangeniusState.state?.toLowerCase();
-  const cleangeniusAttrState = getAttr(entity.attributes.cleangenius, CLEANGENIUS_STATE.OFF);
-  const isValidEntityState =
-    cleangeniusEntityState && cleangeniusEntityState !== 'unavailable' && cleangeniusEntityState !== 'unknown';
+  const cleangeniusEntityState = cleangeniusSelect.value;
+  const cleangeniusAttrState = getAttr(entity.attributes.cleangenius, '');
+  const isValidEntityState = cleangeniusEntityState !== null;
   const isCleanGenius = isValidEntityState
-    ? cleangeniusEntityState !== 'off'
-    : cleangeniusAttrState !== CLEANGENIUS_STATE.OFF;
+    ? selectOptionKey(cleangeniusEntityState) !== 'off'
+    : Boolean(cleangeniusAttrState) && selectOptionKey(cleangeniusAttrState) !== 'off';
 
-  const cleangenius = cleangeniusAttrState;
-  const cleaningMode = getAttr(entity.attributes.cleaning_mode, DEFAULTS.CLEANING_MODE);
-  const cleangeniusMode = getAttr(entity.attributes.cleangenius_mode, DEFAULTS.CLEANGENIUS_MODE);
-  const suctionLevel = getAttr(entity.attributes.suction_level, DEFAULTS.SUCTION_LEVEL);
+  const cleangenius = cleangeniusSelect.value ?? cleangeniusAttrState;
+  const cleaningMode = cleaningModeSelect.value ?? '';
+  const cleangeniusMode = cleangeniusModeSelect.value ?? '';
+  const suctionLevel = suctionLevelSelect.value ?? '';
   const wetnessLevel = getAttr(entity.attributes.wetness_level, DEFAULTS.WETNESS_LEVEL);
-  const waterVolume = getAttr(entity.attributes.water_volume, DEFAULTS.WATER_VOLUME);
-  const cleaningRoute = getAttr(entity.attributes.cleaning_route, DEFAULTS.CLEANING_ROUTE);
+  const waterVolume = waterVolumeSelect.value ?? '';
+  const cleaningRoute = cleaningRouteSelect.value ?? '';
   const maxSuctionPower = getAttr(entity.attributes.max_suction_power, DEFAULTS.MAX_SUCTION_POWER);
   const selfCleanArea = getAttr(entity.attributes.self_clean_area, DEFAULTS.SELF_CLEAN_AREA);
-  const selfCleanFrequency = getAttr(entity.attributes.self_clean_frequency, DEFAULTS.SELF_CLEAN_FREQUENCY);
-  const mopPadHumidity = getAttr(entity.attributes.mop_pad_humidity, DEFAULTS.MOP_PAD_HUMIDITY);
-
-  const baseSelfCleanFrequencyList = getStringArrayAttr('self_clean_frequency_list', []);
-  const selfCleanFrequencyList =
-    baseSelfCleanFrequencyList.length > 0 ? baseSelfCleanFrequencyList : ['By area', 'By time', 'By room'];
+  const selfCleanFrequency = selfCleanFrequencySelect.value ?? '';
+  const mopPadHumidity = mopPadHumiditySelect.value ?? '';
 
   const selfCleanAreaMin = getAttr(entity.attributes.self_clean_area_min, DEFAULTS.SELF_CLEAN_AREA_MIN);
   const selfCleanAreaMax = getAttr(entity.attributes.self_clean_area_max, DEFAULTS.SELF_CLEAN_AREA_MAX);
@@ -68,31 +66,7 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
     { value: UI_MODE_TYPE.CUSTOM, label: t('cleaning_mode.custom') },
   ];
 
-  const baseCleaningModeList = getStringArrayAttr('cleaning_mode_list', []);
-  const effectiveCleaningModeList =
-    baseCleaningModeList.length > 0
-      ? baseCleaningModeList
-      : ['Sweeping', 'Mopping', 'Sweeping and mopping', 'Mopping after sweeping'];
-  const cleaningModeList = [...effectiveCleaningModeList, CLEANING_MODE.CUSTOMIZE];
-
-  const baseCleangeniusModeList = getStringArrayAttr('cleangenius_mode_list', []);
-  const cleangeniusModeList =
-    baseCleangeniusModeList.length > 0 ? baseCleangeniusModeList : ['Vacuum and mop', 'Mop after vacuum'];
-
-  const baseSuctionLevelList = getStringArrayAttr('suction_level_list', []);
-  const suctionLevelList =
-    baseSuctionLevelList.length > 0 ? baseSuctionLevelList : ['Quiet', 'Standard', 'Strong', 'Turbo'];
-
-  const baseWaterVolumeList = getStringArrayAttr('water_volume_list', []);
-  const waterVolumeList = baseWaterVolumeList.length > 0 ? baseWaterVolumeList : ['Low', 'Medium', 'High'];
-
-  const baseMopPadHumidityList = getStringArrayAttr('mop_pad_humidity_list', []);
-  const mopPadHumidityList =
-    baseMopPadHumidityList.length > 0 ? baseMopPadHumidityList : ['Slightly dry', 'Moist', 'Wet'];
-
-  const baseCleaningRouteList = getStringArrayAttr('cleaning_route_list', []);
-  const cleaningRouteList =
-    baseCleaningRouteList.length > 0 ? baseCleaningRouteList : ['Quick', 'Standard', 'Intensive', 'Deep'];
+  const cleaningModeList = [...cleaningModeSelect.options, CUSTOMIZE_MODE_OPTION];
 
   const isModeSwitchDisabled = isInCleaningSession || cleangeniusState.unavailable;
   const effectiveIsCleanGenius = hasCleanGenius && isCleanGenius;
@@ -105,12 +79,13 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
     }
 
     if (!entityIds.cleangenius) return;
-    const state = isCleanGeniusMode ? CLEANGENIUS_STATE.ROUTINE_CLEANING : CLEANGENIUS_STATE.OFF;
-    setSelectOption(entityIds.cleangenius, convertCleanGeniusStateToService(state as CleanGeniusState));
+    const stateKey = isCleanGeniusMode ? 'routine_cleaning' : 'off';
+    const state = findSelectOption(cleangeniusSelect.options, stateKey);
+    if (state) setSelectOption(entityIds.cleangenius, state);
   };
 
   const handleCleaningModeSelect = (entityId: string, value: string) => {
-    if (value === CLEANING_MODE.CUSTOMIZE) {
+    if (value === CUSTOMIZE_MODE_OPTION) {
       if (!customizedCleaningSwitch) return;
       logger.debug('CleaningModeModal', 'Enabling customized cleaning');
       hass.callService('switch', 'turn_on', { entity_id: customizedCleaningSwitch });
@@ -146,27 +121,27 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
           {effectiveIsCleanGenius ? (
             <CleanGeniusMode
               cleangeniusMode={cleangeniusMode}
-              cleangeniusModeList={cleangeniusModeList}
+              cleangeniusModeList={cleangeniusModeSelect.options}
               cleangenius={cleangenius}
             />
           ) : (
             <>
               <CustomMode
-                cleaningMode={isCustomizedCleaning ? CLEANING_MODE.CUSTOMIZE : cleaningMode}
+                cleaningMode={isCustomizedCleaning ? CUSTOMIZE_MODE_OPTION : cleaningMode}
                 cleaningModeList={cleaningModeList}
                 suctionLevel={suctionLevel}
-                suctionLevelList={suctionLevelList}
+                suctionLevelList={suctionLevelSelect.options}
                 wetnessLevel={wetnessLevel}
                 mopPadHumidity={mopPadHumidity}
-                mopPadHumidityList={mopPadHumidityList}
+                mopPadHumidityList={mopPadHumiditySelect.options}
                 waterVolume={waterVolume}
-                waterVolumeList={waterVolumeList}
+                waterVolumeList={waterVolumeSelect.options}
                 cleaningRoute={cleaningRoute}
-                cleaningRouteList={cleaningRouteList}
+                cleaningRouteList={cleaningRouteSelect.options}
                 maxSuctionPower={maxSuctionPower}
                 selfCleanArea={selfCleanArea}
                 selfCleanFrequency={selfCleanFrequency}
-                selfCleanFrequencyList={selfCleanFrequencyList}
+                selfCleanFrequencyList={selfCleanFrequencySelect.options}
                 selfCleanAreaMin={selfCleanAreaMin}
                 selfCleanAreaMax={selfCleanAreaMax}
                 selfCleanTime={selfCleanTime}

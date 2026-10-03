@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useHass, useEntity, useMachineState } from '@/contexts';
-import { CLEANING_MODE } from '@/constants';
+import { selectOptionKey } from '@/utils';
 import {
   CleaningModeSelector,
   SuctionPowerSelector,
@@ -99,6 +99,7 @@ export function CustomMode({
 
   const isCleaningModeSelectorDisabled =
     isInCleaningSession || (!showOnlyCleaningModeSelector && cleaningModeState.unavailable);
+  const isSweeping = selectOptionKey(cleaningMode) === 'sweeping';
 
   return (
     <div className="cleaning-mode-modal__content">
@@ -140,7 +141,7 @@ export function CustomMode({
             </section>
           )}
 
-          {hasWaterVolume && entityIds.waterVolume && cleaningMode !== CLEANING_MODE.SWEEPING && (
+          {hasWaterVolume && entityIds.waterVolume && !isSweeping && (
             <section className="cleaning-mode-modal__section">
               <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.water_volume_title')}</h3>
               <WaterVolumeSelector
@@ -154,7 +155,7 @@ export function CustomMode({
             </section>
           )}
 
-          {hasWetnessLevel && entityIds.wetnessLevel && cleaningMode !== CLEANING_MODE.SWEEPING && (
+          {hasWetnessLevel && entityIds.wetnessLevel && !isSweeping && (
             <section className="cleaning-mode-modal__section">
               <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.wetness_title')}</h3>
               <WetnessSlider
@@ -170,7 +171,7 @@ export function CustomMode({
             </section>
           )}
 
-          {hasMopPadHumidity && entityIds.mopPadHumidity && cleaningMode !== CLEANING_MODE.SWEEPING && (
+          {hasMopPadHumidity && entityIds.mopPadHumidity && !isSweeping && (
             <section className="cleaning-mode-modal__section">
               <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.mop_pad_humidity_title')}</h3>
               <MopPadHumiditySelector

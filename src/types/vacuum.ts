@@ -2,27 +2,9 @@
  * Type definitions and enums for the Dreame Vacuum Card
  */
 
-import type {
-  CLEANING_MODE,
-  CLEANGENIUS_MODE,
-  CLEANGENIUS_STATE,
-  SUCTION_LEVEL,
-  CLEANING_ROUTE,
-  MOP_PAD_HUMIDITY,
-  WATER_VOLUME,
-  VACUUM_MODE_TYPE,
-  SELF_CLEAN_FREQUENCY,
-} from '@/constants';
+import type { VACUUM_MODE_TYPE } from '@/constants';
 
-export type VacuumCleaningMode = (typeof CLEANING_MODE)[keyof typeof CLEANING_MODE];
-export type CleanGeniusMode = (typeof CLEANGENIUS_MODE)[keyof typeof CLEANGENIUS_MODE];
-export type CleanGeniusState = (typeof CLEANGENIUS_STATE)[keyof typeof CLEANGENIUS_STATE];
-export type SuctionLevel = (typeof SUCTION_LEVEL)[keyof typeof SUCTION_LEVEL];
-export type CleaningRoute = (typeof CLEANING_ROUTE)[keyof typeof CLEANING_ROUTE];
-export type MopPadHumidity = (typeof MOP_PAD_HUMIDITY)[keyof typeof MOP_PAD_HUMIDITY];
-export type WaterVolume = (typeof WATER_VOLUME)[keyof typeof WATER_VOLUME];
 export type VacuumModeType = (typeof VACUUM_MODE_TYPE)[keyof typeof VACUUM_MODE_TYPE];
-export type SelfCleanFrequency = (typeof SELF_CLEAN_FREQUENCY)[keyof typeof SELF_CLEAN_FREQUENCY];
 
 // Room type
 export interface Room {
@@ -42,33 +24,33 @@ export interface VacuumMap {
 }
 
 export interface VacuumEntityAttributes {
-  cleaning_mode?: VacuumCleaningMode;
-  cleaning_mode_list?: VacuumCleaningMode[];
-  cleangenius?: CleanGeniusState;
-  cleangenius_list?: CleanGeniusState[];
-  cleangenius_mode?: CleanGeniusMode;
-  cleangenius_mode_list?: CleanGeniusMode[];
+  cleaning_mode?: string;
+  cleaning_mode_list?: string[];
+  cleangenius?: string;
+  cleangenius_list?: string[];
+  cleangenius_mode?: string;
+  cleangenius_mode_list?: string[];
 
   // Suction and power
-  suction_level?: SuctionLevel;
-  suction_level_list?: SuctionLevel[];
+  suction_level?: string;
+  suction_level_list?: string[];
   max_suction_power?: boolean;
 
   // Mopping settings
   wetness_level?: number;
-  mop_pad_humidity?: MopPadHumidity;
-  mop_pad_humidity_list?: MopPadHumidity[];
+  mop_pad_humidity?: string;
+  mop_pad_humidity_list?: string[];
 
   // Cleaning route
-  cleaning_route?: CleaningRoute;
-  cleaning_route_list?: CleaningRoute[];
+  cleaning_route?: string;
+  cleaning_route_list?: string[];
 
   // Self cleaning
   self_clean_area?: number;
   self_clean_area_min?: number;
   self_clean_area_max?: number;
-  self_clean_frequency?: SelfCleanFrequency;
-  self_clean_frequency_list?: SelfCleanFrequency[];
+  self_clean_frequency?: string;
+  self_clean_frequency_list?: string[];
   previous_self_clean_time?: number;
   self_clean_time_min?: number;
   self_clean_time_max?: number;

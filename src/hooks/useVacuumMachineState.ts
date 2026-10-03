@@ -8,13 +8,13 @@
 import { useMemo } from 'react';
 import type { Hass, HassEntity } from '@/types/homeassistant';
 import { getEntityState } from './useEntityState';
+import { selectOptionKey } from '@/utils';
 import {
   STATE_TO_PHASE,
   STATE_TO_TASK,
   VACUUM_STATE_TO_PHASE,
   DEFAULT_PHASE,
   DEFAULT_TASK,
-  CLEANING_MODE,
   type VacuumPhase,
   type CleaningTask,
 } from '@/constants';
@@ -77,14 +77,19 @@ function deriveTask(sensorState: string | undefined): CleaningTask {
   return DEFAULT_TASK;
 }
 
-function deriveControls(phase: VacuumPhase, cleaningMode: string, isCustomizedCleaning: boolean): VacuumControls {
+export function deriveControls(
+  phase: VacuumPhase,
+  cleaningMode: string,
+  isCustomizedCleaning: boolean
+): VacuumControls {
   const isActivelyCleaning = phase === 'cleaning';
   const isPaused = phase === 'paused';
   const isInCleaningSession = isActivelyCleaning || isPaused;
 
-  const isMoppingOnlyMode = cleaningMode === CLEANING_MODE.MOPPING;
-  const isSweepingMode = cleaningMode === CLEANING_MODE.SWEEPING;
-  const isMoppingAfterSweeping = cleaningMode === CLEANING_MODE.MOPPING_AFTER_SWEEPING;
+  const cleaningModeKey = selectOptionKey(cleaningMode);
+  const isMoppingOnlyMode = cleaningModeKey === 'mopping';
+  const isSweepingMode = cleaningModeKey === 'sweeping';
+  const isMoppingAfterSweeping = cleaningModeKey === 'mopping_after_sweeping';
 
   return {
     canChangeCleaningMode: phase === 'idle' || (isInCleaningSession && !isMoppingAfterSweeping),
@@ -122,7 +127,7 @@ export function useVacuumMachineState(
     const task = deriveTask(sensorState.state);
 
     // Get cleaning mode from entity attributes
-    const cleaningMode = (entity.attributes.cleaning_mode as string) ?? CLEANING_MODE.SWEEPING_AND_MOPPING;
+    const cleaningMode = (entity.attributes.cleaning_mode as string) ?? '';
 
     // Check if customized cleaning is active
     const isCustomizedCleaning = entity.attributes.customized_cleaning === true;

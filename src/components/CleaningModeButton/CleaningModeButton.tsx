@@ -1,17 +1,14 @@
 import './CleaningModeButton.scss';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useMachineState } from '@/contexts';
-import {
-  SHORTCUTS_ICON_SVG,
-  VACUUM_MOP_ICON_SVG,
-  VACUUM_ICON_SVG,
-  MOP_ICON_SVG,
-  MOP_AFTER_VACUUM_ICON_SVG,
-  CUSTOMIZE_ICON_SVG,
-} from '@/constants/icons';
-import type { ReactElement } from 'react';
+import { SHORTCUTS_ICON_SVG, VACUUM_MOP_ICON_SVG, CUSTOMIZE_ICON_SVG } from '@/constants/icons';
 import type { RepeatCount } from '@/hooks/useCardUIState';
-import { CLEANGENIUS_MODE, CLEANING_MODE } from '@/constants';
+import {
+  getCleaningModeIcon,
+  getCleaningModeFriendlyName,
+  getCleanGeniusModeFriendlyName,
+  selectOptionKey,
+} from '@/utils';
 
 interface CleaningModeButtonProps {
   cleaningMode: string;
@@ -37,37 +34,26 @@ export function CleaningModeButton({
 
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const secondaryDisabled = isInCleaningSession || isCustomizedCleaning;
+  const isCleanGenius = selectOptionKey(cleangenius) !== 'off';
 
-  const getIcon = (mode: string): ReactElement => {
+  const getIcon = (mode: string) => {
     if (isCustomizedCleaning) {
       return CUSTOMIZE_ICON_SVG;
     }
-    if (mode === CLEANING_MODE.SWEEPING) return VACUUM_ICON_SVG;
-    if (mode === CLEANING_MODE.MOPPING) return MOP_ICON_SVG;
-    if (mode === CLEANING_MODE.SWEEPING_AND_MOPPING) return VACUUM_MOP_ICON_SVG;
-    if (mode === CLEANING_MODE.MOPPING_AFTER_SWEEPING) return MOP_AFTER_VACUUM_ICON_SVG;
-    return VACUUM_MOP_ICON_SVG;
+    return getCleaningModeIcon(mode) || VACUUM_MOP_ICON_SVG;
   };
 
   const getCleanGeniusFriendlyName = (mode: string): string => {
-    if (mode === CLEANGENIUS_MODE.VACUUM_AND_MOP) return t('cleaning_mode_button.vac_and_mop');
-    if (mode === CLEANGENIUS_MODE.MOP_AFTER_VACUUM) return t('cleaning_mode_button.mop_after_vac');
-    return '';
+    return getCleanGeniusModeFriendlyName(mode, t);
   };
 
   const getCustomCleaningFriendlyName = (mode: string): string => {
     if (isCustomizedCleaning) return t('customize.title');
-    if (mode === CLEANING_MODE.MOPPING_AFTER_SWEEPING) return t('cleaning_mode_button.mop_after_vac');
-    if (mode === CLEANING_MODE.SWEEPING_AND_MOPPING) return t('cleaning_mode_button.vac_and_mop');
-    if (mode === CLEANING_MODE.SWEEPING) return t('cleaning_mode_button.vacuum');
-    if (mode === CLEANING_MODE.MOPPING) return t('cleaning_mode_button.mop');
-    return '';
+    return getCleaningModeFriendlyName(mode, t);
   };
 
   const getPrefix = (): string => {
-    return cleangenius === 'Off'
-      ? t('cleaning_mode_button.prefix_custom')
-      : t('cleaning_mode_button.prefix_cleangenius');
+    return isCleanGenius ? t('cleaning_mode_button.prefix_cleangenius') : t('cleaning_mode_button.prefix_custom');
   };
 
   const handleShortcutsClick = (e: React.MouseEvent) => {
@@ -87,9 +73,7 @@ export function CleaningModeButton({
           <span className="cleaning-mode-button__icon">{getIcon(cleaningMode)}</span>
           <span className="cleaning-mode-button__text">
             {getPrefix()}
-            {cleangenius === 'Off'
-              ? getCustomCleaningFriendlyName(cleaningMode)
-              : getCleanGeniusFriendlyName(cleanGeniusMode)}
+            {isCleanGenius ? getCleanGeniusFriendlyName(cleanGeniusMode) : getCustomCleaningFriendlyName(cleaningMode)}
           </span>
         </div>
         <span className="cleaning-mode-button__arrow">›</span>
@@ -104,7 +88,7 @@ export function CleaningModeButton({
           x{repeatCount}
         </button>
       )}
-      {cleangenius === 'Off' && onShortcutsClick && (
+      {!isCleanGenius && onShortcutsClick && (
         <button
           className={`cleaning-mode-button-wrapper__shortcuts ${secondaryDisabled ? 'cleaning-mode-button-wrapper__shortcuts--disabled' : ''}`}
           onClick={handleShortcutsClick}

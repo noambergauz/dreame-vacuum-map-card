@@ -59,96 +59,6 @@ export const SERVICE_ACTION = {
   SET_FAN_SPEED: 'set_fan_speed',
 } as const;
 
-// Cleaning modes
-export const CLEANING_MODE = {
-  SWEEPING: 'Sweeping',
-  MOPPING: 'Mopping',
-  SWEEPING_AND_MOPPING: 'Sweeping and mopping',
-  MOPPING_AFTER_SWEEPING: 'Mopping after sweeping',
-  CUSTOMIZE: 'Customize',
-} as const;
-
-// CleanGenius modes
-export const CLEANGENIUS_MODE = {
-  VACUUM_AND_MOP: 'Vacuum and mop',
-  MOP_AFTER_VACUUM: 'Mop after vacuum',
-} as const;
-
-// CleanGenius states
-export const CLEANGENIUS_STATE = {
-  OFF: 'Off',
-  ROUTINE_CLEANING: 'Routine cleaning',
-  DEEP_CLEANING: 'Deep cleaning',
-} as const;
-
-// Service values (snake_case)
-export const SERVICE_VALUE = {
-  CLEANING_MODE: {
-    SWEEPING: 'sweeping',
-    MOPPING: 'mopping',
-    SWEEPING_AND_MOPPING: 'sweeping_and_mopping',
-    MOPPING_AFTER_SWEEPING: 'mopping_after_sweeping',
-    CUSTOMIZE: 'customize',
-  },
-  CLEANGENIUS_MODE: {
-    VACUUM_AND_MOP: 'vacuum_and_mop',
-    MOP_AFTER_VACUUM: 'mop_after_vacuum',
-  },
-  CLEANGENIUS: {
-    OFF: 'off',
-    ROUTINE_CLEANING: 'routine_cleaning',
-    DEEP_CLEANING: 'deep_cleaning',
-  },
-  SELF_CLEAN_FREQUENCY: {
-    BY_AREA: 'by_area',
-    BY_TIME: 'by_time',
-    BY_ROOM: 'by_room',
-  },
-  MOP_PAD_HUMIDITY: {
-    SLIGHTLY_DRY: 'slightly_dry',
-    MOIST: 'moist',
-    WET: 'wet',
-  },
-} as const;
-
-// Self clean frequency types
-export const SELF_CLEAN_FREQUENCY = {
-  BY_AREA: 'By area',
-  BY_TIME: 'By time',
-  BY_ROOM: 'By room',
-} as const;
-
-// Suction levels
-export const SUCTION_LEVEL = {
-  QUIET: 'Quiet',
-  SILENT: 'Silent',
-  STANDARD: 'Standard',
-  STRONG: 'Strong',
-  TURBO: 'Turbo',
-} as const;
-
-// Cleaning routes
-export const CLEANING_ROUTE = {
-  QUICK: 'Quick',
-  STANDARD: 'Standard',
-  INTENSIVE: 'Intensive',
-  DEEP: 'Deep',
-} as const;
-
-// Mop pad humidity levels
-export const MOP_PAD_HUMIDITY = {
-  SLIGHTLY_DRY: 'Slightly dry',
-  MOIST: 'Moist',
-  WET: 'Wet',
-} as const;
-
-// Water volume levels (for older vacuums without self-wash base)
-export const WATER_VOLUME = {
-  LOW: 'Low',
-  MEDIUM: 'Medium',
-  HIGH: 'High',
-} as const;
-
 // Mode types (for vacuum commands)
 export const VACUUM_MODE_TYPE = {
   ALL: 'all',
@@ -162,6 +72,8 @@ export const UI_MODE_TYPE = {
   CLEANGENIUS: 'CleanGenius',
   CUSTOM: 'Custom',
 } as const;
+
+export const CUSTOMIZE_MODE_OPTION = 'Customize';
 
 // UI constants
 export const UI = {
@@ -209,17 +121,9 @@ export const CUSTOMIZE_DEFAULTS = {
 // Default values
 export const DEFAULTS = {
   MODE: VACUUM_MODE_TYPE.ALL,
-  CLEANING_MODE: CLEANING_MODE.SWEEPING_AND_MOPPING,
-  CLEANGENIUS_MODE: CLEANGENIUS_MODE.VACUUM_AND_MOP,
-  CLEANGENIUS: CLEANGENIUS_STATE.OFF,
-  SUCTION_LEVEL: SUCTION_LEVEL.STANDARD,
   WETNESS_LEVEL: 20,
-  CLEANING_ROUTE: CLEANING_ROUTE.STANDARD,
   MAX_SUCTION_POWER: false,
   SELF_CLEAN_AREA: 20,
-  SELF_CLEAN_FREQUENCY: SELF_CLEAN_FREQUENCY.BY_AREA,
-  MOP_PAD_HUMIDITY: MOP_PAD_HUMIDITY.MOIST,
-  WATER_VOLUME: WATER_VOLUME.MEDIUM,
   SELF_CLEAN_AREA_MIN: 10,
   SELF_CLEAN_AREA_MAX: 35,
   SELF_CLEAN_TIME: 25,

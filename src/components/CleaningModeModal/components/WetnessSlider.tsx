@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { SLIDER_CONFIG, MOP_PAD_HUMIDITY } from '@/constants';
+import { SLIDER_CONFIG } from '@/constants';
 import { useIsRtl } from '@/contexts';
+import { selectOptionKey } from '@/utils';
 
 interface WetnessSliderProps {
   wetnessLevel: number;
@@ -50,9 +51,9 @@ export function WetnessSlider({
   const gradientDirection = isRtl ? 'to left' : 'to right';
 
   const labels = [
-    { humidity: MOP_PAD_HUMIDITY.SLIGHTLY_DRY, text: slightlyDryLabel },
-    { humidity: MOP_PAD_HUMIDITY.MOIST, text: moistLabel },
-    { humidity: MOP_PAD_HUMIDITY.WET, text: wetLabel },
+    { humidity: 'slightly_dry', text: slightlyDryLabel },
+    { humidity: 'moist', text: moistLabel },
+    { humidity: 'wet', text: wetLabel },
   ];
 
   return (
@@ -88,7 +89,7 @@ export function WetnessSlider({
         {labels.map(({ humidity, text }) => (
           <span
             key={humidity}
-            className={`cleaning-mode-modal__slider-label cleaning-mode-modal__slider-label--${mopPadHumidity === humidity ? 'active' : 'inactive'}`}
+            className={`cleaning-mode-modal__slider-label cleaning-mode-modal__slider-label--${selectOptionKey(mopPadHumidity) === humidity ? 'active' : 'inactive'}`}
           >
             {text}
           </span>

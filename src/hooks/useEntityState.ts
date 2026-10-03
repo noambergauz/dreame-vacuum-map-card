@@ -28,6 +28,29 @@ export interface EntityState {
   attributes: Record<string, unknown>;
 }
 
+export interface SelectEntityState {
+  value: string | null;
+  options: string[];
+}
+
+const SELECT_PLACEHOLDERS = new Set(['unknown', 'unavailable']);
+
+function isSelectPlaceholder(value: string): boolean {
+  return SELECT_PLACEHOLDERS.has(value.toLowerCase());
+}
+
+export function readSelectEntity(entity: Pick<HassEntity, 'state' | 'attributes'> | undefined): SelectEntityState {
+  if (!entity) return { value: null, options: [] };
+
+  const publishedOptions = entity.attributes.options;
+  const options = Array.isArray(publishedOptions)
+    ? publishedOptions.filter((option): option is string => typeof option === 'string' && !isSelectPlaceholder(option))
+    : [];
+  const value = isSelectPlaceholder(entity.state) ? null : entity.state;
+
+  return { value, options };
+}
+
 /**
  * Get entity state and availability for any entity ID
  */
