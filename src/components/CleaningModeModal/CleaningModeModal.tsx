@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Modal, SegmentedControl } from '@/components/common';
 import { CleanGeniusMode } from './CleanGeniusMode';
 import { CustomMode } from './CustomMode';
@@ -5,10 +6,17 @@ import { CustomizeMode } from './CustomizeMode';
 import { useHomeAssistantServices, useVacuumEntityIds, getEntityState, readSelectEntity } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEntity, useHass, useMachineState } from '@/contexts';
-import { findSelectOption, getAttr, selectOptionKey } from '@/utils';
+import { findSelectOption, getAttr, isCleangeniusOff } from '@/utils';
 import { CUSTOMIZE_MODE_OPTION, UI_MODE_TYPE, DEFAULTS } from '@/constants';
 import { logger } from '@/utils/logger';
 import './CleaningModeModal.scss';
+
+const CUSTOMIZE_FLAG_WAIT_MS = 5000;
+
+interface PendingSelect {
+  entityId: string;
+  option: string;
+}
 
 interface CleaningModeModalProps {
   opened: boolean;
@@ -36,16 +44,10 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
   const cleaningRouteSelect = selectEntity(entityIds.cleaningRoute);
   const selfCleanFrequencySelect = selectEntity(entityIds.selfCleanFrequency);
 
-  const cleangeniusEntityState = cleangeniusSelect.value;
-  const cleangeniusAttrState = getAttr(entity.attributes.cleangenius, '');
-  const isValidEntityState = cleangeniusEntityState !== null;
-  const isCleanGenius = isValidEntityState
-    ? selectOptionKey(cleangeniusEntityState) !== 'off'
-    : Boolean(cleangeniusAttrState) && selectOptionKey(cleangeniusAttrState) !== 'off';
-
-  const cleangenius = cleangeniusSelect.value ?? cleangeniusAttrState;
-  const cleaningMode = cleaningModeSelect.value ?? '';
-  const cleangeniusMode = cleangeniusModeSelect.value ?? '';
+  const cleangenius = cleangeniusSelect.value ?? getAttr(entity.attributes.cleangenius, '');
+  const isCleanGenius = !isCleangeniusOff(cleangenius);
+  const cleaningMode = cleaningModeSelect.value ?? getAttr(entity.attributes.cleaning_mode, '');
+  const cleangeniusMode = cleangeniusModeSelect.value ?? getAttr(entity.attributes.cleangenius_mode, '');
   const suctionLevel = suctionLevelSelect.value ?? '';
   const wetnessLevel = getAttr(entity.attributes.wetness_level, DEFAULTS.WETNESS_LEVEL);
   const waterVolume = waterVolumeSelect.value ?? '';
@@ -70,35 +72,69 @@ export function CleaningModeModal({ opened, onClose }: CleaningModeModalProps) {
 
   const isModeSwitchDisabled = isInCleaningSession || cleangeniusState.unavailable;
   const effectiveIsCleanGenius = hasCleanGenius && isCleanGenius;
+  const pendingRef = useRef<PendingSelect | null>(null);
+  const customizedRef = useRef(isCustomizedCleaning);
+  const [pendingVersion, setPendingVersion] = useState(0);
+
+  const queueAfterCustomize = (entityId: string, option: string) => {
+    if (!isCustomizedCleaning) {
+      pendingRef.current = null;
+      setSelectOption(entityId, option);
+      return;
+    }
+    pendingRef.current = { entityId, option };
+    setPendingVersion((version) => version + 1);
+    if (!customizedCleaningSwitch) return;
+    logger.debug('CleaningModeModal', 'Disabling customized cleaning');
+    hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
+  };
+
+  useEffect(() => {
+    if (!opened) {
+      pendingRef.current = null;
+      return;
+    }
+    const pending = pendingRef.current;
+    if (!pending || isCustomizedCleaning) return;
+    pendingRef.current = null;
+    setSelectOption(pending.entityId, pending.option);
+  }, [opened, isCustomizedCleaning, pendingVersion, setSelectOption]);
+
+  useEffect(() => {
+    customizedRef.current = isCustomizedCleaning;
+  }, [isCustomizedCleaning]);
+
+  useEffect(() => {
+    if (!opened || pendingVersion === 0) return;
+    const timer = window.setTimeout(() => {
+      if (customizedRef.current) pendingRef.current = null;
+    }, CUSTOMIZE_FLAG_WAIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [opened, pendingVersion]);
 
   const handleModeSwitch = (value: string) => {
     const isCleanGeniusMode = value === UI_MODE_TYPE.CLEANGENIUS;
-
-    if (isCleanGeniusMode && isCustomizedCleaning && customizedCleaningSwitch) {
-      hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
-    }
-
     if (!entityIds.cleangenius) return;
     const stateKey = isCleanGeniusMode ? 'routine_cleaning' : 'off';
     const state = findSelectOption(cleangeniusSelect.options, stateKey);
-    if (state) setSelectOption(entityIds.cleangenius, state);
+    if (!state) return;
+    if (isCleanGeniusMode) {
+      queueAfterCustomize(entityIds.cleangenius, state);
+      return;
+    }
+    pendingRef.current = null;
+    setSelectOption(entityIds.cleangenius, state);
   };
 
   const handleCleaningModeSelect = (entityId: string, value: string) => {
     if (value === CUSTOMIZE_MODE_OPTION) {
+      pendingRef.current = null;
       if (!customizedCleaningSwitch) return;
       logger.debug('CleaningModeModal', 'Enabling customized cleaning');
       hass.callService('switch', 'turn_on', { entity_id: customizedCleaningSwitch });
       return;
     }
-
-    if (isCustomizedCleaning && customizedCleaningSwitch) {
-      logger.debug('CleaningModeModal', 'Disabling customized cleaning');
-      hass.callService('switch', 'turn_off', { entity_id: customizedCleaningSwitch });
-      setTimeout(() => setSelectOption(entityId, value), 300);
-    } else {
-      setSelectOption(entityId, value);
-    }
+    queueAfterCustomize(entityId, value);
   };
 
   const showCustomizeMode = !effectiveIsCleanGenius && isCustomizedCleaning;

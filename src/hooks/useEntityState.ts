@@ -4,6 +4,7 @@
  */
 
 import type { Hass, HassEntity } from '@/types/homeassistant';
+import { isSelectPlaceholder, publishedOptionList } from '@/utils/selectDisplay';
 
 export interface EntityState {
   /** The raw entity from hass.states */
@@ -33,22 +34,13 @@ export interface SelectEntityState {
   options: string[];
 }
 
-const SELECT_PLACEHOLDERS = new Set(['unknown', 'unavailable']);
-
-function isSelectPlaceholder(value: string): boolean {
-  return SELECT_PLACEHOLDERS.has(value.toLowerCase());
-}
-
 export function readSelectEntity(entity: Pick<HassEntity, 'state' | 'attributes'> | undefined): SelectEntityState {
   if (!entity) return { value: null, options: [] };
 
-  const publishedOptions = entity.attributes.options;
-  const options = Array.isArray(publishedOptions)
-    ? publishedOptions.filter((option): option is string => typeof option === 'string' && !isSelectPlaceholder(option))
-    : [];
-  const value = isSelectPlaceholder(entity.state) ? null : entity.state;
-
-  return { value, options };
+  return {
+    value: isSelectPlaceholder(entity.state) ? null : entity.state,
+    options: publishedOptionList(entity.attributes.options),
+  };
 }
 
 /**

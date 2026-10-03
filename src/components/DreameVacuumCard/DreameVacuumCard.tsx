@@ -16,7 +16,10 @@ import {
   useTranslation,
   useMapGeometry,
   useLoadDeviceEntities,
+  useVacuumEntityIds,
+  readSelectEntity,
 } from '@/hooks';
+import type { RepeatCount } from '@/hooks/useCardUIState';
 import {
   extractEntityData,
   getEffectiveCleaningMode,
@@ -28,13 +31,47 @@ import {
   mapDiagnostic,
 } from '@/utils';
 import { isRtlLanguage, resolveChromeLanguage } from '@/i18n';
-import { VacuumCardProvider } from '@/contexts';
+import { useEntity, useHass, VacuumCardProvider } from '@/contexts';
 import { CAPABILITY } from '@/constants';
 import type { Hass, HassConfig } from '@/types/homeassistant';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { CSSProperties } from 'react';
 import { logger } from '@/utils/logger';
 import './DreameVacuumCard.scss';
+
+function publishedOrAttribute(hass: Hass, entityId: string | undefined, attribute: unknown): string {
+  const published = readSelectEntity(entityId ? hass.states[entityId] : undefined).value;
+  if (published) return published;
+  return typeof attribute === 'string' ? attribute : '';
+}
+
+function CleaningModeControls({
+  onClick,
+  onShortcutsClick,
+  onRepeatClick,
+  repeatCount,
+}: {
+  onClick: () => void;
+  onShortcutsClick?: () => void;
+  onRepeatClick?: () => void;
+  repeatCount: RepeatCount;
+}) {
+  const hass = useHass();
+  const entity = useEntity();
+  const entityIds = useVacuumEntityIds();
+
+  return (
+    <CleaningModeButton
+      cleanGeniusMode={publishedOrAttribute(hass, entityIds.cleangeniusMode, entity.attributes.cleangenius_mode)}
+      cleaningMode={publishedOrAttribute(hass, entityIds.cleaningMode, entity.attributes.cleaning_mode)}
+      cleangenius={publishedOrAttribute(hass, entityIds.cleangenius, entity.attributes.cleangenius)}
+      onClick={onClick}
+      onShortcutsClick={onShortcutsClick}
+      onRepeatClick={onRepeatClick}
+      repeatCount={repeatCount}
+    />
+  );
+}
 
 interface DreameVacuumCardProps {
   hass: Hass;
@@ -300,10 +337,7 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
           </div>
 
           <div className="dreame-vacuum-card__footer">
-            <CleaningModeButton
-              cleanGeniusMode={getAttr(entity.attributes.cleangenius_mode, '')}
-              cleaningMode={getAttr(entity.attributes.cleaning_mode, 'Sweeping and mopping')}
-              cleangenius={getAttr(entity.attributes.cleangenius, 'Off')}
+            <CleaningModeControls
               onClick={handleModalOpen}
               onShortcutsClick={hasShortcuts ? handleShortcutsOpen : undefined}
               onRepeatClick={cycleRepeatCount}

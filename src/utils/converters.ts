@@ -17,3 +17,9 @@ export function formatSelectOptionLabel(value: string): string {
 export function findSelectOption(options: readonly string[], key: string): string | undefined {
   return options.find((option) => selectOptionKey(option) === key);
 }
+
+const EMPTY_SELECT_KEYS = new Set(['', 'off', 'unknown', 'unavailable', 'none']);
+
+export function isCleangeniusOff(value: string): boolean {
+  return EMPTY_SELECT_KEYS.has(selectOptionKey(value));
+}

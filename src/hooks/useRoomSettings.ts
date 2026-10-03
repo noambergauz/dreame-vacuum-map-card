@@ -1,38 +1,38 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Hass, HassEntity } from '@/types/homeassistant';
-import { DREAME_SEGMENT_NUMBERS, DREAME_SEGMENT_SELECTS } from '@/constants';
+import { DREAME_SEGMENT_NUMBERS, DREAME_SEGMENT_SELECTS, STORAGE_KEY } from '@/constants';
 import { useDeviceEntities } from '@/contexts/useVacuumCard';
+import { isSelectPlaceholder, publishedOptionList, sameStringList } from '@/utils/selectDisplay';
 import { logger } from '@/utils/logger';
 
-const PLACEHOLDER_STATES = new Set(['unavailable', 'unknown', 'none']);
+export interface ObservedPair {
+  code: number;
+  option: string;
+}
 
-/** Option strings the integration publishes for these selects. Used when HA replaces them with the unavailable placeholder. */
-const SUCTION_OPTIONS = ['quiet', 'standard', 'strong', 'turbo'];
-const SUCTION_BY_CODE: Record<number, string> = {
-  0: 'quiet',
-  1: 'standard',
-  2: 'strong',
-  3: 'turbo',
-};
-const CLEANING_TIMES_OPTIONS = ['1x', '2x', '3x'];
-const CLEANING_TIMES_BY_CODE: Record<number, string> = { 1: '1x', 2: '2x', 3: '3x' };
-const MOP_PRESSURE_OPTIONS = ['light', 'normal'];
-const MOP_PRESSURE_BY_CODE: Record<number, string> = { 0: 'light', 2: 'normal' };
-const MOP_TEMPERATURE_OPTIONS = ['normal', 'warm'];
-const MOP_TEMPERATURE_BY_CODE: Record<number, string> = { 0: 'normal', 1: 'warm' };
+export interface ObservedSelect {
+  options: string[];
+  pairs: ObservedPair[];
+}
 
-interface SelectReading {
+type RoomSelectSetting = 'suction' | 'cleaningTimes' | 'mopPressure' | 'mopTemperature';
+
+export interface RoomSelectStore {
+  version: 1;
+  rooms: Record<string, Partial<Record<RoomSelectSetting, ObservedSelect>>>;
+}
+
+const EMPTY_STORE: RoomSelectStore = { version: 1, rooms: {} };
+
+export interface RoomSelectReading {
   value: string | null;
   options: string[];
+  next: ObservedSelect | undefined;
+  changed: boolean;
 }
 
 function isPlaceholderState(state: string | null | undefined): boolean {
-  return !state || PLACEHOLDER_STATES.has(state.toLowerCase());
-}
-
-function publishedOptions(options: unknown): string[] {
-  if (!Array.isArray(options)) return [];
-  return options.filter((option): option is string => typeof option === 'string' && !isPlaceholderState(option));
+  return !state || isSelectPlaceholder(state);
 }
 
 function numericAttribute(value: unknown): number | null {
@@ -43,30 +43,68 @@ function finiteOr(value: unknown, fallback: number): number {
   return typeof value === 'number' && Number.isFinite(value) ? value : fallback;
 }
 
-/**
- * Room selects report state "unavailable" and options ["unavailable"] whenever the integration's
- * segment_available_fn is false. The numeric code stays in attributes.value.
- */
+function isRoomSelectStore(value: unknown): value is RoomSelectStore {
+  if (typeof value !== 'object' || value === null) return false;
+  const record = value as { version?: unknown; rooms?: unknown };
+  return (
+    record.version === 1 && typeof record.rooms === 'object' && record.rooms !== null && !Array.isArray(record.rooms)
+  );
+}
+
+export function readRoomSelectStore(storage: Pick<Storage, 'getItem'> = localStorage): RoomSelectStore {
+  const raw = storage.getItem(STORAGE_KEY.ROOM_SELECTS);
+  if (!raw) return EMPTY_STORE;
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return EMPTY_STORE;
+  }
+  return isRoomSelectStore(parsed) ? parsed : EMPTY_STORE;
+}
+
+export function writeRoomSelectStore(store: RoomSelectStore, storage: Pick<Storage, 'setItem'> = localStorage): void {
+  storage.setItem(STORAGE_KEY.ROOM_SELECTS, JSON.stringify(store));
+}
+
+export function rememberPair(pairs: readonly ObservedPair[], code: number, option: string): readonly ObservedPair[] {
+  const exact = pairs.some((pair) => pair.code === code && pair.option === option);
+  const conflict = pairs.some(
+    (pair) => (pair.code === code || pair.option === option) && !(pair.code === code && pair.option === option)
+  );
+  if (exact && !conflict) return pairs;
+  return [...pairs.filter((pair) => pair.code !== code && pair.option !== option), { code, option }];
+}
+
+function sameObserved(left: ObservedSelect | undefined, right: ObservedSelect): boolean {
+  if (!left || !sameStringList(left.options, right.options) || left.pairs.length !== right.pairs.length) return false;
+  return left.pairs.every(
+    (pair, index) => pair.code === right.pairs[index]?.code && pair.option === right.pairs[index]?.option
+  );
+}
+
 export function readRoomSelect(
   entity: Pick<HassEntity, 'state' | 'attributes'> | undefined,
-  fallbackOptions: readonly string[],
-  optionByCode: Readonly<Record<number, string>>
-): SelectReading {
-  if (!entity) return { value: null, options: [] };
+  stored: ObservedSelect | undefined
+): RoomSelectReading {
+  if (!entity) return { value: null, options: [], next: undefined, changed: false };
+  const known = stored && Array.isArray(stored.options) && Array.isArray(stored.pairs) ? stored : undefined;
 
-  const published = publishedOptions(entity.attributes.options);
-  const options = published.length > 0 ? published : [...fallbackOptions];
+  const published = publishedOptionList(entity.attributes.options);
+  const code = numericAttribute(entity.attributes.value);
   const state = isPlaceholderState(entity.state) ? null : entity.state;
-  if (state && options.includes(state)) {
-    return { value: state, options };
+
+  if (published.length > 0) {
+    const pairs = state && code !== null ? rememberPair(known?.pairs ?? [], code, state) : (known?.pairs ?? []);
+    const next: ObservedSelect = { options: published, pairs: [...pairs] };
+    const value = state && published.includes(state) ? state : null;
+    return { value, options: published, next, changed: !sameObserved(known, next) };
   }
 
-  const fromCode = optionByCode[numericAttribute(entity.attributes.value) ?? Number.NaN] ?? null;
-  if (fromCode && options.includes(fromCode)) {
-    return { value: fromCode, options };
-  }
-
-  return { value: null, options };
+  const options = known?.options ?? [];
+  const match = code === null ? undefined : known?.pairs.find((pair) => pair.code === code);
+  const value = match && options.includes(match.option) ? match.option : null;
+  return { value, options, next: known, changed: false };
 }
 
 export function readWetnessLevel(entity: Pick<HassEntity, 'state'> | undefined): number | null {
@@ -121,8 +159,30 @@ interface UseRoomSettingsReturn {
  * Hook to read and write per-room cleaning settings from Home Assistant entities
  *
  */
+function observeRoom(
+  store: RoomSelectStore,
+  roomId: number,
+  readings: Array<[RoomSelectSetting, Pick<HassEntity, 'state' | 'attributes'> | undefined]>
+): { readings: RoomSelectReading[]; store: RoomSelectStore } {
+  const roomKey = String(roomId);
+  const room = store.rooms[roomKey] ?? {};
+  let nextRoom = room;
+  let changed = false;
+  const observed = readings.map(([setting, entity]) => {
+    const reading = readRoomSelect(entity, room[setting]);
+    if (reading.changed && reading.next) {
+      nextRoom = { ...nextRoom, [setting]: reading.next };
+      changed = true;
+    }
+    return reading;
+  });
+  if (!changed) return { readings: observed, store };
+  return { readings: observed, store: { version: 1, rooms: { ...store.rooms, [roomKey]: nextRoom } } };
+}
+
 export function useRoomSettings({ hass, rooms }: UseRoomSettingsOptions): UseRoomSettingsReturn {
   const { getRoom } = useDeviceEntities();
+  const [store, setStore] = useState(readRoomSelectStore);
   const roomEntityIds = useMemo(() => {
     return rooms.map((room) => ({
       roomId: room.id,
@@ -135,9 +195,8 @@ export function useRoomSettings({ hass, rooms }: UseRoomSettingsOptions): UseRoo
     }));
   }, [getRoom, rooms]);
 
-  // Build room settings map from HA entity states
-  // Only recalculate when relevant entities change
-  const roomSettings = useMemo(() => {
+  const observed = useMemo(() => {
+    let nextStore = store;
     const settings = new Map<number, RoomSetting>();
 
     for (const entityIds of roomEntityIds) {
@@ -151,7 +210,6 @@ export function useRoomSettings({ hass, rooms }: UseRoomSettingsOptions): UseRoo
         ? hass.states[entityIds.mopTemperatureEntityId]
         : undefined;
 
-      // Check if at least one entity exists
       const hasEntities = !!(
         suctionEntity ||
         wetnessEntity ||
@@ -159,26 +217,29 @@ export function useRoomSettings({ hass, rooms }: UseRoomSettingsOptions): UseRoo
         mopPressureEntity ||
         mopTemperatureEntity
       );
-
-      const suction = readRoomSelect(suctionEntity, SUCTION_OPTIONS, SUCTION_BY_CODE);
-      const cleaningTimes = readRoomSelect(cleaningTimesEntity, CLEANING_TIMES_OPTIONS, CLEANING_TIMES_BY_CODE);
-      const mopPressure = readRoomSelect(mopPressureEntity, MOP_PRESSURE_OPTIONS, MOP_PRESSURE_BY_CODE);
-      const mopTemperature = readRoomSelect(mopTemperatureEntity, MOP_TEMPERATURE_OPTIONS, MOP_TEMPERATURE_BY_CODE);
+      const room = observeRoom(nextStore, entityIds.roomId, [
+        ['suction', suctionEntity],
+        ['cleaningTimes', cleaningTimesEntity],
+        ['mopPressure', mopPressureEntity],
+        ['mopTemperature', mopTemperatureEntity],
+      ]);
+      nextStore = room.store;
+      const [suction, cleaningTimes, mopPressure, mopTemperature] = room.readings;
 
       settings.set(entityIds.roomId, {
         roomId: entityIds.roomId,
         roomName: entityIds.roomName,
-        suctionLevel: suction.value,
-        suctionLevelOptions: suction.options,
+        suctionLevel: suction?.value ?? null,
+        suctionLevelOptions: suction?.options ?? [],
         wetnessLevel: readWetnessLevel(wetnessEntity),
         wetnessMin: finiteOr(wetnessEntity?.attributes?.min, 1),
         wetnessMax: finiteOr(wetnessEntity?.attributes?.max, 32),
-        cleaningTimes: cleaningTimes.value,
-        cleaningTimesOptions: cleaningTimes.options,
-        mopPressure: mopPressure.value,
-        mopPressureOptions: mopPressure.options,
-        mopTemperature: mopTemperature.value,
-        mopTemperatureOptions: mopTemperature.options,
+        cleaningTimes: cleaningTimes?.value ?? null,
+        cleaningTimesOptions: cleaningTimes?.options ?? [],
+        mopPressure: mopPressure?.value ?? null,
+        mopPressureOptions: mopPressure?.options ?? [],
+        mopTemperature: mopTemperature?.value ?? null,
+        mopTemperatureOptions: mopTemperature?.options ?? [],
         hasEntities,
         suctionEntityId: entityIds.suctionEntityId,
         wetnessEntityId: entityIds.wetnessEntityId,
@@ -188,8 +249,16 @@ export function useRoomSettings({ hass, rooms }: UseRoomSettingsOptions): UseRoo
       });
     }
 
-    return settings;
-  }, [hass.states, roomEntityIds]);
+    return { settings, store: nextStore };
+  }, [hass.states, roomEntityIds, store]);
+
+  if (observed.store !== store) {
+    setStore(observed.store);
+  }
+
+  useEffect(() => {
+    writeRoomSelectStore(store);
+  }, [store]);
 
   // Set suction level for a room
   const setSuctionLevel = useCallback(
@@ -243,7 +312,7 @@ export function useRoomSettings({ hass, rooms }: UseRoomSettingsOptions): UseRoo
   );
 
   return {
-    roomSettings,
+    roomSettings: observed.settings,
     setSuctionLevel,
     setWetnessLevel,
     setCleaningTimes,

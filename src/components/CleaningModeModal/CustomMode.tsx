@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
-import { useHomeAssistantServices, useVacuumEntityIds, getEntityState } from '@/hooks';
+import { useHomeAssistantServices, usePublishedSelect, useVacuumEntityIds, getEntityState } from '@/hooks';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useHass, useEntity, useMachineState } from '@/contexts';
-import { selectOptionKey } from '@/utils';
+import { publishedOptionList, selectOptionKey } from '@/utils';
 import {
   CleaningModeSelector,
   SuctionPowerSelector,
@@ -77,19 +77,29 @@ export function CustomMode({
 
   const cleaningModeState = getEntityState(hass, entityIds.cleaningMode);
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
+  const suctionAttributeList = publishedOptionList(entity.attributes.suction_level_list);
+  const fanSpeedList = publishedOptionList(entity.attributes.fan_speed_list);
+  const fanSpeed = typeof entity.attributes.fan_speed === 'string' ? entity.attributes.fan_speed : '';
+  const waterDisplay = usePublishedSelect(waterVolumeList, publishedOptionList(entity.attributes.water_volume_list));
+  const humidityDisplay = usePublishedSelect(
+    mopPadHumidityList,
+    publishedOptionList(entity.attributes.mop_pad_humidity_list)
+  );
+  const routeDisplay = usePublishedSelect(
+    cleaningRouteList,
+    publishedOptionList(entity.attributes.cleaning_route_list)
+  );
+  const frequencyDisplay = usePublishedSelect(
+    selfCleanFrequencyList,
+    publishedOptionList(entity.attributes.self_clean_frequency_list)
+  );
 
   const handleCleaningModeSelect = onCleaningModeSelect ?? setSelectOption;
 
   const handleSuctionLevelSelect = useCallback(
     (_entityId: string, value: string) => {
       if (isInCleaningSession && !isCustomizedCleaning) {
-        const suctionToFanSpeed: Record<string, string> = {
-          quiet: 'silent',
-          standard: 'standard',
-          strong: 'strong',
-          turbo: 'turbo',
-        };
-        setFanSpeed(entity.entity_id, suctionToFanSpeed[value] ?? value);
+        setFanSpeed(entity.entity_id, value);
       } else if (!isInCleaningSession && entityIds.suctionLevel) {
         setSelectOption(entityIds.suctionLevel, value);
       }
@@ -127,6 +137,10 @@ export function CustomMode({
               <SuctionPowerSelector
                 suctionLevel={suctionLevel}
                 suctionLevelList={suctionLevelList}
+                attributeList={suctionAttributeList}
+                fanSpeedList={fanSpeedList}
+                fanSpeed={fanSpeed}
+                cleaning={isInCleaningSession}
                 maxSuctionPower={maxSuctionPower}
                 onSelectSuctionLevel={handleSuctionLevelSelect}
                 onToggleMaxPower={setSwitch}
@@ -141,16 +155,16 @@ export function CustomMode({
             </section>
           )}
 
-          {hasWaterVolume && entityIds.waterVolume && !isSweeping && (
+          {hasWaterVolume && entityIds.waterVolume && !isSweeping && waterDisplay.options.length > 0 && (
             <section className="cleaning-mode-modal__section">
               <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.water_volume_title')}</h3>
               <WaterVolumeSelector
                 waterVolume={waterVolume}
-                waterVolumeList={waterVolumeList}
+                waterVolumeList={waterDisplay.options}
                 onSelect={setSelectOption}
                 entityId={entityIds.waterVolume}
                 t={t}
-                disabled={!controls.canChangeWetness}
+                disabled={!waterDisplay.clicksEnabled || !controls.canChangeWetness}
               />
             </section>
           )}
@@ -171,16 +185,16 @@ export function CustomMode({
             </section>
           )}
 
-          {hasMopPadHumidity && entityIds.mopPadHumidity && !isSweeping && (
+          {hasMopPadHumidity && entityIds.mopPadHumidity && !isSweeping && humidityDisplay.options.length > 0 && (
             <section className="cleaning-mode-modal__section">
               <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.mop_pad_humidity_title')}</h3>
               <MopPadHumiditySelector
                 mopPadHumidity={mopPadHumidity}
-                mopPadHumidityList={mopPadHumidityList}
+                mopPadHumidityList={humidityDisplay.options}
                 onSelect={setSelectOption}
                 entityId={entityIds.mopPadHumidity}
                 t={t}
-                disabled={!controls.canChangeWetness}
+                disabled={!humidityDisplay.clicksEnabled || !controls.canChangeWetness}
               />
             </section>
           )}
@@ -193,7 +207,7 @@ export function CustomMode({
                 <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.mop_washing_frequency_title')}</h3>
                 <MopWashingFrequency
                   selfCleanFrequency={selfCleanFrequency}
-                  selfCleanFrequencyList={selfCleanFrequencyList}
+                  selfCleanFrequencyList={frequencyDisplay.options}
                   selfCleanArea={selfCleanArea}
                   selfCleanAreaMin={selfCleanAreaMin}
                   selfCleanAreaMax={selfCleanAreaMax}
@@ -207,24 +221,24 @@ export function CustomMode({
                   areaEntityId={entityIds.selfCleanArea}
                   timeEntityId={entityIds.selfCleanTime}
                   t={t}
-                  frequencyDisabled={!controls.canChangeMopFrequency}
+                  frequencyDisabled={!frequencyDisplay.clicksEnabled || !controls.canChangeMopFrequency}
                   areaDisabled={false}
                   timeDisabled={false}
                 />
               </section>
             )}
 
-          {hasCleaningRoute && entityIds.cleaningRoute && cleaningRouteList.length > 0 && (
+          {hasCleaningRoute && entityIds.cleaningRoute && routeDisplay.options.length > 0 && (
             <section className="cleaning-mode-modal__section">
               <div className="cleaning-mode-modal__section-header">
                 <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.route_title')}</h3>
               </div>
               <RouteSelector
                 cleaningRoute={cleaningRoute}
-                cleaningRouteList={cleaningRouteList}
+                cleaningRouteList={routeDisplay.options}
                 onSelect={setSelectOption}
                 entityId={entityIds.cleaningRoute}
-                disabled={!controls.canChangeRoute}
+                disabled={!routeDisplay.clicksEnabled || !controls.canChangeRoute}
               />
             </section>
           )}

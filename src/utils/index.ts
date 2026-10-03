@@ -3,6 +3,7 @@
  */
 
 export * from './converters';
+export * from './selectDisplay';
 export * from './formatters';
 export * from './icons';
 export * from './helpers';

@@ -1,58 +1,86 @@
 import { describe, expect, it } from 'vitest';
-import { readRoomSelect, readWetnessLevel } from '../useRoomSettings';
+import {
+  readRoomSelect,
+  readRoomSelectStore,
+  readWetnessLevel,
+  writeRoomSelectStore,
+  type ObservedSelect,
+  type RoomSelectStore,
+} from '../useRoomSettings';
 
-const SUCTION_OPTIONS = ['quiet', 'standard', 'strong', 'turbo'];
-const SUCTION_BY_CODE: Record<number, string> = {
-  0: 'quiet',
-  1: 'standard',
-  2: 'strong',
-  3: 'turbo',
+const pressure: ObservedSelect = {
+  options: ['light', 'normal'],
+  pairs: [{ code: 2, option: 'normal' }],
 };
-const CLEANING_TIMES_OPTIONS = ['1x', '2x', '3x'];
-const CLEANING_TIMES_BY_CODE: Record<number, string> = { 1: '1x', 2: '2x', 3: '3x' };
 
 describe('readRoomSelect', () => {
-  it('keeps a published option and its current state', () => {
+  it('records a published option with the numeric code that arrived with it', () => {
     expect(
-      readRoomSelect(
-        { state: 'standard', attributes: { options: ['quiet', 'standard', 'strong', 'turbo'], value: 1 } },
-        SUCTION_OPTIONS,
-        SUCTION_BY_CODE
-      )
-    ).toEqual({
-      value: 'standard',
-      options: ['quiet', 'standard', 'strong', 'turbo'],
+      readRoomSelect({ state: 'normal', attributes: { options: ['light', 'normal'], value: 2 } }, undefined)
+    ).toMatchObject({
+      value: 'normal',
+      options: ['light', 'normal'],
+      next: pressure,
+      changed: true,
     });
   });
 
-  it('recovers the saved suction code when Home Assistant publishes the unavailable placeholder', () => {
+  it('restores the stored pair after the select publishes only unavailable', () => {
     expect(
-      readRoomSelect(
-        { state: 'unavailable', attributes: { options: ['unavailable'], value: 1 } },
-        SUCTION_OPTIONS,
-        SUCTION_BY_CODE
-      )
-    ).toEqual({
-      value: 'standard',
-      options: SUCTION_OPTIONS,
+      readRoomSelect({ state: 'unavailable', attributes: { options: ['unavailable'], value: 2 } }, pressure)
+    ).toMatchObject({
+      value: 'normal',
+      options: ['light', 'normal'],
+      changed: false,
     });
   });
 
-  it('recovers cleaning times as the integration option label', () => {
+  it('restores a 1-based cleaning repeat from the stored pair', () => {
+    const repeats: ObservedSelect = {
+      options: ['1x', '2x'],
+      pairs: [{ code: 1, option: '1x' }],
+    };
+
     expect(
-      readRoomSelect(
-        { state: 'unavailable', attributes: { options: ['unavailable'], value: 1 } },
-        CLEANING_TIMES_OPTIONS,
-        CLEANING_TIMES_BY_CODE
-      )
+      readRoomSelect({ state: 'unavailable', attributes: { options: ['unavailable'], value: 1 } }, repeats).value
+    ).toBe('1x');
+  });
+
+  it('does not invent a catalog when unavailable and nothing was stored', () => {
+    expect(
+      readRoomSelect({ state: 'unavailable', attributes: { options: ['unavailable'], value: 1 } }, undefined)
     ).toEqual({
-      value: '1x',
-      options: CLEANING_TIMES_OPTIONS,
+      value: null,
+      options: [],
+      next: undefined,
+      changed: false,
     });
   });
 
   it('returns nothing when the entity is missing', () => {
-    expect(readRoomSelect(undefined, SUCTION_OPTIONS, SUCTION_BY_CODE)).toEqual({ value: null, options: [] });
+    expect(readRoomSelect(undefined, undefined)).toEqual({
+      value: null,
+      options: [],
+      next: undefined,
+      changed: false,
+    });
+  });
+});
+
+describe('readRoomSelectStore', () => {
+  it('restores pairs this browser already saw', () => {
+    const memory = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => memory.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        memory.set(key, value);
+      },
+    };
+    const store: RoomSelectStore = { version: 1, rooms: { '3': { mopPressure: pressure } } };
+
+    writeRoomSelectStore(store, storage);
+
+    expect(readRoomSelectStore(storage)).toEqual(store);
   });
 });
 

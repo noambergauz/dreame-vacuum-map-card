@@ -1,12 +1,16 @@
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { CircularButton, Toggle } from '@/components/common';
-import { getSuctionLevelFriendlyName, getSuctionLevelIcon } from '@/utils';
+import { getSuctionLevelFriendlyName, getSuctionLevelIcon, resolveSuctionDisplay, sameStringList } from '@/utils';
 
 type TranslateFunction = (key: string, params?: Record<string, string | number>) => string;
 
 interface SuctionPowerSelectorProps {
   suctionLevel: string;
   suctionLevelList: string[];
+  attributeList: string[];
+  fanSpeedList: string[];
+  fanSpeed: string;
+  cleaning: boolean;
   maxSuctionPower: boolean;
   onSelectSuctionLevel: (entityId: string, value: string) => void;
   onToggleMaxPower: (entityId: string, checked: boolean) => void;
@@ -25,6 +29,10 @@ interface SuctionPowerSelectorProps {
 export function SuctionPowerSelector({
   suctionLevel,
   suctionLevelList,
+  attributeList,
+  fanSpeedList,
+  fanSpeed,
+  cleaning,
   maxSuctionPower,
   onSelectSuctionLevel,
   onToggleMaxPower,
@@ -36,35 +44,34 @@ export function SuctionPowerSelector({
   maxPowerDisabled = false,
   hideMaxPower = false,
 }: SuctionPowerSelectorProps) {
-  const cachedSuctionLevels = useRef<string[]>([]);
-  useEffect(() => {
-    if (suctionLevelList.length > 0) {
-      cachedSuctionLevels.current = suctionLevelList;
-    }
-  }, [suctionLevelList]);
-
-  // Max+ temporarily replaces the entity options with a placeholder on some devices.
-  let displayList = suctionLevelList;
-  if (displayList.length === 0) {
-    // Entity prop changes drive rendering; the ref only retains the last published options.
-    // eslint-disable-next-line react-hooks/refs
-    displayList = maxSuctionPower ? cachedSuctionLevels.current : [];
+  const [rememberedOptions, setRememberedOptions] = useState<string[]>([]);
+  const display = resolveSuctionDisplay({
+    cleaning,
+    selectOptions: suctionLevelList,
+    attributeList,
+    rememberedOptions,
+    fanSpeedList,
+    fanSpeed,
+    suctionLevel,
+    maxSuctionPower: !hideMaxPower && maxSuctionPower,
+  });
+  if (!sameStringList(rememberedOptions, display.rememberedOptions)) {
+    setRememberedOptions(display.rememberedOptions);
   }
 
-  // Disable suction buttons when Max+ is enabled OR when explicitly disabled
-  // Only consider maxSuctionPower if it's not hidden
-  const isSuctionDisabled = suctionLevelDisabled || (!hideMaxPower && maxSuctionPower);
+  const isSuctionDisabled =
+    !display.clicksEnabled || suctionLevelDisabled || (!display.sendFanSpeed && !hideMaxPower && maxSuctionPower);
 
   return (
     <>
       <div
         className={`cleaning-mode-modal__power-grid ${isSuctionDisabled ? 'cleaning-mode-modal__power-grid--disabled' : ''}`}
       >
-        {displayList.map((level) => (
+        {display.options.map((level) => (
           <div key={level} className="cleaning-mode-modal__power-option">
             <CircularButton
               size="small"
-              selected={!maxSuctionPower && level === suctionLevel}
+              selected={level === display.highlight}
               onClick={() => !isSuctionDisabled && onSelectSuctionLevel(suctionLevelEntityId, level)}
               icon={getSuctionLevelIcon(level)}
               disabled={isSuctionDisabled}
@@ -74,7 +81,6 @@ export function SuctionPowerSelector({
         ))}
       </div>
 
-      {/* Max+ toggle - only show if capability is supported */}
       {!hideMaxPower && (
         <div className="cleaning-mode-modal__max-plus">
           <div className="cleaning-mode-modal__max-plus-header">

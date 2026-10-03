@@ -88,6 +88,7 @@ export const STORAGE_KEY = {
   MAP_LOCKED: 'dreame-vacuum-map-locked',
   CUSTOMIZE_CONFIG: 'dreame-vacuum-card:customize_config',
   AREA_SELECTION_MODE: 'dreame-vacuum-card:area_selection_mode',
+  ROOM_SELECTS: 'dreame-vacuum-card:room_selects',
 } as const;
 
 // Customize cleaning mode constants

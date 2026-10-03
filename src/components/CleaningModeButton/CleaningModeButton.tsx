@@ -7,7 +7,7 @@ import {
   getCleaningModeIcon,
   getCleaningModeFriendlyName,
   getCleanGeniusModeFriendlyName,
-  selectOptionKey,
+  isCleangeniusOff,
 } from '@/utils';
 
 interface CleaningModeButtonProps {
@@ -34,7 +34,7 @@ export function CleaningModeButton({
 
   const isInCleaningSession = phase === 'cleaning' || phase === 'paused';
   const secondaryDisabled = isInCleaningSession || isCustomizedCleaning;
-  const isCleanGenius = selectOptionKey(cleangenius) !== 'off';
+  const isCleanGenius = !isCleangeniusOff(cleangenius);
 
   const getIcon = (mode: string) => {
     if (isCustomizedCleaning) {

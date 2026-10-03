@@ -106,33 +106,24 @@ export function deriveControls(
   };
 }
 
-/**
- * Hook to compute vacuum machine state from Home Assistant entities
- *
- * @param hass - Home Assistant object
- * @param entity - Main vacuum entity
- * @returns Complete vacuum machine state with derived controls
- */
+export function resolveCleaningMode(selectValue: string | null, attribute: unknown): string {
+  if (selectValue) return selectValue;
+  return typeof attribute === 'string' ? attribute : '';
+}
+
 export function useVacuumMachineState(
   hass: Hass,
   entity: HassEntity,
-  stateSensorId: string | undefined
+  stateSensorId: string | undefined,
+  cleaningMode: string
 ): VacuumMachineState {
   return useMemo(() => {
     const sensorState = getEntityState(hass, stateSensorId);
     const rawState = sensorState.state ?? entity.state ?? 'unknown';
 
-    // Derive phase and task
     const phase = derivePhase(sensorState.state, entity.state);
     const task = deriveTask(sensorState.state);
-
-    // Get cleaning mode from entity attributes
-    const cleaningMode = (entity.attributes.cleaning_mode as string) ?? '';
-
-    // Check if customized cleaning is active
     const isCustomizedCleaning = entity.attributes.customized_cleaning === true;
-
-    // Derive control enablement
     const controls = deriveControls(phase, cleaningMode, isCustomizedCleaning);
 
     return {
@@ -143,5 +134,5 @@ export function useVacuumMachineState(
       isCustomizedCleaning,
       controls,
     };
-  }, [hass, entity, stateSensorId]);
+  }, [hass, entity, stateSensorId, cleaningMode]);
 }

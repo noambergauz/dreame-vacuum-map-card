@@ -2,29 +2,21 @@ import { useState, useEffect } from 'react';
 import { CircularButton, Accordion } from '@/components/common';
 import { useTranslation, useRoomSettings, getEntityState } from '@/hooks';
 import { useHass, useIsRtl, useConfig, useDeviceEntities } from '@/contexts';
-import { parseRoomsFromCamera, resolveMapEntityId, readLiveMapFloor } from '@/utils';
 import {
-  SUCTION_QUIET_ICON_SVG,
-  SUCTION_STANDARD_ICON_SVG,
-  SUCTION_STRONG_ICON_SVG,
-  SUCTION_TURBO_ICON_SVG,
-} from '@/constants';
+  formatSelectOptionLabel,
+  getSuctionLevelFriendlyName,
+  getSuctionLevelIcon,
+  parseRoomsFromCamera,
+  publishedOptionList,
+  readLiveMapFloor,
+  resolveMapEntityId,
+  selectOptionKey,
+} from '@/utils';
 import { Gauge, Thermometer } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { RoomSetting } from '@/hooks';
 import './CustomizeMode.scss';
 
-// Map suction level names to icons (lowercase to match HA entity options)
-const SUCTION_ICONS: Record<string, ReactNode> = {
-  quiet: SUCTION_QUIET_ICON_SVG,
-  silent: SUCTION_QUIET_ICON_SVG,
-  standard: SUCTION_STANDARD_ICON_SVG,
-  strong: SUCTION_STRONG_ICON_SVG,
-  turbo: SUCTION_TURBO_ICON_SVG,
-  max: SUCTION_TURBO_ICON_SVG,
-};
-
-// Map mop pressure names to icons
 const MOP_PRESSURE_ICONS: Record<string, ReactNode> = {
   light: <Gauge size={18} strokeWidth={1.5} />,
   normal: <Gauge size={18} strokeWidth={2.5} />,
@@ -48,7 +40,21 @@ const SUCTION_SHORT: Record<string, string> = {
 
 function getSuctionShort(level: string | null): string {
   if (!level) return '-';
-  return SUCTION_SHORT[level] ?? level.charAt(0).toUpperCase();
+  return SUCTION_SHORT[selectOptionKey(level)] ?? level.charAt(0).toUpperCase();
+}
+
+function optionLabel(
+  t: (key: string, params?: Record<string, string | number>) => string,
+  group: string,
+  value: string
+): string {
+  const key = `${group}.${selectOptionKey(value)}`;
+  const translated = t(key);
+  return translated === key ? formatSelectOptionLabel(value) : translated;
+}
+
+function selectNotAccepting(state: { unavailable: boolean; attributes: Record<string, unknown> }): boolean {
+  return state.unavailable || publishedOptionList(state.attributes.options).length === 0;
 }
 
 function getWetnessShort(level: number | null, min: number, max: number): string {
@@ -196,10 +202,10 @@ function RoomSettingsContent({
                   size="small"
                   selected={setting.suctionLevel === level}
                   onClick={() => !suctionDisabled && setSuctionLevel(setting.roomId, level)}
-                  icon={SUCTION_ICONS[level] || SUCTION_STANDARD_ICON_SVG}
+                  icon={getSuctionLevelIcon(level)}
                   disabled={suctionDisabled}
                 />
-                <span className="customize-mode__option-label">{t(`suction_levels.${level.toLowerCase()}`)}</span>
+                <span className="customize-mode__option-label">{getSuctionLevelFriendlyName(level, t)}</span>
               </div>
             ))}
           </div>
@@ -234,10 +240,10 @@ function RoomSettingsContent({
                   size="small"
                   selected={setting.mopPressure === pressure}
                   onClick={() => !mopPressureDisabled && setMopPressure(setting.roomId, pressure)}
-                  icon={MOP_PRESSURE_ICONS[pressure.toLowerCase()] || <Gauge size={18} />}
+                  icon={MOP_PRESSURE_ICONS[selectOptionKey(pressure)] || <Gauge size={18} />}
                   disabled={mopPressureDisabled}
                 />
-                <span className="customize-mode__option-label">{t(`mop_pressure.${pressure.toLowerCase()}`)}</span>
+                <span className="customize-mode__option-label">{optionLabel(t, 'mop_pressure', pressure)}</span>
               </div>
             ))}
           </div>
@@ -257,10 +263,10 @@ function RoomSettingsContent({
                   size="small"
                   selected={setting.mopTemperature === temp}
                   onClick={() => !mopTemperatureDisabled && setMopTemperature(setting.roomId, temp)}
-                  icon={MOP_TEMPERATURE_ICONS[temp.toLowerCase()] || <Thermometer size={18} />}
+                  icon={MOP_TEMPERATURE_ICONS[selectOptionKey(temp)] || <Thermometer size={18} />}
                   disabled={mopTemperatureDisabled}
                 />
-                <span className="customize-mode__option-label">{t(`mop_temperature.${temp.toLowerCase()}`)}</span>
+                <span className="customize-mode__option-label">{optionLabel(t, 'mop_temperature', temp)}</span>
               </div>
             ))}
           </div>
@@ -384,11 +390,11 @@ export function CustomizeMode() {
                 setMopPressure={setMopPressure}
                 setMopTemperature={setMopTemperature}
                 t={t}
-                suctionDisabled={suctionState.unavailable}
+                suctionDisabled={selectNotAccepting(suctionState)}
                 wetnessDisabled={wetnessState.unavailable}
-                cleaningTimesDisabled={cleaningTimesState.unavailable}
-                mopPressureDisabled={mopPressureState.unavailable}
-                mopTemperatureDisabled={mopTemperatureState.unavailable}
+                cleaningTimesDisabled={selectNotAccepting(cleaningTimesState)}
+                mopPressureDisabled={selectNotAccepting(mopPressureState)}
+                mopTemperatureDisabled={selectNotAccepting(mopTemperatureState)}
               />
             </Accordion>
           );

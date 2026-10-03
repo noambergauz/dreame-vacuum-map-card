@@ -44,24 +44,16 @@ export function getCleanGeniusModeFriendlyName(mode: string, t?: TranslateFuncti
   return CLEANGENIUS_MODE_FALLBACK[key] ?? formatSelectOptionLabel(mode);
 }
 
-/**
- * Get friendly name for suction level
- * Maps: Strong -> Turbo, Turbo -> Max
- */
-export function getSuctionLevelFriendlyName(level: string, t?: TranslateFunction): string {
-  const normalizedLevel = selectOptionKey(level);
+const SUCTION_LABELS: Record<string, { key: string; fallback: string }> = {
+  quiet: { key: 'suction_levels.quiet', fallback: 'Quiet' },
+  silent: { key: 'suction_levels.quiet', fallback: 'Quiet' },
+  standard: { key: 'suction_levels.standard', fallback: 'Standard' },
+  strong: { key: 'suction_levels.strong', fallback: 'Turbo' },
+  turbo: { key: 'suction_levels.turbo', fallback: 'Max' },
+};
 
-  if (normalizedLevel.includes('quiet') || normalizedLevel.includes('silent')) {
-    return t ? t('suction_levels.quiet') : 'Quiet';
-  }
-  if (normalizedLevel.includes('standard')) {
-    return t ? t('suction_levels.standard') : 'Standard';
-  }
-  if (normalizedLevel.includes('strong')) {
-    return t ? t('suction_levels.strong') : 'Turbo';
-  }
-  if (normalizedLevel.includes('turbo')) {
-    return t ? t('suction_levels.turbo') : 'Max';
-  }
-  return formatSelectOptionLabel(level);
+export function getSuctionLevelFriendlyName(level: string, t?: TranslateFunction): string {
+  const match = SUCTION_LABELS[selectOptionKey(level)];
+  if (!match) return formatSelectOptionLabel(level);
+  return t ? t(match.key) : match.fallback;
 }
