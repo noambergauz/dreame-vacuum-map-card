@@ -202,7 +202,8 @@ export function CustomMode({
           {hasSelfCleanFrequency &&
             entityIds.selfCleanFrequency &&
             entityIds.selfCleanArea &&
-            entityIds.selfCleanTime && (
+            entityIds.selfCleanTime &&
+            frequencyDisplay.options.length > 0 && (
               <section className="cleaning-mode-modal__section">
                 <h3 className="cleaning-mode-modal__section-title">{t('custom_mode.mop_washing_frequency_title')}</h3>
                 <MopWashingFrequency
