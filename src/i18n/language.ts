@@ -34,6 +34,7 @@ const BACKEND_LANGUAGE: Record<SupportedLanguage, string> = {
   hu_HU: 'hu',
   uk: 'uk',
   lt: 'lt',
+  th: 'th',
 };
 
 function languageCode(value: string): string {
