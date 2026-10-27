@@ -13,6 +13,9 @@ const CHROME_ALIASES: Record<string, SupportedLanguage> = {
   iw: 'he',
   hu: 'hu_HU',
   'hu-hu': 'hu_HU',
+  pt: 'pt_PT',
+  'pt-pt': 'pt_PT',
+  'pt-br': 'pt_BR',
 };
 
 /** Chrome pack to the language code dreame_vacuum ships. */
@@ -34,6 +37,8 @@ const BACKEND_LANGUAGE: Record<SupportedLanguage, string> = {
   hu_HU: 'hu',
   uk: 'uk',
   lt: 'lt',
+  pt_BR: 'pt-BR',
+  pt_PT: 'pt',
 };
 
 function languageCode(value: string): string {

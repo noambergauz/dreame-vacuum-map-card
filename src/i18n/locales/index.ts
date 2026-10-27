@@ -15,6 +15,8 @@ import { zh_TW } from './zh_TW';
 import { hu_HU } from './hu_HU';
 import { uk } from './uk';
 import { lt } from './lt';
+import { pt_BR } from './pt_BR';
+import { pt_PT } from './pt_PT';
 
 export const locales = {
   en,
@@ -34,6 +36,8 @@ export const locales = {
   hu_HU,
   uk,
   lt,
+  pt_BR,
+  pt_PT,
 };
 
 export type SupportedLanguage = keyof typeof locales;

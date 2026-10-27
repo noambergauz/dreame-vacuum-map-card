@@ -13,6 +13,10 @@ describe('resolveChromeLanguage', () => {
     expect(normalizeChromeLanguage('uk')).toBe('uk');
     expect(normalizeChromeLanguage('lt')).toBe('lt');
     expect(normalizeChromeLanguage('fr')).toBe('fr_FR');
+    expect(normalizeChromeLanguage('pt')).toBe('pt_PT');
+    expect(normalizeChromeLanguage('pt-PT')).toBe('pt_PT');
+    expect(normalizeChromeLanguage('pt-BR')).toBe('pt_BR');
+    expect(normalizeChromeLanguage('pt_BR')).toBe('pt_BR');
     expect(normalizeChromeLanguage('xx')).toBe('en');
   });
 
@@ -29,6 +33,8 @@ describe('resolveChromeLanguage', () => {
     expect(resolveBackendLanguage('cs', 'en')).toBe('cs');
     expect(resolveBackendLanguage('sk', 'en')).toBe('sk');
     expect(resolveBackendLanguage('hu_HU', 'en')).toBe('hu');
+    expect(resolveBackendLanguage('pt_BR', 'en')).toBe('pt-BR');
+    expect(resolveBackendLanguage('pt_PT', 'en')).toBe('pt');
   });
 });
 
