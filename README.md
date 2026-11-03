@@ -148,6 +148,7 @@ Currently available:
 - **Hungarian (hu_HU)** - Magyar
 - **Ukrainian (uk)** - Українська
 - **Lithuanian (lt)** - Lietuvių
+- **Turkish (tr)** - Türkçe
 
 Set the language in your configuration:
 
