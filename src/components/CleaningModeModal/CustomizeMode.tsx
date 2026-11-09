@@ -4,6 +4,8 @@ import { useTranslation, useRoomSettings, getEntityState } from '@/hooks';
 import { useHass, useIsRtl, useConfig, useDeviceEntities } from '@/contexts';
 import {
   formatSelectOptionLabel,
+  getCleaningModeFriendlyName,
+  getCleaningModeIcon,
   getSuctionLevelFriendlyName,
   getSuctionLevelIcon,
   parseRoomsFromCamera,
@@ -161,12 +163,14 @@ function RoomWetnessSlider({
 
 interface RoomSettingsContentProps {
   setting: RoomSetting;
+  setCleaningMode: (roomId: number, value: string) => void;
   setSuctionLevel: (roomId: number, value: string) => void;
   setWetnessLevel: (roomId: number, value: number) => void;
   setCleaningTimes: (roomId: number, value: string) => void;
   setMopPressure: (roomId: number, value: string) => void;
   setMopTemperature: (roomId: number, value: string) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
+  cleaningModeDisabled?: boolean;
   suctionDisabled?: boolean;
   wetnessDisabled?: boolean;
   cleaningTimesDisabled?: boolean;
@@ -176,12 +180,14 @@ interface RoomSettingsContentProps {
 
 function RoomSettingsContent({
   setting,
+  setCleaningMode,
   setSuctionLevel,
   setWetnessLevel,
   setCleaningTimes,
   setMopPressure,
   setMopTemperature,
   t,
+  cleaningModeDisabled = false,
   suctionDisabled = false,
   wetnessDisabled = false,
   cleaningTimesDisabled = false,
@@ -190,6 +196,27 @@ function RoomSettingsContent({
 }: RoomSettingsContentProps) {
   return (
     <div className="customize-mode__room-settings-content">
+      {/* Cleaning Mode */}
+      {setting.cleaningModeOptions.length > 0 && (
+        <div className="customize-mode__setting-group">
+          <span className="customize-mode__setting-label">{t('custom_mode.cleaning_mode_title')}</span>
+          <div className={`customize-mode__options ${cleaningModeDisabled ? 'customize-mode__options--disabled' : ''}`}>
+            {setting.cleaningModeOptions.map((mode: string) => (
+              <div key={mode} className="customize-mode__option">
+                <CircularButton
+                  size="small"
+                  selected={setting.cleaningMode === mode}
+                  onClick={() => !cleaningModeDisabled && setCleaningMode(setting.roomId, mode)}
+                  icon={getCleaningModeIcon(mode)}
+                  disabled={cleaningModeDisabled}
+                />
+                <span className="customize-mode__option-label">{getCleaningModeFriendlyName(mode, t)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Suction Power */}
       {setting.suctionLevelOptions.length > 0 && (
         <div className="customize-mode__setting-group">
@@ -313,12 +340,19 @@ export function CustomizeMode() {
   const mapFloor = readLiveMapFloor(hass.states[config.entity]?.attributes.selected_map_id, camera?.attributes);
   const rooms = mapEntityId && mapFloor.floorReady ? parseRoomsFromCamera(hass, mapEntityId, config.room_names) : [];
 
-  const { roomSettings, setSuctionLevel, setWetnessLevel, setCleaningTimes, setMopPressure, setMopTemperature } =
-    useRoomSettings({
-      hass,
-      vacuumEntityId: config.entity,
-      rooms: rooms.map((r) => ({ id: r.id, name: r.name })),
-    });
+  const {
+    roomSettings,
+    setCleaningMode,
+    setSuctionLevel,
+    setWetnessLevel,
+    setCleaningTimes,
+    setMopPressure,
+    setMopTemperature,
+  } = useRoomSettings({
+    hass,
+    vacuumEntityId: config.entity,
+    rooms: rooms.map((r) => ({ id: r.id, name: r.name })),
+  });
 
   // If no rooms found, show message
   if (rooms.length === 0) {
@@ -354,6 +388,7 @@ export function CustomizeMode() {
           const setting = roomSettings.get(room.id);
           if (!setting) return null;
 
+          const cleaningModeState = getEntityState(hass, setting.cleaningModeEntityId);
           const suctionState = getEntityState(hass, setting.suctionEntityId);
           const wetnessState = getEntityState(hass, setting.wetnessEntityId);
           const cleaningTimesState = getEntityState(hass, setting.cleaningTimesEntityId);
@@ -384,12 +419,14 @@ export function CustomizeMode() {
             >
               <RoomSettingsContent
                 setting={setting}
+                setCleaningMode={setCleaningMode}
                 setSuctionLevel={setSuctionLevel}
                 setWetnessLevel={setWetnessLevel}
                 setCleaningTimes={setCleaningTimes}
                 setMopPressure={setMopPressure}
                 setMopTemperature={setMopTemperature}
                 t={t}
+                cleaningModeDisabled={selectNotAccepting(cleaningModeState)}
                 suctionDisabled={selectNotAccepting(suctionState)}
                 wetnessDisabled={wetnessState.unavailable}
                 cleaningTimesDisabled={selectNotAccepting(cleaningTimesState)}
