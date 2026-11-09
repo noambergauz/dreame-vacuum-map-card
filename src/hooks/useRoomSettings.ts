@@ -15,7 +15,7 @@ export interface ObservedSelect {
   pairs: ObservedPair[];
 }
 
-type RoomSelectSetting = 'suction' | 'cleaningTimes' | 'mopPressure' | 'mopTemperature';
+type RoomSelectSetting = 'cleaningMode' | 'suction' | 'cleaningTimes' | 'mopPressure' | 'mopTemperature';
 
 export interface RoomSelectStore {
   version: 1;
@@ -124,6 +124,9 @@ export function readWetnessLevel(entity: Pick<HassEntity, 'state'> | undefined):
 export interface RoomSetting {
   roomId: number;
   roomName: string;
+  // Cleaning mode (sweeping/mopping/sweeping_and_mopping)
+  cleaningMode: string | null;
+  cleaningModeOptions: string[];
   // Suction level
   suctionLevel: string | null;
   suctionLevelOptions: string[];
@@ -142,6 +145,7 @@ export interface RoomSetting {
   mopTemperatureOptions: string[];
   // Whether entities exist for this room
   hasEntities: boolean;
+  cleaningModeEntityId?: string;
   suctionEntityId?: string;
   wetnessEntityId?: string;
   cleaningTimesEntityId?: string;
@@ -157,6 +161,7 @@ interface UseRoomSettingsOptions {
 
 interface UseRoomSettingsReturn {
   roomSettings: Map<number, RoomSetting>;
+  setCleaningMode: (roomId: number, value: string) => void;
   setSuctionLevel: (roomId: number, value: string) => void;
   setWetnessLevel: (roomId: number, value: number) => void;
   setCleaningTimes: (roomId: number, value: string) => void;
@@ -197,6 +202,7 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
     return rooms.map((room) => ({
       roomId: room.id,
       roomName: room.name,
+      cleaningModeEntityId: getRoom(room.id, 'select', DREAME_SEGMENT_SELECTS.CLEANING_MODE.key),
       suctionEntityId: getRoom(room.id, 'select', DREAME_SEGMENT_SELECTS.SUCTION_LEVEL.key),
       wetnessEntityId: getRoom(room.id, 'number', DREAME_SEGMENT_NUMBERS.WETNESS_LEVEL.key),
       cleaningTimesEntityId: getRoom(room.id, 'select', DREAME_SEGMENT_SELECTS.CLEANING_TIMES.key),
@@ -210,6 +216,9 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
     const settings = new Map<number, RoomSetting>();
 
     for (const entityIds of roomEntityIds) {
+      const cleaningModeEntity = entityIds.cleaningModeEntityId
+        ? hass.states[entityIds.cleaningModeEntityId]
+        : undefined;
       const suctionEntity = entityIds.suctionEntityId ? hass.states[entityIds.suctionEntityId] : undefined;
       const wetnessEntity = entityIds.wetnessEntityId ? hass.states[entityIds.wetnessEntityId] : undefined;
       const cleaningTimesEntity = entityIds.cleaningTimesEntityId
@@ -221,6 +230,7 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
         : undefined;
 
       const hasEntities = !!(
+        cleaningModeEntity ||
         suctionEntity ||
         wetnessEntity ||
         cleaningTimesEntity ||
@@ -228,17 +238,20 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
         mopTemperatureEntity
       );
       const room = observeRoom(nextStore, entityIds.roomId, [
+        ['cleaningMode', cleaningModeEntity],
         ['suction', suctionEntity],
         ['cleaningTimes', cleaningTimesEntity],
         ['mopPressure', mopPressureEntity],
         ['mopTemperature', mopTemperatureEntity],
       ]);
       nextStore = room.store;
-      const [suction, cleaningTimes, mopPressure, mopTemperature] = room.readings;
+      const [cleaningMode, suction, cleaningTimes, mopPressure, mopTemperature] = room.readings;
 
       settings.set(entityIds.roomId, {
         roomId: entityIds.roomId,
         roomName: entityIds.roomName,
+        cleaningMode: cleaningMode?.value ?? null,
+        cleaningModeOptions: cleaningMode?.options ?? [],
         suctionLevel: suction?.value ?? null,
         suctionLevelOptions: suction?.options ?? [],
         wetnessLevel: readWetnessLevel(wetnessEntity),
@@ -251,6 +264,7 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
         mopTemperature: mopTemperature?.value ?? null,
         mopTemperatureOptions: mopTemperature?.options ?? [],
         hasEntities,
+        cleaningModeEntityId: entityIds.cleaningModeEntityId,
         suctionEntityId: entityIds.suctionEntityId,
         wetnessEntityId: entityIds.wetnessEntityId,
         cleaningTimesEntityId: entityIds.cleaningTimesEntityId,
@@ -269,6 +283,16 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
   useEffect(() => {
     writeRoomSelectStore(storageKey, store);
   }, [storageKey, store]);
+
+  const setCleaningMode = useCallback(
+    (roomId: number, value: string) => {
+      const entityId = getRoom(roomId, 'select', DREAME_SEGMENT_SELECTS.CLEANING_MODE.key);
+      if (!entityId) return;
+      logger.debug('RoomSettings', 'Setting cleaning mode:', { roomId, value, entityId });
+      hass.callService('select', 'select_option', { entity_id: entityId, option: value });
+    },
+    [getRoom, hass]
+  );
 
   // Set suction level for a room
   const setSuctionLevel = useCallback(
@@ -323,6 +347,7 @@ export function useRoomSettings({ hass, vacuumEntityId, rooms }: UseRoomSettings
 
   return {
     roomSettings: observed.settings,
+    setCleaningMode,
     setSuctionLevel,
     setWetnessLevel,
     setCleaningTimes,
