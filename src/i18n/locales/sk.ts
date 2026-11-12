@@ -99,6 +99,21 @@ export const sk: Translation = {
     select_spot_first: 'Najprv vyberte bod na mape',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Spustiť po…',
+    description: 'Aktuálny výber sa odošle vysávaču, keď bude splnená podmienka.',
+    at_time: 'V nastavenom čase',
+    time_label: 'o {{time}}',
+    schedule: 'Naplánovať',
+    scheduled: 'Štart naplánovaný: {{label}}',
+    pending: 'Čaká na štart: {{label}}',
+    pending_generic: 'Čaká na štart',
+    cancelled: 'Naplánovaný štart zrušený',
+    script_missing: 'Skript {{script}} sa nenašiel. Nastavenie odloženého štartu nájdete v README.',
+    no_triggers: 'Nie sú nastavené žiadne spúšťače',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Vybrané miestnosti:',

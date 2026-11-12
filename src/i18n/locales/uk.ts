@@ -99,6 +99,21 @@ export const uk: Translation = {
     select_spot_first: 'Спочатку виберіть точку на карті',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Запустити після…',
+    description: 'Поточний вибір буде надіслано пилососу, коли умову буде виконано.',
+    at_time: 'У визначений час',
+    time_label: 'о {{time}}',
+    schedule: 'Запланувати',
+    scheduled: 'Запуск заплановано: {{label}}',
+    pending: 'Очікування запуску: {{label}}',
+    pending_generic: 'Очікування запуску',
+    cancelled: 'Запланований запуск скасовано',
+    script_missing: 'Скрипт {{script}} не знайдено. Налаштування відкладеного запуску описано в README.',
+    no_triggers: 'Тригери не налаштовано',
+  },
+
   // Вибрані кімнати
   room_display: {
     selected_rooms: 'Вибрані кімнати:',

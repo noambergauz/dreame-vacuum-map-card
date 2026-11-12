@@ -15,6 +15,7 @@ A modern, beautiful Home Assistant Lovelace card for controlling Dreame robot va
 - **Per-room customized cleaning**: Configure suction level, wetness, and cleaning cycles for each room individually
 - **Dock popup**: station status and dock tasks while the robot is docked
 - **Shortcuts**: start, rename, and delete the shortcuts saved in the Dreame app
+- **Start after…**: set everything up now and let Home Assistant start the clean later, when a trigger is met (e.g. the house is empty) or at a set time
 - **Landscape layout**: controls beside the map on wide dashboards, mirrored for RTL languages
 - Real-time vacuum status and battery level
 - **Theming**: follows the active Home Assistant theme, including custom themes and dark mode
@@ -91,6 +92,87 @@ name everywhere the card shows it — map labels, room list, selection summary, 
 settings and toasts. Keys are looked up as segment id first, then as the device-provided
 name; anything not listed keeps its original name. Cleaning commands always use the
 segment id, so renaming is purely cosmetic.
+
+### Start after… (delayed start)
+
+Set up the clean as usual (rooms, zones or spots, cleaning mode, repeats) and press the
+clock next to **Clean** instead. Pick one of your triggers, or a time of day, and the
+command is handed to a Home Assistant script that waits for it. Because the waiting
+happens in Home Assistant, it keeps working after you close the dashboard.
+
+While a start is waiting, the card shows a banner with a **Cancel** button. Starting a
+clean normally cancels the pending one, and scheduling again replaces it.
+
+**1. Add the script** (Settings → Automations & Scenes → Scripts → ⋮ → Edit in YAML, or
+`scripts.yaml`). The entity must be `script.dreame_delayed_start` unless you set
+`delayed_start.script`.
+
+```yaml
+dreame_delayed_start:
+  alias: Dreame delayed start
+  description: Used by the "Start after…" option of the Dreame Vacuum Map Card.
+  mode: restart # a new request replaces the waiting one
+  icon: mdi:timer-sand
+  fields:
+    service:
+      description: Service to call, e.g. dreame_vacuum.vacuum_clean_segment
+    data:
+      description: Service data
+    label:
+      description: Text shown in the card
+    trigger_entity:
+      description: Entity to wait for (optional)
+    trigger_state:
+      description: State that releases the start
+    not_before:
+      description: ISO date/time to wait for first (optional)
+    timeout_hours:
+      description: Give up after this many hours
+  sequence:
+    - if:
+        - condition: template
+          value_template: "{{ not_before | default('') != '' }}"
+      then:
+        - wait_template: "{{ now() >= as_datetime(not_before) }}"
+    - if:
+        - condition: template
+          value_template: "{{ trigger_entity | default('') != '' }}"
+      then:
+        - wait_template: "{{ is_state(trigger_entity, trigger_state) }}"
+          timeout: "{{ '%02d:00:00' % (timeout_hours | default(12) | int(12)) }}"
+          continue_on_timeout: false
+    # Don't interrupt a clean that was started some other way in the meantime
+    - condition: template
+      value_template: "{{ states(data.entity_id) not in ['cleaning', 'returning'] }}"
+    - action: "{{ service }}"
+      data: "{{ data }}"
+```
+
+If the trigger is already met when you schedule (e.g. the house is already empty), the
+clean starts right away. The timeout counts from when the time option (if any) is reached.
+
+**2. Configure the card:**
+
+```yaml
+delayed_start:
+  script: script.dreame_delayed_start # Optional, this is the default
+  timeout_hours: 12 # Optional, drop a pending start after this many hours
+  allow_time: true # Optional, show the "At a set time" option
+  triggers:
+    - label: House empty
+      entity: input_select.house_state
+      state: Empty
+    - label: Everyone left
+      entity: zone.home
+      state: '0'
+```
+
+Each trigger is an entity and the state that releases the start, so any entity works:
+an `input_select`, an `input_boolean`, a `person`, `zone.home` (number of people at home),
+a `binary_sensor`, and so on. Without a `delayed_start` section the card looks exactly as before.
+
+Per-room settings and the cleaning mode are applied to the robot immediately, as usual;
+only the start command waits. Changing them before the start fires will affect the clean.
 
 ### Landscape layout
 

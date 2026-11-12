@@ -99,6 +99,21 @@ export const ru: Translation = {
     select_spot_first: 'Выберите точку на карте',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Запустить после…',
+    description: 'Текущий выбор будет отправлен пылесосу, когда условие выполнится.',
+    at_time: 'В заданное время',
+    time_label: 'в {{time}}',
+    schedule: 'Запланировать',
+    scheduled: 'Запуск запланирован: {{label}}',
+    pending: 'Ожидание запуска: {{label}}',
+    pending_generic: 'Ожидание запуска',
+    cancelled: 'Запланированный запуск отменён',
+    script_missing: 'Скрипт {{script}} не найден. Настройка отложенного запуска описана в README.',
+    no_triggers: 'Триггеры не настроены',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Выбранные комнаты:',

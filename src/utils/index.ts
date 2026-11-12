@@ -17,3 +17,4 @@ export * from './dockPopup';
 export * from './typeGuards';
 export * from './logger';
 export * from './deviceEntities';
+export * from './delayedStart';

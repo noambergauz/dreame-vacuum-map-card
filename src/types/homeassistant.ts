@@ -67,6 +67,27 @@ export interface HassConfig {
   room_label_scale?: number;
   /** Maximum height of the map area as a CSS length, e.g. '520px' or '60vh', or a number of pixels. */
   map_height?: string | number;
+  /** Enables "Start after…": the start command is handed to a Home Assistant script that waits for a trigger. */
+  delayed_start?: DelayedStartConfig;
+}
+
+export interface DelayedStartTrigger {
+  /** Text shown in the menu, e.g. "House empty". */
+  label: string;
+  /** Entity to watch, e.g. input_select.house_state. */
+  entity: string;
+  /** State that releases the start, e.g. "Empty". */
+  state: string;
+}
+
+export interface DelayedStartConfig {
+  /** Script that waits and then sends the command (default: script.dreame_delayed_start). */
+  script?: string;
+  /** Hours after which a pending start is dropped (default: 12). */
+  timeout_hours?: number;
+  /** Show the "at a set time" option (default: true). */
+  allow_time?: boolean;
+  triggers?: DelayedStartTrigger[];
 }
 
 export interface HassUnitSystem {

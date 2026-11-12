@@ -99,6 +99,21 @@ export const pl: Translation = {
     select_spot_first: 'Wybierz punkt na mapie',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Uruchom po…',
+    description: 'Bieżący wybór zostanie wysłany do robota, gdy warunek zostanie spełniony.',
+    at_time: 'O określonej godzinie',
+    time_label: 'o {{time}}',
+    schedule: 'Zaplanuj',
+    scheduled: 'Start zaplanowany: {{label}}',
+    pending: 'Oczekiwanie na start: {{label}}',
+    pending_generic: 'Oczekiwanie na start',
+    cancelled: 'Zaplanowany start anulowany',
+    script_missing: 'Nie znaleziono skryptu {{script}}. Zobacz README, aby skonfigurować opóźniony start.',
+    no_triggers: 'Brak skonfigurowanych wyzwalaczy',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Wybrane pokoje:',
