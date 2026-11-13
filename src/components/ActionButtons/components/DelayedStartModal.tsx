@@ -85,7 +85,7 @@ export function DelayedStartModal({
               type="button"
               className="delayed-start__schedule"
               disabled={disabled || !notBefore}
-              onClick={() => notBefore && void submit({ label: t('delayed_start.time_label', { time }), notBefore })}
+              onClick={() => notBefore && void submit({ label: time, notBefore })}
             >
               {t('delayed_start.schedule')}
             </button>
