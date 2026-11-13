@@ -99,6 +99,20 @@ export const nl: Translation = {
     select_spot_first: 'Selecteer een punt op de kaart',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Starten na…',
+    description: 'De huidige selectie wordt naar de robot gestuurd zodra aan de voorwaarde is voldaan.',
+    at_time: 'Op een vast tijdstip',
+    schedule: 'Plannen',
+    scheduled: 'Start gepland: {{label}}',
+    pending: 'Wacht op “{{label}}” voor de start',
+    pending_generic: 'Wacht op start',
+    cancelled: 'Geplande start geannuleerd',
+    script_missing: 'Script {{script}} niet gevonden. Zie de README om uitgestelde start in te stellen.',
+    no_triggers: 'Geen triggers ingesteld',
+  },
+
   // Kamer Selectie Weergave
   room_display: {
     selected_rooms: 'Geselecteerde Kamers:',

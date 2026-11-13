@@ -97,6 +97,20 @@ export const en = {
     select_spot_first: 'Please select a spot on the map',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Start after…',
+    description: 'The current selection will be sent to the vacuum when the condition is met.',
+    at_time: 'At a set time',
+    schedule: 'Schedule',
+    scheduled: 'Start scheduled: {{label}}',
+    pending: 'Waiting for “{{label}}” before starting',
+    pending_generic: 'Waiting to start',
+    cancelled: 'Scheduled start cancelled',
+    script_missing: 'Script {{script}} not found. See the README to set up delayed start.',
+    no_triggers: 'No triggers configured',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Selected Rooms:',

@@ -99,6 +99,20 @@ export const ko: Translation = {
     select_spot_first: '지도에서 지점을 선택하세요',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: '다음 이후 시작…',
+    description: '조건이 충족되면 현재 선택 항목이 로봇청소기로 전송됩니다.',
+    at_time: '지정한 시간에',
+    schedule: '예약',
+    scheduled: '시작 예약됨: {{label}}',
+    pending: '“{{label}}” 대기 후 시작',
+    pending_generic: '시작 대기 중',
+    cancelled: '예약된 시작이 취소됨',
+    script_missing: '{{script}} 스크립트를 찾을 수 없습니다. 지연 시작 설정은 README를 참고하세요.',
+    no_triggers: '설정된 트리거가 없습니다',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: '선택된 방:',

@@ -99,6 +99,20 @@ export const lt: Translation = {
     select_spot_first: 'Pirmiausia pažymėkite tašką žemėlapyje',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Pradėti po…',
+    description: 'Dabartinis pasirinkimas bus išsiųstas siurbliui, kai bus įvykdyta sąlyga.',
+    at_time: 'Nustatytu laiku',
+    schedule: 'Suplanuoti',
+    scheduled: 'Pradžia suplanuota: {{label}}',
+    pending: 'Laukiama „{{label}}“ prieš pradedant',
+    pending_generic: 'Laukiama pradžios',
+    cancelled: 'Suplanuota pradžia atšaukta',
+    script_missing: 'Scenarijus {{script}} nerastas. Atidėtos pradžios nustatymą rasite README.',
+    no_triggers: 'Nėra sukonfigūruotų paleidiklių',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Pasirinkti kambariai:',

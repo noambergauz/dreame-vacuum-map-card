@@ -7,6 +7,8 @@ export { useLoadDeviceEntities } from './useLoadDeviceEntities';
 export { useVacuumEntityIds } from './useVacuumEntityIds';
 export { useCardUIState } from './useCardUIState';
 export { useVacuumServices } from './useVacuumServices';
+export { useDelayedStart } from './useDelayedStart';
+export type { DelayedStartState } from './useDelayedStart';
 export { useToast } from './useToast';
 export { useTranslation } from './useTranslation';
 export { useButtonConfig } from './useButtonConfig';

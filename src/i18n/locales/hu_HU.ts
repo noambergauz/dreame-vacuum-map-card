@@ -99,6 +99,20 @@ export const hu_HU: Translation = {
     select_spot_first: 'Kérlek, előbb jelölj ki egy pontot a térképen',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Indítás ezután…',
+    description: 'A jelenlegi kijelölés akkor kerül a robotporszívóhoz, amikor a feltétel teljesül.',
+    at_time: 'Megadott időpontban',
+    schedule: 'Ütemezés',
+    scheduled: 'Indítás ütemezve: {{label}}',
+    pending: 'Indítás előtt várakozás erre: „{{label}}”',
+    pending_generic: 'Indításra vár',
+    cancelled: 'Az ütemezett indítás törölve',
+    script_missing: 'A(z) {{script}} szkript nem található. A késleltetett indítás beállítását lásd a README-ben.',
+    no_triggers: 'Nincsenek beállított triggerek',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Kiválasztott szobák:',

@@ -99,6 +99,20 @@ export const es: Translation = {
     select_spot_first: 'Selecciona un punto en el mapa',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Iniciar después de…',
+    description: 'La selección actual se enviará al robot cuando se cumpla la condición.',
+    at_time: 'A una hora concreta',
+    schedule: 'Programar',
+    scheduled: 'Inicio programado: {{label}}',
+    pending: 'Esperando «{{label}}» para iniciar',
+    pending_generic: 'Esperando para iniciar',
+    cancelled: 'Inicio programado cancelado',
+    script_missing: 'No se encontró el script {{script}}. Consulta el README para configurar el inicio diferido.',
+    no_triggers: 'No hay disparadores configurados',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Habitaciones seleccionadas:',

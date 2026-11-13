@@ -101,6 +101,20 @@ export const de: Translation = {
     select_spot_first: 'Bitte wähle einen Punkt auf der Karte aus',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Starten nach…',
+    description: 'Die aktuelle Auswahl wird an den Saugroboter gesendet, sobald die Bedingung erfüllt ist.',
+    at_time: 'Zu einer bestimmten Uhrzeit',
+    schedule: 'Planen',
+    scheduled: 'Start geplant: {{label}}',
+    pending: 'Wartet auf „{{label}}“ vor dem Start',
+    pending_generic: 'Wartet auf Start',
+    cancelled: 'Geplanter Start abgebrochen',
+    script_missing: 'Skript {{script}} nicht gefunden. Siehe README zur Einrichtung des verzögerten Starts.',
+    no_triggers: 'Keine Auslöser konfiguriert',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Ausgewählte Räume:',

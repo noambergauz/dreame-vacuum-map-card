@@ -98,6 +98,20 @@ export const cs: Translation = {
     select_spot_first: 'Nejprve vyberte bod na mapě',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Spustit po…',
+    description: 'Aktuální výběr bude odeslán vysavači, jakmile bude splněna podmínka.',
+    at_time: 'V nastavený čas',
+    schedule: 'Naplánovat',
+    scheduled: 'Start naplánován: {{label}}',
+    pending: 'Čeká na „{{label}}“ před spuštěním',
+    pending_generic: 'Čeká na start',
+    cancelled: 'Naplánovaný start zrušen',
+    script_missing: 'Skript {{script}} nebyl nalezen. Nastavení odloženého startu najdete v README.',
+    no_triggers: 'Nejsou nastaveny žádné spouštěče',
+  },
+
   // Room Selection Display
   room_display: {
     selected_rooms: 'Vybrané místnosti:',

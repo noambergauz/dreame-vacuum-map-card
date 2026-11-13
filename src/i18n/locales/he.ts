@@ -99,6 +99,20 @@ export const he: Translation = {
     select_spot_first: 'יש לבחור נקודה במפה',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'התחל אחרי…',
+    description: 'הבחירה הנוכחית תישלח לשואב כשהתנאי יתקיים.',
+    at_time: 'בשעה מסוימת',
+    schedule: 'תזמן',
+    scheduled: 'ההתחלה תוזמנה: {{label}}',
+    pending: 'ממתין ל־„{{label}}” לפני ההתחלה',
+    pending_generic: 'ממתין להתחלה',
+    cancelled: 'ההתחלה המתוזמנת בוטלה',
+    script_missing: 'הסקריפט {{script}} לא נמצא. ראה את ה־README להגדרת התחלה מושהית.',
+    no_triggers: 'לא הוגדרו טריגרים',
+  },
+
   // תצוגת בחירת חדרים
   room_display: {
     selected_rooms: 'חדרים שנבחרו:',

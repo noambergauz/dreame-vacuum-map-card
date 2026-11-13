@@ -99,6 +99,20 @@ export const zh_TW: Translation = {
     select_spot_first: '請先在地圖上選擇清潔點',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: '稍後開始…',
+    description: '滿足條件時，目前的選擇將傳送給掃地機器人。',
+    at_time: '在指定時間',
+    schedule: '排程',
+    scheduled: '已排程開始：{{label}}',
+    pending: '等待「{{label}}」後開始',
+    pending_generic: '等待開始',
+    cancelled: '已取消排程開始',
+    script_missing: '找不到腳本 {{script}}。請參閱 README 設定延遲開始。',
+    no_triggers: '未設定觸發條件',
+  },
+
   // Room Selection Display (房間選擇顯示)
   room_display: {
     selected_rooms: '已選房間：',

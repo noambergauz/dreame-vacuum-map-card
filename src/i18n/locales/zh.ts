@@ -99,6 +99,20 @@ export const zh: Translation = {
     select_spot_first: '请在地图上选择清洁点',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: '稍后开始…',
+    description: '满足条件时，当前选择将发送给扫地机器人。',
+    at_time: '在指定时间',
+    schedule: '预约',
+    scheduled: '已预约开始：{{label}}',
+    pending: '等待“{{label}}”后开始',
+    pending_generic: '等待开始',
+    cancelled: '已取消预约开始',
+    script_missing: '未找到脚本 {{script}}。请参阅 README 设置延迟开始。',
+    no_triggers: '未配置触发条件',
+  },
+
   // Room Selection Display (房间选择显示)
   room_display: {
     selected_rooms: '已选房间：',

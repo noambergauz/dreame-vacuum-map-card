@@ -12,6 +12,7 @@ import { Toast } from '@/components/common';
 import {
   useCardUIState,
   useVacuumServices,
+  useDelayedStart,
   useToast,
   useTranslation,
   useMapGeometry,
@@ -28,6 +29,9 @@ import {
   readLiveMapFloor,
   resolveCleaningSelection,
   mapDiagnostic,
+  buildCleanCommand,
+  type CleanCommandResult,
+  type DelayedStartRequest,
 } from '@/utils';
 import { isRtlLanguage, resolveChromeLanguage } from '@/i18n';
 import { useEntity, useHass, VacuumCardProvider } from '@/contexts';
@@ -36,6 +40,14 @@ import type { Hass, HassConfig } from '@/types/homeassistant';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { CSSProperties } from 'react';
 import { logger } from '@/utils/logger';
+
+const CLEAN_COMMAND_ERROR_KEYS: Record<Extract<CleanCommandResult, { ok: false }>['reason'], string> = {
+  select_rooms_first: 'toast.select_rooms_first',
+  select_zone_first: 'toast.select_zone_first',
+  select_spot_first: 'toast.select_spot_first',
+  cannot_determine_map: 'toast.cannot_determine_map',
+  map_transform: 'errors.map_transform_unavailable',
+};
 
 function publishedOrAttribute(hass: Hass, entityId: string | undefined, attribute: unknown): string {
   const published = readSelectEntity(entityId ? hass.states[entityId] : undefined).value;
@@ -195,6 +207,9 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     onError: showToast,
   });
 
+  // "Start after…": the command is handed to a Home Assistant script that waits for the trigger
+  const delayedStart = useDelayedStart({ hass, config, language, onSuccess: showToast, onError: showToast });
+
   // Handle room toggle with toast
   const handleRoomToggleWithToast = useCallback(
     (roomId: number, roomName: string) => {
@@ -212,6 +227,9 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     if (cleanInFlight.current) return;
     cleanInFlight.current = true;
     try {
+      // Starting now supersedes a start that is still waiting for its trigger
+      if (delayedStart.pending) await delayedStart.cancel(true);
+
       if (selectedMode === 'zone' && areaSelectionMode === 'spot') {
         const success = await handleCleanSpots(
           selectedSpots,
@@ -245,7 +263,44 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
     handleClean,
     handleCleanSpots,
     setSelectedSpots,
+    delayedStart,
   ]);
+
+  const handleDelayedStart = useCallback(
+    async (request: DelayedStartRequest): Promise<boolean> => {
+      const result = buildCleanCommand({
+        entityId: config.entity,
+        mode: selectedMode,
+        areaSelectionMode,
+        selectedRooms,
+        selectedZones,
+        selectedSpots,
+        imageWidth: imageDimensions?.width,
+        imageHeight: imageDimensions?.height,
+        repeats: repeatCount,
+        mapTransform: displayedGeometry.transform,
+      });
+      if (!result.ok) {
+        showToast(t(CLEAN_COMMAND_ERROR_KEYS[result.reason]));
+        return false;
+      }
+      return delayedStart.schedule(result.command, request);
+    },
+    [
+      config.entity,
+      selectedMode,
+      areaSelectionMode,
+      selectedRooms,
+      selectedZones,
+      selectedSpots,
+      imageDimensions,
+      repeatCount,
+      displayedGeometry.transform,
+      showToast,
+      t,
+      delayedStart,
+    ]
+  );
 
   // Memoized handlers for modal/panel open/close
   const handleSettingsOpen = useCallback(() => setSettingsPanelOpened(true), [setSettingsPanelOpened]);
@@ -358,6 +413,8 @@ export function DreameVacuumCard({ hass, config }: DreameVacuumCardProps) {
                 onResume={handleResume}
                 onStop={handleStop}
                 onDock={handleDock}
+                delayedStart={delayedStart}
+                onDelayedStart={handleDelayedStart}
               />
             </div>
           </div>

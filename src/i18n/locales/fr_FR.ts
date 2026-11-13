@@ -99,6 +99,20 @@ export const fr_FR: Translation = {
     select_spot_first: 'Sélectionnez un point sur la carte',
   },
 
+  // Delayed start ("Start after…")
+  delayed_start: {
+    title: 'Démarrer après…',
+    description: 'La sélection actuelle sera envoyée au robot lorsque la condition sera remplie.',
+    at_time: 'À une heure précise',
+    schedule: 'Programmer',
+    scheduled: 'Démarrage programmé : {{label}}',
+    pending: 'En attente de « {{label}} » pour démarrer',
+    pending_generic: 'En attente de démarrage',
+    cancelled: 'Démarrage programmé annulé',
+    script_missing: 'Script {{script}} introuvable. Consultez le README pour configurer le démarrage différé.',
+    no_triggers: 'Aucun déclencheur configuré',
+  },
+
   // Room selection display
   room_display: {
     selected_rooms: 'Pièces sélectionnées :',
